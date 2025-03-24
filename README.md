@@ -1,1 +1,0 @@
-# Odoo_public_developpements

@@ -41,7 +41,7 @@
         </record>
     </data>
 
-    <menuitem name="OWL Tutorial" id="menu_owl_tutorial" sequence="10">
+    <menuitem name="Todo List" id="menu_owl_tutorial" sequence="10">
         <menuitem name="Todo List" id="menu_owl_todo_list" sequence="10" action="action_owl_todo_list"/>
         <menuitem name="Todo List OWL" id="menu_owl_todo_list_js" sequence="10" action="action_owl_todo_list_js"/>
     </menuitem>
