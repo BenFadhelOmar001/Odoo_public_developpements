@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_purchase_request_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.request</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="affectation" />
+                <field name="sale_id" string="Commande client" attrs="{'invisible': [('affectation', '!=', 'Sur commande client')]}"/>
+                <field name="activite_id" attrs="{'invisible': [('affectation', '!=', 'Sur activité')]}" string="Atelier" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                <field name="affectation_id" attrs="{'invisible': [('affectation', '!=', 'Sur activité')]}" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+     <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="request_id" />
+                <field name="affectation" />
+                <field name="activite_id" attrs="{'invisible': [('affectation', '!=', 'Sur activité')]}" string="Atelier" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                <field name="affectation_id" attrs="{'invisible': [('affectation', '!=', 'Sur activité')]}" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                <field name="sale_id" string="Commande client" attrs="{'invisible': [('affectation', '!=', 'Sur commande client')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_activite_activite_cycle_form" model="ir.ui.view">
+      <field name="name">activite_activite.form</field>
+      <field name="model">activite.activite</field>
+      <field name="arch" type="xml">
+            <form string="Activité">
+                    <group>
+                        <field name="name" string="Activité"/>
+                    </group>
+            </form>
+      </field>
+    </record>
+
+    <record id="menu_activite_activite_action" model="ir.actions.act_window">
+            <field name="name">Ateliers</field>
+            <field name="res_model">activite.activite</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="activite_activite_menu" parent="purchase_request.menu_purchase_request" name="Activités" sequence="10"
+                  action="menu_activite_activite_action"/>
+
+    <record id="view_affectation_affectation_cycle_form" model="ir.ui.view">
+      <field name="name">affectation_affectation.form</field>
+      <field name="model">affectation.affectation</field>
+      <field name="arch" type="xml">
+            <form string="Affectation">
+                    <group>
+                        <field name="name" string="Activité"/>
+                    </group>
+            </form>
+      </field>
+    </record>
+
+    <record id="menu_affectation_affectation_action" model="ir.actions.act_window">
+            <field name="name">Affectations</field>
+            <field name="res_model">affectation.affectation</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="affectation_affectation_menu" parent="purchase_request.menu_purchase_request" name="Affectations" sequence="11"
+                  action="menu_affectation_affectation_action"/>
+
+
+
+
+</odoo>

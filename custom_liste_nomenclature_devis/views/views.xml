@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_inherit_form_common_view" model="ir.ui.view">
+            <field name="name">product.template.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+
+
+
+                <xpath expr="//field[@name='image_1920']" position="replace">
+
+                    <field name="image_1920" widget="image" style="width:300px; height:200px; float:right;" />
+
+
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="sale_order_inherit_form_view" model="ir.ui.view">
+            <field name="name">saleorder.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+
+
+                <xpath expr="//div[@name='button_box']" position="inside">
+
+
+
+
+                            <button string="Nomenclatures" name="action_liste_mrp_bom_tree_view_readonly" class="oe_stat_button"
+                                    icon="fa-external-link-square" type="object">
+                                <!-- <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Consommation</span>
+                                </div> -->
+                            </button>
+
+
+              </xpath>
+
+              <!--<xpath expr="//page[@name='order_lines']" position="after">
+
+                  <page string="Nomenclature" name="Nomenclature">
+                            <field name="liste_bom_ids">
+                                <tree editable="buttom" create="0">
+                                    <field name="code" readonly="1" string="Nomenclature"/>
+                                    <field name="bom_id" invisible="1"/>
+                                </tree>
+                            </field>
+                  </page>
+
+              </xpath>-->
+                <xpath expr="//page[1]/field[1]/tree[1]/field[@name='price_unit']" position="before">
+
+
+                                    <field name="champ_test" invisible="1"/>
+
+
+
+
+              </xpath>
+
+            </field>
+        </record>
+
+        <record id="mrp_bom_inherit_form_view" model="ir.ui.view">
+            <field name="name">mrp.bom.form</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+
+              <!--<xpath expr="//page[@name='miscellaneous']" position="after">
+
+                  <page string="Bons de commande" name="Bons de commande">
+                            <field name="liste_order_ids">
+                                <tree editable="buttom" create="0">
+                                    <field name="order_id" readonly="1"/>
+                                </tree>
+                            </field>
+                  </page>
+
+              </xpath>-->
+                <xpath expr="//div[@name='button_box']" position="inside">
+
+
+
+
+                            <button string="Bons de commande" name="action_liste_sale_order_tree_view_readonly" class="oe_stat_button"
+                                    icon="fa-external-link-square" type="object">
+                                <!-- <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Consommation</span>
+                                </div> -->
+                            </button>
+
+
+              </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_liste_mrp_bom_tree" model="ir.ui.view">
+            <field name="name">Liste des nomenclatures</field>
+            <field name="model">liste.mrp.bom</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="bom_id" string="Nom"/>
+                    <button name="open_mrp_bom" type="object" string="Ouvrir" class="btn-primary" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="menu_liste_mrp_action" model="ir.actions.act_window">
+            <field name="name">Liste des nomenclatures</field>
+            <field name="res_model">liste.mrp.bom</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_liste_sale_order_tree" model="ir.ui.view">
+            <field name="name">Liste des nomenclatures</field>
+            <field name="model">liste.sale.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="order_id" string="Nom"/>
+                    <button name="open_sale_order" type="object" string="Ouvrir" class="btn-primary" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="menu_liste_sale_order_action" model="ir.actions.act_window">
+            <field name="name">Liste des nomenclatures</field>
+            <field name="res_model">liste.sale.order</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

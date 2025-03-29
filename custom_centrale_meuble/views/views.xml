@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mrp_production_inherit_form_view" model="ir.ui.view">
+            <field name="name">mrp_production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+
+              <xpath expr="//field[@name='user_id']" position="after">
+
+                  <field name="partner_id" string="Client" />
+
+              </xpath>
+
+            </field>
+        </record>
+
+        <record id="sale_order_inherit_form_view" model="ir.ui.view">
+            <field name="name">saleorder.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+              <xpath expr="//field[@name='partner_id']" position="after">
+
+                  <field name="type" string="Type" />
+
+              </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_order_type_form" model="ir.ui.view">
+            <field name="name">Cycle production</field>
+            <field name="model">order.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name" string="Nom" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_order_type_tree" model="ir.ui.view">
+            <field name="name">Type Order</field>
+            <field name="model">order.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Nom"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="menu_order_type_action" model="ir.actions.act_window">
+            <field name="name">Type Order</field>
+            <field name="res_model">order.type</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="order_type_menu" parent="sale.menu_sales_config" name="Type commande" sequence="2"
+                  action="menu_order_type_action"/>
+
+
+    </data>
+</odoo>
