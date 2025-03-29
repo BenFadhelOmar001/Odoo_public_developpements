@@ -1,0 +1,1381 @@
+<odoo>
+    <data>
+
+      
+<template id="demande_recrutement_form_drh" name="Demande recrutement form drh">
+    <t t-set="dr_metier_commerce_ids" t-value="request.env['dr.metier'].sudo().search([('is_commerce', '=', True)]).ids"/>
+    <t t-set="dr_metier_autre_ids" t-value="request.env['dr.metier'].sudo().search([('is_autre', '=', True)]).ids"/>
+    <t t-set="attachement_records" t-value="request.env['ir.attachment'].sudo().search([('res_model', '=', 'helpdesk.ticket'), ('res_id', '=', demande_recrutement.id), ('name', '!=', '')])"/>
+        <t t-call="portal.portal_layout">
+                    <br/>
+                    <div id="prest" class="col-12 col-lg justify-content-end">
+
+                        <div id="card" class="card">
+                                <div id="card_header" class="card-header container" data-anchor="true">
+                                    <div class="row gs-0">
+                                        <div class="col-md">
+                                            <h5 class="row mx-1 mb-1 mb-md-0">
+                                                <div class="col-9 text-truncate">
+                                                    <span t-field="demande_recrutement.name"/>
+                                                    <small class="text-muted "> (#<span t-field="demande_recrutement.id"/>)</small>
+                                                </div>
+                                                <div class="col-3 text-end">
+                                                    <small class="text-end">Status:</small>
+                                                    <span  t-field="demande_recrutement.stage_id.name" class="badge rounded-pill text-bg-info" title="Current stage of this ticket"/>
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                        <div id="card_body" class="card-body">
+
+                            <div class="form_group">
+
+                                <t t-if="demande_recrutement.stage_id.etape in ['dr_refuse', 'dr_valide']  or demande_recrutement.stage_id.etape != 'dr_traitement_drh'">
+
+                                    <form id="demande_recrutement_form_open" role="form" action="/demande_recrutement/update" method="POST" enctype="multipart/form-data">
+
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <br/>
+                                        <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                        <input type="hidden" name="demande_recrutement_poste_a_choisir_id" t-att-value="demande_recrutement.poste_a_choisir.id"/>
+                                        <input type="hidden" name="demande_recrutement_metier_a_choisir_id" t-att-value="demande_recrutement.metier_a_choisir_id.id"/>
+                                        <br/>
+                                        <div style="overflow: hidden;position:relative">
+                                    
+                                            <div style="float:left;width:45%;">
+
+                                                <label for="nom_du_demandeur_a_afficher" class="control-label"><strong>Nom du demandeur</strong></label>
+                                                <input type="text" name="nom_du_demandeur_a_afficher" class="form-control" t-att-value="demande_recrutement.partner_id.name" readonly="1"/>
+                                                <br/>
+
+                                                <t t-set="res_partner_records" t-value="request.env['res.partner'].sudo().search([])"/>
+                                                <label for="manager_recrutement" id="label_manager_recrutement">Manager</label>
+                                                <select id="manager_recrutement" name="manager_recrutement" class="form-select" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <t t-foreach="res_partner_records" t-as="record">
+                                                        <option t-att-value="record.id" t-att-selected="demande_recrutement.manager_recrutement.id == record.id and 'selected' or None"><t t-esc="record.name"/></option>
+                                                    </t>
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="etablissement" class="control-label"><strong>Site de recrutement</strong></label>
+                                                <select id="etablissement" name="etablissement" class="form-select" onchange="OnChange_etablissement_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="MONTAIGU" t-att-selected="demande_recrutement.etablissement == 'MONTAIGU' and 'selected' or None">MONTAIGU</option>
+                                                    <option value="LISSES" t-att-selected="demande_recrutement.etablissement == 'LISSES' and 'selected' or None">LISSES</option>
+                                                    <option value="PARIS" t-att-selected="demande_recrutement.etablissement == 'PARIS' and 'selected' or None">PARIS</option>
+                                                    <option value="GESLOT" t-att-selected="demande_recrutement.etablissement == 'GESLOT' and 'selected' or None">GESLOT</option>
+                                                    <option value="BOURGOIN" t-att-selected="demande_recrutement.etablissement == 'BOURGOIN' and 'selected' or None">BOURGOIN</option>
+                                                    <option value="CASTELNAU" t-att-selected="demande_recrutement.etablissement == 'CASTELNAU' and 'selected' or None">CASTELNAU</option>
+
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="rrh" class="control-label"><strong>RRH</strong></label>
+                                                <select id="rrh" name="rrh" class="form-select"  disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="Juliette FABIEN" t-att-selected="demande_recrutement.rrh == 'Juliette FABIEN' and 'selected' or None">Juliette FABIEN</option>
+                                                    <option value="Carole LARRAUD" t-att-selected="demande_recrutement.rrh == 'Carole LARRAUD' and 'selected' or None">Carole LARRAUD</option>
+                                                    <option value="Coralie BERTHET" t-att-selected="demande_recrutement.rrh == 'Coralie BERTHET' and 'selected' or None">Coralie BERTHET</option>
+
+                                                </select>
+                                                <br/>
+
+                                                <t t-set="dr_direction_records" t-value="request.env['dr.direction'].sudo().search([])"/>
+                                                <label for="direction_a_choisir_id" id="label_direction_a_choisir_id">Direction</label>
+                                                <select id="direction_a_choisir_id" name="direction_a_choisir_id" class="form-select" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <t t-foreach="dr_direction_records" t-as="record">
+                                                        <option t-att-value="record.id" t-att-selected="demande_recrutement.direction_a_choisir_id.id == record.id and 'selected' or None"><t t-esc="record.name"/></option>
+                                                    </t>
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="metier_a_choisir_id" id="label_metier_a_choisir_id">Métier</label>
+                                                <select id="metier_a_choisir_id" name="metier_a_choisir_id" class="form-select" disabled="disabled" onchange="OnChange_metier_a_choisir_id_select(this)">
+                                                    <option value=""></option>
+                                                    
+                                                </select>
+                                                <br/>
+
+                                                <div id="poste_a_choisir_div">
+                                                    <label for="poste_a_choisir" id="label_poste_a_choisir">Poste</label>
+                                                    <select id="poste_a_choisir" name="poste_a_choisir" class="form-select" disabled="disabled">
+                                                        <option value=""></option>
+                                                        
+                                                    </select>
+                                                    <br/>
+                                                </div>
+
+                                                <div id="poste_a_choisir_autre_div" style="display:none">
+                                                    <label for="poste_a_choisir_autre" id="label_poste_a_choisir_autre" class="control-label"><strong>Poste</strong></label>
+                                                    <input type="text" id="poste_a_choisir_autre" name="poste_a_choisir_autre" class="form-control" t-att-value="demande_recrutement.poste_a_choisir_autre" readonly="1"/>
+                                                    <br/>
+                                                </div>
+
+                                                <label for="commentaire_demandeur" id="label_commentaire_demandeur" class="control-label"><strong>Commentaire</strong></label>
+                                                <input type="text" id="commentaire_demandeur" name="commentaire_demandeur" class="form-control"  t-att-value="demande_recrutement.commentaire_demandeur" readonly="1"/>
+
+                                                
+
+                                            </div>
+
+                                            <div style="float:right;width:45%">
+
+                                                <label for="date_de_creation_a_afficher" class="control-label"><strong>Date de création</strong></label>
+                                                <input type="text" name="date_de_creation_a_afficher" class="form-control" t-att-value="demande_recrutement.date_de_creation_a_afficher.strftime('%d/%m/%Y')" readonly="1"/>
+                                                
+
+                                                <br/>
+                                                <label for="motif_de_recrutement" class="control-label"><strong>Motif de recrutement</strong></label>
+                                                <select id="motif_de_recrutement" name="motif_de_recrutement" class="form-select" onchange="OnChange_motif_de_recrutement_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="Création" t-att-selected="demande_recrutement.motif_de_recrutement == 'Création' and 'selected' or None">Création</option>
+                                                    <option value="Remplacement Départ CDI" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement Départ CDI' and 'selected' or None">Remplacement Départ CDI</option>
+                                                    <option value="Remplacement Départ CDD" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement Départ CDD' and 'selected' or None">Remplacement Départ CDD</option>
+                                                    <option value="Remplacement interimaire" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement interimaire' and 'selected' or None">Remplacement interimaire</option>
+                                                    <option value="Remplacement CDI AML/AT/etc." t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement CDI AML/AT/etc.' and 'selected' or None">Remplacement CDI AML/AT/etc.</option>
+                                                </select>
+
+                                                <br/>
+
+                                                
+                                                <label for="si_remplacement_qui" id="label_si_remplacement_qui" class="control-label" style="display:none"><strong>Personne remplacée</strong></label>
+                                                <input type="text" name="si_remplacement_qui" id="si_remplacement_qui" t-att-value="demande_recrutement.si_remplacement_qui" class="form-control"   style="display:none" readonly="1"/>
+                                                
+                                                
+                                                <br/>
+                                                <label for="type_contrat" class="control-label"><strong>Type de contrat souhaité</strong></label>
+                                                <select id="type_contrat" name="type_contrat" class="form-select" onchange="OnChange_type_contrat_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="CDI" t-att-selected="demande_recrutement.type_contrat == 'CDI' and 'selected' or None">CDI</option>
+                                                    <option value="CDD" t-att-selected="demande_recrutement.type_contrat == 'CDD' and 'selected' or None">CDD</option>
+                                                    <option value="Saisonnier" t-att-selected="demande_recrutement.type_contrat == 'Saisonnier' and 'selected' or None">Saisonnier</option>
+                                                    <option value="Stage" t-att-selected="demande_recrutement.type_contrat == 'Stage' and 'selected' or None">Stage</option>
+                                                    <option value="Alternant" t-att-selected="demande_recrutement.type_contrat == 'Alternant' and 'selected' or None">Alternant</option>
+                                                </select>
+                                                <br/>
+
+                                                <label for="date_de_debut_souhaite" id="label_date_de_debut_souhaite" class="control-label"><strong>Date de début souhaitée</strong></label>
+                                                <input type="date" id ="date_de_debut_souhaite" name="date_de_debut_souhaite" class="form-control" t-att-value="demande_recrutement.date_de_debut_souhaite" readonly="1"/>
+                                                <br/>
+                                            
+                                                <label for="date_de_debut" id="label_date_de_debut" class="control-label"><strong>Date de début</strong></label>
+                                                <input type="date" id ="date_de_debut" name="date_de_debut" class="form-control" t-att-value="demande_recrutement.date_de_debut" readonly="1"/>
+                                                <br/>
+
+                                                <label for="date_de_fin" id="label_date_de_fin" class="control-label"><strong>Date de fin</strong></label>
+                                                <input type="date" data-date-format="YYYY-MM-DD" id ="date_de_fin" name="date_de_fin" class="form-control" t-att-value="demande_recrutement.date_de_fin" readonly="1"/>
+                                                <br/>
+
+
+                                                
+                                                <label for="missions_principales" class="control-label"><strong>Missions principales</strong></label>
+                                                <input type="text" name="missions_principales" class="form-control" t-att-value="demande_recrutement.missions_principales" readonly="1"/>
+
+                                                <br/>
+                                                        
+                                            </div>
+
+                                        </div>
+                                        <br/>
+
+
+                                            <div id="commercial" style="overflow: hidden;position:relative;">
+                                        
+                                                <div style="float:left;width:45%;">
+
+                                                    <label for="secteur_geographique" id="label_secteur_geographique" class="control-label"><strong>Secteur géographique</strong></label>
+                                                    <input type="text" name="secteur_geographique" id="secteur_geographique" t-att-value="demande_recrutement.secteur_geographique" class="form-control" readonly="1"/>
+                                                    
+                                                    <br/>
+                                                    <label for="specificite_clients" id="label_specificite_clients" class="control-label"><strong>Type Clientèle</strong></label>
+                                                    <select id="specificite_clients" name="specificite_clients" class="form-select" disabled="disabled">
+                                                        <option value=""></option>
+                                                        <option value="Détail" t-att-selected="demande_recrutement.specificite_clients == 'Détail' and 'selected' or None">Détail</option>
+                                                        <option value="Pétrolier" t-att-selected="demande_recrutement.specificite_clients == 'Pétrolier' and 'selected' or None">Pétrolier</option>
+                                                        <option value="GMS" t-att-selected="demande_recrutement.specificite_clients == 'GMS' and 'selected' or None">GMS</option>
+                                                        <option value="Hybride" t-att-selected="demande_recrutement.specificite_clients == 'Hybride' and 'selected' or None">Hybride</option>
+                                                        <option value="Autres" t-att-selected="demande_recrutement.specificite_clients == 'Autres' and 'selected' or None">Autres</option>
+                                                    </select>
+
+                                                    <br/>
+                                                    <label for="lieu_habitation_souhaite" id="label_lieu_habitation_souhaite" class="control-label"><strong>Lieu d’habitation souhaité</strong></label>
+                                                    <input type="text" name="lieu_habitation_souhaite" id="lieu_habitation_souhaite" class="form-control" t-att-value="demande_recrutement.lieu_habitation_souhaite" readonly="1"/>
+
+                                                </div>
+
+                                                <div style="float:right;width:45%">
+                                                    <table class="table" border="0">
+                                                    <tr>
+                                                        <th width="50%"></th>
+                                                        <th>Actuel</th>
+                                                        <th>Visé</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Chiffre d’affaires du secteur</th>
+                                                        <td><input type="text" name="chiffre_affaires_du_secteur_actuel" class="form-control" t-att-value="demande_recrutement.chiffre_affaires_du_secteur_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="chiffre_affaires_du_secteur_vise" class="form-control" t-att-value="demande_recrutement.chiffre_affaires_du_secteur_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Evaluation rémunération annuelle</th>
+                                                        <td><input type="text" name="evaluation_remuneration_annuelle_actuel" class="form-control" t-att-value="demande_recrutement.evaluation_remuneration_annuelle_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="evaluation_remuneration_annuelle_vise" class="form-control" t-att-value="demande_recrutement.evaluation_remuneration_annuelle_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Garantie de salaire</th>
+                                                        <td><input type="text" name="garantie_de_salaire_actuel" class="form-control" t-att-value="demande_recrutement.garantie_de_salaire_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="garantie_de_salaire_vise" class="form-control" t-att-value="demande_recrutement.garantie_de_salaire_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Nombre de clients</th>
+                                                        <td><input type="text" name="nombre_de_clients_actuel" class="form-control" t-att-value="demande_recrutement.nombre_de_clients_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="nombre_de_clients_vise" class="form-control" t-att-value="demande_recrutement.nombre_de_clients_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Panier moyen</th>
+                                                        <td><input type="text" name="panier_moyen_actuel" class="form-control" t-att-value="demande_recrutement.panier_moyen_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="panier_moyen_vise" class="form-control" t-att-value="demande_recrutement.panier_moyen_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                                    
+                                                    <br/>
+                                                    <label for="attachment" id="label_piece_jointe" class="control-label"><strong>Pièce jointe</strong></label>
+                                                    <input type="file" id="upload_files" name="upload_files" multiple="multiple" disabled="disabled"/>
+                                                    <br/>
+
+                                                    <t t-foreach="attachement_records" t-as="attachment">
+
+                                                        <div t-att-id="'attachment-div-oe-att-'+str(attachment.id)">
+
+                                                            <a t-att-href="'/download/file/%s' % attachment.id">
+                                                                <t t-esc="attachment.name"/>
+                                                            </a>
+                                                            <!-- <button type="button" class="btn btn-danger btn-delete-attachment" t-att-data-id="attachment.id"><i class="fa fa-trash"></i> Supprimer</button> -->
+                                                        </div>
+
+                                                    </t>
+                                                
+
+                                                </div>
+
+                                            </div>
+                                        
+                                        <br/>
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>INFOS RRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="poste_budgete" class="control-label"><strong>Poste budgeté</strong></label>
+                                                        <select id="poste_budgete" name="poste_budgete" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="Oui" t-att-selected="demande_recrutement.poste_budgete == 'Oui' and 'selected' or None">Oui</option>
+                                                            <option value="Non" t-att-selected="demande_recrutement.poste_budgete == 'Non' and 'selected' or None">Non</option>
+                                                        </select>
+                                                        <br/>
+
+                                                        <label for="statut_a_choisir" class="control-label"><strong>Statut</strong></label>
+                                                        <select id="statut_a_choisir" name="statut_a_choisir" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="CADRE" t-att-selected="demande_recrutement.statut_a_choisir == 'CADRE' and 'selected' or None">CADRE</option>
+                                                            <option value="AGENT DE MAITRISE" t-att-selected="demande_recrutement.statut_a_choisir == 'AGENT DE MAITRISE' and 'selected' or None">AGENT DE MAITRISE</option>
+                                                            <option value="TECHNICIEN" t-att-selected="demande_recrutement.statut_a_choisir == 'TECHNICIEN' and 'selected' or None">TECHNICIEN</option>
+                                                            <option value="EMPLOYE" t-att-selected="demande_recrutement.statut_a_choisir == 'EMPLOYE' and 'selected' or None">EMPLOYE</option>
+                                                        </select>
+                                                        <br/>
+
+                                                        <label for="temps_de_travail_a_choisir" class="control-label"><strong>Temps de travail</strong></label>
+                                                        <select id="temps_de_travail_a_choisir" name="temps_de_travail_a_choisir" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="151,67h/mois" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == '151,67h/mois' and 'selected' or None">151,67h/mois</option>
+                                                            <option value="Forfait 216j" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == 'Forfait 216j' and 'selected' or None">Forfait 216j</option>
+                                                            <option value="Temps partiel" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == 'Temps partiel' and 'selected' or None">Temps partiel</option>
+                                                        </select>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="commentaires" class="control-label"><strong>Commentaires</strong></label>
+                                                        <input type="text" name="commentaires" class="form-control" t-att-value="demande_recrutement.commentaires" readonly="1"/>
+                                                        <br/>
+
+                                                        <label for="confidentiel" class="control-label"><strong>Confidentiel</strong></label>
+                                                        <select id="confidentiel" name="confidentiel" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="Oui" t-att-selected="demande_recrutement.confidentiel == 'Oui' and 'selected' or None">Oui</option>
+                                                            <option value="Non" t-att-selected="demande_recrutement.confidentiel == 'Non' and 'selected' or None">Non</option>
+                                                        </select>
+                                                        <br/>
+                                                        <table class="table" border="0">
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>Débutant</th>
+                                                                <th>Expérimenté(max autorisé)</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Fourchette de rémunération annuelle</th>
+                                                                <td><input type="text" name="fourchette_de_remuneration_annuelle_debutant" class="form-control"  t-att-value="demande_recrutement.fourchette_de_remuneration_annuelle_debutant" readonly="1"/></td>
+                                                                <td><input type="text" name="fourchette_de_remuneration_annuelle_experimente" class="form-control"  t-att-value="demande_recrutement.fourchette_de_remuneration_annuelle_experimente" readonly="1"/></td>
+                                                            </tr>
+                                                            
+                                                            
+                                                        </table>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>RDRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="rdrh_comment_complete" class="control-label"><strong>Complément d'informations</strong></label>
+                                                        <input type="text" name="rdrh_comment_complete" class="form-control" t-att-value="demande_recrutement.rdrh_comment_complete" readonly="1"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="from_rdrh_ck_demandeur">Demandeur:</label>
+                                                        <input type="checkbox" name="from_rdrh_ck_demandeur" id="from_rdrh_ck_demandeur"  disabled="disabled"/>
+                                                        <br/>
+                                                        <label for="from_rdrh_ck_rrh">RRH:</label>
+                                                        <input type="checkbox" name="from_rdrh_ck_rrh" id="from_rdrh_ck_rrh"  disabled="disabled"/>
+
+                                                    </div>
+
+                                                </div>
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>DIRECTION</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="direction_commentaire" class="control-label"><strong>Commentaire</strong></label>
+                                                        <input type="text" name="direction_commentaire" class="form-control" t-att-value="demande_recrutement.direction_commentaire" readonly="1"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>DRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="drh_comment_complete" class="control-label"><strong>Complément d'informations</strong></label>
+                                                        <input type="text" name="drh_comment_complete" class="form-control" t-att-value="demande_recrutement.drh_comment_complete" readonly="1"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="from_drh_ck_demandeur">Demandeur:</label>
+                                                        <input type="checkbox" name="from_drh_ck_demandeur" id="from_drh_ck_demandeur" disabled="disabled"/>
+                                                        <br/>
+                                                        <label for="from_drh_ck_rrh">RRH:</label>
+                                                        <input type="checkbox" name="from_drh_ck_rrh" id="from_drh_ck_rrh" disabled="disabled"/>
+
+                                                    </div>
+
+                                                </div>
+                                            
+
+                                        <div class="clearfix oe_login_buttons" style="margin-left:550px">
+                                            <button type="submit" class="btn btn-primary pull-left btn-lg" id="toggle-button" >Enregistrer</button>
+                                        </div>
+
+                                        <script type="text/javascript">
+
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                // Access the template values in JavaScript
+                                                var recordId = parseInt("<t t-esc='demande_recrutement.id'/>");
+                                                var type_contrat = "<t t-esc='demande_recrutement.type_contrat'/>";
+
+                                                var from_rdrh_ck_demandeur = "<t t-esc='demande_recrutement.from_rdrh_ck_demandeur'/>";
+                                                var from_rdrh_ck_rrh = "<t t-esc='demande_recrutement.from_rdrh_ck_rrh'/>";
+
+
+                                                var from_rdrh_ck_demandeur_to_check = document.getElementById("from_rdrh_ck_demandeur");
+                                                var from_rdrh_ck_rrh_to_check = document.getElementById("from_rdrh_ck_rrh");
+
+
+
+                                                var from_drh_ck_demandeur = "<t t-esc='demande_recrutement.from_drh_ck_demandeur'/>";
+                                                var from_drh_ck_rrh = "<t t-esc='demande_recrutement.from_drh_ck_rrh'/>";
+
+
+                                                var from_drh_ck_demandeur_to_check = document.getElementById("from_drh_ck_demandeur");
+                                                var from_drh_ck_rrh_to_check = document.getElementById("from_drh_ck_rrh");
+
+
+
+
+                                                var label_date_de_debut_souhaite = document.getElementById("label_date_de_debut_souhaite");
+                                                var date_de_debut_souhaite = document.getElementById("date_de_debut_souhaite");
+
+                                                var label_date_de_debut = document.getElementById("label_date_de_debut");
+                                                var date_de_debut = document.getElementById("date_de_debut");
+
+                                                var label_date_de_fin = document.getElementById("label_date_de_fin");
+                                                var date_de_fin = document.getElementById("date_de_fin");
+
+
+
+                                                if (from_rdrh_ck_demandeur == 'True')
+                                                    {
+                                                        //console.log("enter first true")
+                                                        from_rdrh_ck_demandeur_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter first false")
+                                                        from_rdrh_ck_demandeur_to_check.checked = false;
+                                                    }
+
+                                                if (from_rdrh_ck_rrh == 'True')
+                                                    {
+                                                        //console.log("enter second true")
+                                                        from_rdrh_ck_rrh_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter second false")
+                                                        from_rdrh_ck_rrh_to_check.checked = false;
+                                                    }
+
+
+
+
+
+
+                                                if (from_drh_ck_demandeur == 'True')
+                                                    {
+                                                        //console.log("enter first true")
+                                                        from_drh_ck_demandeur_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter first false")
+                                                        from_drh_ck_demandeur_to_check.checked = false;
+                                                    }
+
+                                                if (from_drh_ck_rrh == 'True')
+                                                    {
+                                                        //console.log("enter second true")
+                                                        from_drh_ck_rrh_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter second false")
+                                                        from_drh_ck_rrh_to_check.checked = false;
+                                                    }
+
+                                                if (type_contrat == "CDI")
+                                                    {
+                                                        label_date_de_debut_souhaite.style.display = 'block';
+                                                        date_de_debut_souhaite.style.display = 'block';
+                                                        date_de_debut_souhaite.setAttribute('required', '');
+
+                                                        label_date_de_debut.style.display = 'none';
+                                                        date_de_debut.style.display = 'none';
+                                                        date_de_debut.removeAttribute('required');
+
+                                                        label_date_de_fin.style.display = 'none';
+                                                        date_de_fin.style.display = 'none';
+                                                        date_de_fin.removeAttribute('required');
+                                                    }
+                                                else if (type_contrat == "CDD" || type_contrat == "Saisonnier" || type_contrat == "Stage" || type_contrat == "Alternant")
+                                                    {
+                                                        label_date_de_debut.style.display = 'block';
+                                                        date_de_debut.style.display = 'block';
+                                                        date_de_debut.setAttribute('required', '');
+
+                                                        label_date_de_fin.style.display = 'block';
+                                                        date_de_fin.style.display = 'block';
+                                                        date_de_fin.setAttribute('required', '');
+                                                        
+                                                        label_date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.removeAttribute('required');
+                                                    }
+                                                else
+                                                    {
+                                                        label_date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.removeAttribute('required');
+
+                                                        label_date_de_debut.style.display = 'none';
+                                                        date_de_debut.style.display = 'none';
+                                                        date_de_debut.removeAttribute('required');
+
+                                                        label_date_de_fin.style.display = 'none';
+                                                        date_de_fin.style.display = 'none';
+                                                        date_de_fin.removeAttribute('required');
+                                                    }
+
+
+                                                var dr_metier_commerce_ids = <t t-esc="dr_metier_commerce_ids"/>;
+                                                var dr_metier_autre_ids = <t t-esc="dr_metier_autre_ids"/>;
+
+                                                var metier_a_choisir_id = "<t t-esc='demande_recrutement.metier_a_choisir_id.id'/>";
+                                                var commercial = document.getElementById("commercial");
+
+                                                var poste_a_choisir = document.getElementById("poste_a_choisir");
+                                                var poste_a_choisir_div = document.getElementById("poste_a_choisir_div");
+
+                                                var poste_a_choisir_autre = document.getElementById("poste_a_choisir_autre");
+                                                var poste_a_choisir_autre_div = document.getElementById("poste_a_choisir_autre_div");
+
+                                                if (dr_metier_commerce_ids.includes(Number(metier_a_choisir_id)))
+                                                    {
+                                                        commercial.style.display = 'block';
+                                                    }
+                                                else
+                                                    {
+
+                                                        commercial.style.display = 'none';
+                                                    } 
+
+
+                                                if (dr_metier_autre_ids.includes(Number(metier_a_choisir_id)))
+                                                    {
+                                                        
+                                                        poste_a_choisir_autre_div.style.display = 'block';
+                                                        poste_a_choisir_autre.setAttribute('required', '');
+
+                                                        poste_a_choisir_div.style.display = 'none';
+                                                        poste_a_choisir.removeAttribute('required');
+
+                                                    }
+                                                else
+                                                    {
+
+                                                        poste_a_choisir_autre_div.style.display = 'none';
+                                                        poste_a_choisir_autre.removeAttribute('required');
+
+                                                        poste_a_choisir_div.style.display = 'block';
+                                                        poste_a_choisir.setAttribute('required', '');
+                                                    } 
+
+                                                var motif_de_recrutement = "<t t-esc='demande_recrutement.motif_de_recrutement'/>";
+                                                var label_si_remplacement_qui = document.getElementById("label_si_remplacement_qui");
+                                                var si_remplacement_qui = document.getElementById("si_remplacement_qui");
+
+                                                if (motif_de_recrutement == "Remplacement Départ CDI" || motif_de_recrutement == "Remplacement Départ CDD" || motif_de_recrutement == "Remplacement interimaire" || motif_de_recrutement == "Remplacement CDI AML/AT/etc.")
+                                                    {
+                                                        label_si_remplacement_qui.style.display = 'block';
+                                                        si_remplacement_qui.style.display = 'block';
+                                                        si_remplacement_qui.setAttribute('required', '');
+                                                    }
+                                                else
+                                                    {
+                                                        label_si_remplacement_qui.style.display = 'none';
+                                                        si_remplacement_qui.style.display = 'none';
+                                                        si_remplacement_qui.removeAttribute('required');
+                                                    }
+                                                
+
+
+
+
+
+
+                                                });
+
+
+                                        </script>
+
+                                        
+                                    </form>
+
+                                </t>
+
+                                <t t-else="">
+
+                                    <form id="demande_recrutement_form_open" role="form" action="/demande_recrutement/update" method="POST" enctype="multipart/form-data">
+
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <br/>
+                                        <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                        <input type="hidden" name="demande_recrutement_poste_a_choisir_id" t-att-value="demande_recrutement.poste_a_choisir.id"/>
+                                        <input type="hidden" name="demande_recrutement_metier_a_choisir_id" t-att-value="demande_recrutement.metier_a_choisir_id.id"/>
+                                        <br/>
+                                        <div style="overflow: hidden;position:relative">
+                                    
+                                            <div style="float:left;width:45%;">
+
+                                                <label for="nom_du_demandeur_a_afficher" class="control-label"><strong>Nom du demandeur</strong></label>
+                                                <input type="text" name="nom_du_demandeur_a_afficher" class="form-control" t-att-value="demande_recrutement.partner_id.name" readonly="1"/>
+                                                <br/>
+
+                                                <t t-set="res_partner_records" t-value="request.env['res.partner'].sudo().search([])"/>
+                                                <label for="manager_recrutement" id="label_manager_recrutement">Manager</label>
+                                                <select id="manager_recrutement" name="manager_recrutement" class="form-select" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <t t-foreach="res_partner_records" t-as="record">
+                                                        <option t-att-value="record.id" t-att-selected="demande_recrutement.manager_recrutement.id == record.id and 'selected' or None"><t t-esc="record.name"/></option>
+                                                    </t>
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="etablissement" class="control-label"><strong>Site de recrutement</strong></label>
+                                                <select id="etablissement" name="etablissement" class="form-select" onchange="OnChange_etablissement_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="MONTAIGU" t-att-selected="demande_recrutement.etablissement == 'MONTAIGU' and 'selected' or None">MONTAIGU</option>
+                                                    <option value="LISSES" t-att-selected="demande_recrutement.etablissement == 'LISSES' and 'selected' or None">LISSES</option>
+                                                    <option value="PARIS" t-att-selected="demande_recrutement.etablissement == 'PARIS' and 'selected' or None">PARIS</option>
+                                                    <option value="GESLOT" t-att-selected="demande_recrutement.etablissement == 'GESLOT' and 'selected' or None">GESLOT</option>
+                                                    <option value="BOURGOIN" t-att-selected="demande_recrutement.etablissement == 'BOURGOIN' and 'selected' or None">BOURGOIN</option>
+                                                    <option value="CASTELNAU" t-att-selected="demande_recrutement.etablissement == 'CASTELNAU' and 'selected' or None">CASTELNAU</option>
+
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="rrh" class="control-label"><strong>RRH</strong></label>
+                                                <select id="rrh" name="rrh" class="form-select"  disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="Juliette FABIEN" t-att-selected="demande_recrutement.rrh == 'Juliette FABIEN' and 'selected' or None">Juliette FABIEN</option>
+                                                    <option value="Carole LARRAUD" t-att-selected="demande_recrutement.rrh == 'Carole LARRAUD' and 'selected' or None">Carole LARRAUD</option>
+                                                    <option value="Coralie BERTHET" t-att-selected="demande_recrutement.rrh == 'Coralie BERTHET' and 'selected' or None">Coralie BERTHET</option>
+
+                                                </select>
+                                                <br/>
+
+                                                <t t-set="dr_direction_records" t-value="request.env['dr.direction'].sudo().search([])"/>
+                                                <label for="direction_a_choisir_id" id="label_direction_a_choisir_id">Direction</label>
+                                                <select id="direction_a_choisir_id" name="direction_a_choisir_id" class="form-select" required="required">
+                                                    <option value=""></option>
+                                                    <t t-foreach="dr_direction_records" t-as="record">
+                                                        <option t-att-value="record.id" t-att-selected="demande_recrutement.direction_a_choisir_id.id == record.id and 'selected' or None"><t t-esc="record.name"/></option>
+                                                    </t>
+
+                                                </select>
+                                                <br/>
+
+                                                <label for="metier_a_choisir_id" id="label_metier_a_choisir_id">Métier</label>
+                                                <select id="metier_a_choisir_id" name="metier_a_choisir_id" class="form-select" required="required" onchange="OnChange_metier_a_choisir_id_select(this)">
+                                                    <option value=""></option>
+                                                    
+                                                </select>
+                                                <br/>
+
+                                                <div id="poste_a_choisir_div">
+                                                    <label for="poste_a_choisir" id="label_poste_a_choisir">Poste</label>
+                                                    <select id="poste_a_choisir" name="poste_a_choisir" class="form-select" required="required">
+                                                        <option value=""></option>
+                                                        
+                                                    </select>
+                                                    <br/>
+                                                </div>
+
+                                                <div id="poste_a_choisir_autre_div" style="display:none">
+                                                    <label for="poste_a_choisir_autre" id="label_poste_a_choisir_autre" class="control-label"><strong>Poste</strong></label>
+                                                    <input type="text" id="poste_a_choisir_autre" name="poste_a_choisir_autre" class="form-control" t-att-value="demande_recrutement.poste_a_choisir_autre"/>
+                                                    <br/>
+                                                </div>
+
+                                                <label for="commentaire_demandeur" id="label_commentaire_demandeur" class="control-label"><strong>Commentaire</strong></label>
+                                                <input type="text" id="commentaire_demandeur" name="commentaire_demandeur" class="form-control"  t-att-value="demande_recrutement.commentaire_demandeur"/>
+
+                                                
+
+                                            </div>
+
+                                            <div style="float:right;width:45%">
+
+                                                <label for="date_de_creation_a_afficher" class="control-label"><strong>Date de création</strong></label>
+                                                <input type="text" name="date_de_creation_a_afficher" class="form-control" t-att-value="demande_recrutement.date_de_creation_a_afficher.strftime('%d/%m/%Y')" readonly="1"/>
+                                                
+
+                                                <br/>
+                                                <label for="motif_de_recrutement" class="control-label"><strong>Motif de recrutement</strong></label>
+                                                <select id="motif_de_recrutement" name="motif_de_recrutement" class="form-select" onchange="OnChange_motif_de_recrutement_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="Création" t-att-selected="demande_recrutement.motif_de_recrutement == 'Création' and 'selected' or None">Création</option>
+                                                    <option value="Remplacement Départ CDI" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement Départ CDI' and 'selected' or None">Remplacement Départ CDI</option>
+                                                    <option value="Remplacement Départ CDD" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement Départ CDD' and 'selected' or None">Remplacement Départ CDD</option>
+                                                    <option value="Remplacement interimaire" t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement interimaire' and 'selected' or None">Remplacement interimaire</option>
+                                                    <option value="Remplacement CDI AML/AT/etc." t-att-selected="demande_recrutement.motif_de_recrutement == 'Remplacement CDI AML/AT/etc.' and 'selected' or None">Remplacement CDI AML/AT/etc.</option>
+                                                </select>
+
+                                                <br/>
+
+                                                
+                                                <label for="si_remplacement_qui" id="label_si_remplacement_qui" class="control-label" style="display:none"><strong>Personne remplacée</strong></label>
+                                                <input type="text" name="si_remplacement_qui" id="si_remplacement_qui" t-att-value="demande_recrutement.si_remplacement_qui" class="form-control"   style="display:none" readonly="1"/>
+                                                
+                                                
+                                                <br/>
+                                                <label for="type_contrat" class="control-label"><strong>Type de contrat souhaité</strong></label>
+                                                <select id="type_contrat" name="type_contrat" class="form-select" onchange="OnChange_type_contrat_select(this)" disabled="disabled">
+                                                    <option value=""></option>
+                                                    <option value="CDI" t-att-selected="demande_recrutement.type_contrat == 'CDI' and 'selected' or None">CDI</option>
+                                                    <option value="CDD" t-att-selected="demande_recrutement.type_contrat == 'CDD' and 'selected' or None">CDD</option>
+                                                    <option value="Saisonnier" t-att-selected="demande_recrutement.type_contrat == 'Saisonnier' and 'selected' or None">Saisonnier</option>
+                                                    <option value="Stage" t-att-selected="demande_recrutement.type_contrat == 'Stage' and 'selected' or None">Stage</option>
+                                                    <option value="Alternant" t-att-selected="demande_recrutement.type_contrat == 'Alternant' and 'selected' or None">Alternant</option>
+                                                </select>
+                                                <br/>
+
+                                                <label for="date_de_debut_souhaite" id="label_date_de_debut_souhaite" class="control-label"><strong>Date de début souhaitée</strong></label>
+                                                <input type="date" id ="date_de_debut_souhaite" name="date_de_debut_souhaite" class="form-control" t-att-value="demande_recrutement.date_de_debut_souhaite" readonly="1"/>
+                                                <br/>
+                                            
+                                                <label for="date_de_debut" id="label_date_de_debut" class="control-label"><strong>Date de début</strong></label>
+                                                <input type="date" id ="date_de_debut" name="date_de_debut" class="form-control" t-att-value="demande_recrutement.date_de_debut" readonly="1"/>
+                                                <br/>
+
+                                                <label for="date_de_fin" id="label_date_de_fin" class="control-label"><strong>Date de fin</strong></label>
+                                                <input type="date" data-date-format="YYYY-MM-DD" id ="date_de_fin" name="date_de_fin" class="form-control" t-att-value="demande_recrutement.date_de_fin" readonly="1"/>
+                                                <br/>
+
+
+                                                
+                                                <label for="missions_principales" class="control-label"><strong>Missions principales</strong></label>
+                                                <input type="text" name="missions_principales" class="form-control" t-att-value="demande_recrutement.missions_principales" readonly="1"/>
+
+                                                <br/>
+                                                        
+                                            </div>
+
+                                        </div>
+                                        <br/>
+
+
+                                            <div id="commercial" style="overflow: hidden;position:relative;">
+                                        
+                                                <div style="float:left;width:45%;">
+
+                                                    <label for="secteur_geographique" id="label_secteur_geographique" class="control-label"><strong>Secteur géographique</strong></label>
+                                                    <input type="text" name="secteur_geographique" id="secteur_geographique" t-att-value="demande_recrutement.secteur_geographique" class="form-control" readonly="1"/>
+                                                    
+                                                    <br/>
+                                                    <label for="specificite_clients" id="label_specificite_clients" class="control-label"><strong>Type Clientèle</strong></label>
+                                                    <select id="specificite_clients" name="specificite_clients" class="form-select" disabled="disabled">
+                                                        <option value=""></option>
+                                                        <option value="Détail" t-att-selected="demande_recrutement.specificite_clients == 'Détail' and 'selected' or None">Détail</option>
+                                                        <option value="Pétrolier" t-att-selected="demande_recrutement.specificite_clients == 'Pétrolier' and 'selected' or None">Pétrolier</option>
+                                                        <option value="GMS" t-att-selected="demande_recrutement.specificite_clients == 'GMS' and 'selected' or None">GMS</option>
+                                                        <option value="Hybride" t-att-selected="demande_recrutement.specificite_clients == 'Hybride' and 'selected' or None">Hybride</option>
+                                                        <option value="Autres" t-att-selected="demande_recrutement.specificite_clients == 'Autres' and 'selected' or None">Autres</option>
+                                                    </select>
+
+                                                    <br/>
+                                                    <label for="lieu_habitation_souhaite" id="label_lieu_habitation_souhaite" class="control-label"><strong>Lieu d’habitation souhaité</strong></label>
+                                                    <input type="text" name="lieu_habitation_souhaite" id="lieu_habitation_souhaite" class="form-control" t-att-value="demande_recrutement.lieu_habitation_souhaite" readonly="1"/>
+
+                                                </div>
+
+                                                <div style="float:right;width:45%">
+                                                    <table class="table" border="0">
+                                                    <tr>
+                                                        <th width="50%"></th>
+                                                        <th>Actuel</th>
+                                                        <th>Visé</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Chiffre d’affaires du secteur</th>
+                                                        <td><input type="text" name="chiffre_affaires_du_secteur_actuel" class="form-control" t-att-value="demande_recrutement.chiffre_affaires_du_secteur_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="chiffre_affaires_du_secteur_vise" class="form-control" t-att-value="demande_recrutement.chiffre_affaires_du_secteur_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Evaluation rémunération annuelle</th>
+                                                        <td><input type="text" name="evaluation_remuneration_annuelle_actuel" class="form-control" t-att-value="demande_recrutement.evaluation_remuneration_annuelle_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="evaluation_remuneration_annuelle_vise" class="form-control" t-att-value="demande_recrutement.evaluation_remuneration_annuelle_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Garantie de salaire</th>
+                                                        <td><input type="text" name="garantie_de_salaire_actuel" class="form-control" t-att-value="demande_recrutement.garantie_de_salaire_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="garantie_de_salaire_vise" class="form-control" t-att-value="demande_recrutement.garantie_de_salaire_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Nombre de clients</th>
+                                                        <td><input type="text" name="nombre_de_clients_actuel" class="form-control" t-att-value="demande_recrutement.nombre_de_clients_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="nombre_de_clients_vise" class="form-control" t-att-value="demande_recrutement.nombre_de_clients_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Panier moyen</th>
+                                                        <td><input type="text" name="panier_moyen_actuel" class="form-control" t-att-value="demande_recrutement.panier_moyen_actuel" readonly="1"/></td>
+                                                        <td><input type="text" name="panier_moyen_vise" class="form-control" t-att-value="demande_recrutement.panier_moyen_vise" readonly="1"/></td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                                    
+                                                    <br/>
+                                                    <label for="attachment" id="label_piece_jointe" class="control-label"><strong>Pièce jointe</strong></label>
+                                                    <input type="file" id="upload_files" name="upload_files" multiple="multiple" disabled="disabled"/>
+                                                    <br/>
+
+                                                    <t t-foreach="attachement_records" t-as="attachment">
+
+                                                        <div t-att-id="'attachment-div-oe-att-'+str(attachment.id)">
+
+                                                            <a t-att-href="'/download/file/%s' % attachment.id">
+                                                                <t t-esc="attachment.name"/>
+                                                            </a>
+                                                            <!-- <button type="button" class="btn btn-danger btn-delete-attachment" t-att-data-id="attachment.id"><i class="fa fa-trash"></i> Supprimer</button> -->
+                                                        </div>
+
+                                                    </t>
+                                                
+
+                                                </div>
+
+                                            </div>
+                                        
+                                        <br/>
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>INFOS RRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="poste_budgete" class="control-label"><strong>Poste budgeté</strong></label>
+                                                        <select id="poste_budgete" name="poste_budgete" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="Oui" t-att-selected="demande_recrutement.poste_budgete == 'Oui' and 'selected' or None">Oui</option>
+                                                            <option value="Non" t-att-selected="demande_recrutement.poste_budgete == 'Non' and 'selected' or None">Non</option>
+                                                        </select>
+                                                        <br/>
+
+                                                        <label for="statut_a_choisir" class="control-label"><strong>Statut</strong></label>
+                                                        <select id="statut_a_choisir" name="statut_a_choisir" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="CADRE" t-att-selected="demande_recrutement.statut_a_choisir == 'CADRE' and 'selected' or None">CADRE</option>
+                                                            <option value="AGENT DE MAITRISE" t-att-selected="demande_recrutement.statut_a_choisir == 'AGENT DE MAITRISE' and 'selected' or None">AGENT DE MAITRISE</option>
+                                                            <option value="TECHNICIEN" t-att-selected="demande_recrutement.statut_a_choisir == 'TECHNICIEN' and 'selected' or None">TECHNICIEN</option>
+                                                            <option value="EMPLOYE" t-att-selected="demande_recrutement.statut_a_choisir == 'EMPLOYE' and 'selected' or None">EMPLOYE</option>
+                                                        </select>
+                                                        <br/>
+
+                                                        <label for="temps_de_travail_a_choisir" class="control-label"><strong>Temps de travail</strong></label>
+                                                        <select id="temps_de_travail_a_choisir" name="temps_de_travail_a_choisir" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="151,67h/mois" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == '151,67h/mois' and 'selected' or None">151,67h/mois</option>
+                                                            <option value="Forfait 216j" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == 'Forfait 216j' and 'selected' or None">Forfait 216j</option>
+                                                            <option value="Temps partiel" t-att-selected="demande_recrutement.temps_de_travail_a_choisir == 'Temps partiel' and 'selected' or None">Temps partiel</option>
+                                                        </select>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="commentaires" class="control-label"><strong>Commentaires</strong></label>
+                                                        <input type="text" name="commentaires" class="form-control" t-att-value="demande_recrutement.commentaires" readonly="1"/>
+                                                        <br/>
+
+                                                        <label for="confidentiel" class="control-label"><strong>Confidentiel</strong></label>
+                                                        <select id="confidentiel" name="confidentiel" class="form-select" disabled="disabled">
+                                                            <option value=""></option>
+                                                            <option value="Oui" t-att-selected="demande_recrutement.confidentiel == 'Oui' and 'selected' or None">Oui</option>
+                                                            <option value="Non" t-att-selected="demande_recrutement.confidentiel == 'Non' and 'selected' or None">Non</option>
+                                                        </select>
+                                                        <br/>
+                                                        <table class="table" border="0">
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>Débutant</th>
+                                                                <th>Expérimenté(max autorisé)</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Fourchette de rémunération annuelle</th>
+                                                                <td><input type="text" name="fourchette_de_remuneration_annuelle_debutant" class="form-control"  t-att-value="demande_recrutement.fourchette_de_remuneration_annuelle_debutant" readonly="1"/></td>
+                                                                <td><input type="text" name="fourchette_de_remuneration_annuelle_experimente" class="form-control"  t-att-value="demande_recrutement.fourchette_de_remuneration_annuelle_experimente" readonly="1"/></td>
+                                                            </tr>
+                                                            
+                                                            
+                                                        </table>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>RDRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="rdrh_comment_complete" class="control-label"><strong>Complément d'informations</strong></label>
+                                                        <input type="text" name="rdrh_comment_complete" class="form-control" t-att-value="demande_recrutement.rdrh_comment_complete" readonly="1"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="from_rdrh_ck_demandeur">Demandeur:</label>
+                                                        <input type="checkbox" name="from_rdrh_ck_demandeur" id="from_rdrh_ck_demandeur"  disabled="disabled"/>
+                                                        <br/>
+                                                        <label for="from_rdrh_ck_rrh">RRH:</label>
+                                                        <input type="checkbox" name="from_rdrh_ck_rrh" id="from_rdrh_ck_rrh"  disabled="disabled"/>
+
+                                                    </div>
+
+                                                </div>
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>DIRECTION</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="direction_commentaire" class="control-label"><strong>Commentaire</strong></label>
+                                                        <input type="text" name="direction_commentaire" class="form-control" t-att-value="demande_recrutement.direction_commentaire" readonly="1"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div style="overflow: hidden;position:relative">
+                                                    <h3>DRH</h3>
+                                            
+                                                    <div style="float:left;width:45%;">
+                                                        
+                                                        <label for="drh_comment_complete" class="control-label"><strong>Complément d'informations</strong></label>
+                                                        <input type="text" name="drh_comment_complete" class="form-control" t-att-value="demande_recrutement.drh_comment_complete"/>
+                                                        <br/>
+
+                                                    </div>
+
+                                                    <div style="float:right;width:45%">
+
+                                                        <label for="from_drh_ck_demandeur">Demandeur:</label>
+                                                        <input type="checkbox" name="from_drh_ck_demandeur" id="from_drh_ck_demandeur"/>
+                                                        <br/>
+                                                        <label for="from_drh_ck_rrh">RRH:</label>
+                                                        <input type="checkbox" name="from_drh_ck_rrh" id="from_drh_ck_rrh"/>
+
+                                                    </div>
+
+                                                </div>
+                                            
+
+                                        <div class="clearfix oe_login_buttons" style="margin-left:550px">
+                                            <button type="submit" class="btn btn-primary pull-left btn-lg" id="toggle-button" >Enregistrer</button>
+                                        </div>
+
+                                        <script type="text/javascript">
+
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                // Access the template values in JavaScript
+                                                var recordId = parseInt("<t t-esc='demande_recrutement.id'/>");
+                                                var type_contrat = "<t t-esc='demande_recrutement.type_contrat'/>";
+
+                                                var from_rdrh_ck_demandeur = "<t t-esc='demande_recrutement.from_rdrh_ck_demandeur'/>";
+                                                var from_rdrh_ck_rrh = "<t t-esc='demande_recrutement.from_rdrh_ck_rrh'/>";
+
+
+                                                var from_rdrh_ck_demandeur_to_check = document.getElementById("from_rdrh_ck_demandeur");
+                                                var from_rdrh_ck_rrh_to_check = document.getElementById("from_rdrh_ck_rrh");
+
+
+
+                                                var from_drh_ck_demandeur = "<t t-esc='demande_recrutement.from_drh_ck_demandeur'/>";
+                                                var from_drh_ck_rrh = "<t t-esc='demande_recrutement.from_drh_ck_rrh'/>";
+
+
+                                                var from_drh_ck_demandeur_to_check = document.getElementById("from_drh_ck_demandeur");
+                                                var from_drh_ck_rrh_to_check = document.getElementById("from_drh_ck_rrh");
+
+
+
+
+                                                var label_date_de_debut_souhaite = document.getElementById("label_date_de_debut_souhaite");
+                                                var date_de_debut_souhaite = document.getElementById("date_de_debut_souhaite");
+
+                                                var label_date_de_debut = document.getElementById("label_date_de_debut");
+                                                var date_de_debut = document.getElementById("date_de_debut");
+
+                                                var label_date_de_fin = document.getElementById("label_date_de_fin");
+                                                var date_de_fin = document.getElementById("date_de_fin");
+
+
+
+                                                if (from_rdrh_ck_demandeur == 'True')
+                                                    {
+                                                        //console.log("enter first true")
+                                                        from_rdrh_ck_demandeur_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter first false")
+                                                        from_rdrh_ck_demandeur_to_check.checked = false;
+                                                    }
+
+                                                if (from_rdrh_ck_rrh == 'True')
+                                                    {
+                                                        //console.log("enter second true")
+                                                        from_rdrh_ck_rrh_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter second false")
+                                                        from_rdrh_ck_rrh_to_check.checked = false;
+                                                    }
+
+
+
+
+
+
+                                                if (from_drh_ck_demandeur == 'True')
+                                                    {
+                                                        //console.log("enter first true")
+                                                        from_drh_ck_demandeur_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter first false")
+                                                        from_drh_ck_demandeur_to_check.checked = false;
+                                                    }
+
+                                                if (from_drh_ck_rrh == 'True')
+                                                    {
+                                                        //console.log("enter second true")
+                                                        from_drh_ck_rrh_to_check.checked = true;
+                                                    }
+                                                else
+                                                    {
+                                                        //console.log("enter second false")
+                                                        from_drh_ck_rrh_to_check.checked = false;
+                                                    }
+
+                                                if (type_contrat == "CDI")
+                                                    {
+                                                        label_date_de_debut_souhaite.style.display = 'block';
+                                                        date_de_debut_souhaite.style.display = 'block';
+                                                        date_de_debut_souhaite.setAttribute('required', '');
+
+                                                        label_date_de_debut.style.display = 'none';
+                                                        date_de_debut.style.display = 'none';
+                                                        date_de_debut.removeAttribute('required');
+
+                                                        label_date_de_fin.style.display = 'none';
+                                                        date_de_fin.style.display = 'none';
+                                                        date_de_fin.removeAttribute('required');
+                                                    }
+                                                else if (type_contrat == "CDD" || type_contrat == "Saisonnier" || type_contrat == "Stage" || type_contrat == "Alternant")
+                                                    {
+                                                        label_date_de_debut.style.display = 'block';
+                                                        date_de_debut.style.display = 'block';
+                                                        date_de_debut.setAttribute('required', '');
+
+                                                        label_date_de_fin.style.display = 'block';
+                                                        date_de_fin.style.display = 'block';
+                                                        date_de_fin.setAttribute('required', '');
+                                                        
+                                                        label_date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.removeAttribute('required');
+                                                    }
+                                                else
+                                                    {
+                                                        label_date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.style.display = 'none';
+                                                        date_de_debut_souhaite.removeAttribute('required');
+
+                                                        label_date_de_debut.style.display = 'none';
+                                                        date_de_debut.style.display = 'none';
+                                                        date_de_debut.removeAttribute('required');
+
+                                                        label_date_de_fin.style.display = 'none';
+                                                        date_de_fin.style.display = 'none';
+                                                        date_de_fin.removeAttribute('required');
+                                                    }
+
+
+                                                var dr_metier_commerce_ids = <t t-esc="dr_metier_commerce_ids"/>;
+                                                var dr_metier_autre_ids = <t t-esc="dr_metier_autre_ids"/>;
+
+                                                var metier_a_choisir_id = "<t t-esc='demande_recrutement.metier_a_choisir_id.id'/>";
+                                                var commercial = document.getElementById("commercial");
+
+                                                var poste_a_choisir = document.getElementById("poste_a_choisir");
+                                                var poste_a_choisir_div = document.getElementById("poste_a_choisir_div");
+
+                                                var poste_a_choisir_autre = document.getElementById("poste_a_choisir_autre");
+                                                var poste_a_choisir_autre_div = document.getElementById("poste_a_choisir_autre_div");
+
+                                                if (dr_metier_commerce_ids.includes(Number(metier_a_choisir_id)))
+                                                    {
+                                                        commercial.style.display = 'block';
+                                                    }
+                                                else
+                                                    {
+
+                                                        commercial.style.display = 'none';
+                                                    } 
+
+
+                                                if (dr_metier_autre_ids.includes(Number(metier_a_choisir_id)))
+                                                    {
+                                                        
+                                                        poste_a_choisir_autre_div.style.display = 'block';
+                                                        poste_a_choisir_autre.setAttribute('required', '');
+
+                                                        poste_a_choisir_div.style.display = 'none';
+                                                        poste_a_choisir.removeAttribute('required');
+
+                                                    }
+                                                else
+                                                    {
+
+                                                        poste_a_choisir_autre_div.style.display = 'none';
+                                                        poste_a_choisir_autre.removeAttribute('required');
+
+                                                        poste_a_choisir_div.style.display = 'block';
+                                                        poste_a_choisir.setAttribute('required', '');
+                                                    } 
+
+                                                var motif_de_recrutement = "<t t-esc='demande_recrutement.motif_de_recrutement'/>";
+                                                var label_si_remplacement_qui = document.getElementById("label_si_remplacement_qui");
+                                                var si_remplacement_qui = document.getElementById("si_remplacement_qui");
+
+                                                if (motif_de_recrutement == "Remplacement Départ CDI" || motif_de_recrutement == "Remplacement Départ CDD" || motif_de_recrutement == "Remplacement interimaire" || motif_de_recrutement == "Remplacement CDI AML/AT/etc.")
+                                                    {
+                                                        label_si_remplacement_qui.style.display = 'block';
+                                                        si_remplacement_qui.style.display = 'block';
+                                                        si_remplacement_qui.setAttribute('required', '');
+                                                    }
+                                                else
+                                                    {
+                                                        label_si_remplacement_qui.style.display = 'none';
+                                                        si_remplacement_qui.style.display = 'none';
+                                                        si_remplacement_qui.removeAttribute('required');
+                                                    }
+                                                
+
+
+
+
+
+
+                                                });
+
+
+                                        </script>
+
+                                        
+                                    </form>
+
+
+
+                                </t>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+            <!-- begin js code -->
+            <script type="text/javascript">
+
+                document.querySelector("form").addEventListener("submit", function() {
+                    document.getElementById("rrh").disabled = false;
+                    document.getElementById("from_drh_ck_demandeur").disabled = false;
+                    document.getElementById("from_drh_ck_rrh").disabled = false;
+                });
+
+                
+
+                function OnChange_metier_a_choisir_id_select(obj) {
+
+
+                    //console.log("enter in onchange from xml");
+                    var dr_metier_commerce_ids = <t t-esc="dr_metier_commerce_ids"/>;
+                    var dr_metier_autre_ids = <t t-esc="dr_metier_autre_ids"/>;
+
+                    var metier_a_choisir_id = document.getElementById("metier_a_choisir_id");
+                    var commercial = document.getElementById("commercial");
+
+                    var poste_a_choisir = document.getElementById("poste_a_choisir");
+                    var poste_a_choisir_div = document.getElementById("poste_a_choisir_div");
+
+                    var poste_a_choisir_autre = document.getElementById("poste_a_choisir_autre");
+                    var poste_a_choisir_autre_div = document.getElementById("poste_a_choisir_autre_div");
+
+                    
+                    if (dr_metier_commerce_ids.includes(Number(metier_a_choisir_id.value)))
+                        {
+                            
+                            commercial.style.display = 'block';
+                        }
+                    else
+                        {
+
+                            commercial.style.display = 'none';
+                        } 
+
+
+                    if (dr_metier_autre_ids.includes(Number(metier_a_choisir_id.value)))
+                        {
+                            
+                            poste_a_choisir_autre_div.style.display = 'block';
+                            poste_a_choisir_autre.setAttribute('required', '');
+
+                            poste_a_choisir_div.style.display = 'none';
+                            poste_a_choisir.removeAttribute('required');
+
+                        }
+                    else
+                        {
+
+                            poste_a_choisir_autre_div.style.display = 'none';
+                            poste_a_choisir_autre.removeAttribute('required');
+
+                            poste_a_choisir_div.style.display = 'block';
+                            poste_a_choisir.setAttribute('required', '');
+                        } 
+
+                    }
+
+
+                function OnChange_etablissement_select(obj) {
+                    console.log("OnChange_etablissement_select")
+                    var etablissement = document.getElementById("etablissement");
+                    var rrh = document.getElementById("rrh");
+                    if (etablissement.value == "MONTAIGU" || etablissement.value == "CASTELNAU")
+                        {
+                            rrh.value= "Juliette FABIEN"
+                        }
+                    else if (etablissement.value == "BOURGOIN")
+                        {
+                            rrh.value= "Coralie BERTHET"
+                        }
+                    else if (etablissement.value == "GESLOT" || etablissement.value == "PARIS" || etablissement.value == "LISSES")
+                        {
+                            rrh.value= "Carole LARRAUD"
+                        }
+                    else
+                        {
+                            rrh.value= false
+                        }
+                    }
+
+
+                function OnChange_type_contrat_select(obj) {
+                    console.log("OnChange_type_contrat_select")
+                    var type_contrat = document.getElementById("type_contrat");
+
+                    var label_date_de_debut_souhaite = document.getElementById("label_date_de_debut_souhaite");
+                    var date_de_debut_souhaite = document.getElementById("date_de_debut_souhaite");
+
+                    var label_date_de_debut = document.getElementById("label_date_de_debut");
+                    var date_de_debut = document.getElementById("date_de_debut");
+
+                    var label_date_de_fin = document.getElementById("label_date_de_fin");
+                    var date_de_fin = document.getElementById("date_de_fin");
+
+                    if (type_contrat.value == "CDI")
+                        {
+                            label_date_de_debut_souhaite.style.display = 'block';
+                            date_de_debut_souhaite.style.display = 'block';
+                            date_de_debut_souhaite.setAttribute('required', '');
+
+                            label_date_de_debut.style.display = 'none';
+                            date_de_debut.style.display = 'none';
+                            date_de_debut.removeAttribute('required');
+
+                            label_date_de_fin.style.display = 'none';
+                            date_de_fin.style.display = 'none';
+                            date_de_fin.removeAttribute('required');
+                        }
+                    else if (type_contrat.value == "CDD" || type_contrat.value == "Saisonnier" || type_contrat.value == "Stage" || type_contrat.value == "Alternant")
+                        {
+                            label_date_de_debut.style.display = 'block';
+                            date_de_debut.style.display = 'block';
+                            date_de_debut.setAttribute('required', '');
+
+                            label_date_de_fin.style.display = 'block';
+                            date_de_fin.style.display = 'block';
+                            date_de_fin.setAttribute('required', '');
+                            
+                            label_date_de_debut_souhaite.style.display = 'none';
+                            date_de_debut_souhaite.style.display = 'none';
+                            date_de_debut_souhaite.removeAttribute('required');
+                        }
+                    else
+                        {
+                            label_date_de_debut_souhaite.style.display = 'none';
+                            date_de_debut_souhaite.style.display = 'none';
+                            date_de_debut_souhaite.removeAttribute('required');
+
+                            label_date_de_debut.style.display = 'none';
+                            date_de_debut.style.display = 'none';
+                            date_de_debut.removeAttribute('required');
+
+                            label_date_de_fin.style.display = 'none';
+                            date_de_fin.style.display = 'none';
+                            date_de_fin.removeAttribute('required');
+                        }
+                    }
+
+
+                function OnChange_motif_de_recrutement_select(obj) {
+                    var motif_de_recrutement = document.getElementById("motif_de_recrutement");
+
+                    var label_si_remplacement_qui = document.getElementById("label_si_remplacement_qui");
+                    var si_remplacement_qui = document.getElementById("si_remplacement_qui");
+
+                    if (motif_de_recrutement.value == "Remplacement Départ CDI" || motif_de_recrutement.value == "Remplacement Départ CDD" || motif_de_recrutement.value == "Remplacement interimaire" || motif_de_recrutement.value == "Remplacement CDI AML/AT/etc.")
+                        {
+                            label_si_remplacement_qui.style.display = 'block';
+                            si_remplacement_qui.style.display = 'block';
+                            si_remplacement_qui.setAttribute('required', '');
+                        }
+                    else
+                        {
+                            label_si_remplacement_qui.style.display = 'none';
+                            si_remplacement_qui.style.display = 'none';
+                            si_remplacement_qui.removeAttribute('required');
+                        }
+                    }
+
+
+                
+
+
+
+
+            </script>
+            <!-- end js code -->
+        </t>
+
+    </template>
+
+
+
+
+
+</data>
+
+</odoo>

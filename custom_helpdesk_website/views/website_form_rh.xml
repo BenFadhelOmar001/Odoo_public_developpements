@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record model="website.menu"  id="menu_form_rh">
+        <field name="name">Fiche nouvelle arrivant</field>
+        <field name="url">/ticket_webform_rh</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">7</field>
+    </record>
+
+    <template id="create_ticket_rh" name="Create Ticket RH">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container">
+                        <img src="/custom_helpdesk_website/static/img/logo.jpg" style="height:300px; width:1290px;"/>
+                        <br/>
+                        <br/>
+
+                        <form role="form" action="/create/ticket_rh" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="form_group my-element">
+                                <label for="ticket_name" class="control-label">Sujet</label>
+                                <input type="text" name="name" id="ticket_name" class="form-control" required="1"
+                                       placeholder="Sujet" />
+                            </div>
+
+
+                            <div class="form_group">
+
+
+                                 <!--<label for="equipe" id="label_equipe" class="control-label">Equipe</label>
+                                <input type="text"  name="equipe" readonly="1" id="equipe" class="form-control"
+                                />-->
+
+                                <!--<label for="user" id="label_user" class="control-label">Assigné à</label>
+                                <input type="text"  name="user" readonly="1" id="user" class="form-control"
+                                />-->
+
+                                <label for="x_studio_civilit_1" id="label_x_studio_civilit_1" class="control-label">Civilité</label>
+                                <select id="x_studio_civilit_1" name="x_studio_civilit_1" class="form-select" required="1">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="mme">
+                                        Mme
+                                    </option>
+                                    <option value="mr">
+                                        Mr
+                                    </option>
+
+
+                                </select>
+
+
+                                <label for="x_studio_nom_2" id="label_x_studio_nom_2" class="control-label">Nom</label>
+                                <input type="text" name="x_studio_nom_2" id="x_studio_nom_2" class="form-control" required="1"
+                                />
+
+                                <!--<label for="x_studio_nom1" id="label_x_studio_nom1" class="control-label">Nom 1</label>
+                                <input type="text" name="x_studio_nom1" id="x_studio_nom1" class="form-control"
+                                />-->
+
+                                <label for="x_studio_prnom" id="label_x_studio_prnom" class="control-label">Prenom</label>
+                                <input type="text"  name="x_studio_prnom" id="x_studio_prnom" class="form-control" required="1"
+                                />
+
+                                <label for="x_studio_date_de_naissance" id="label_x_studio_date_de_naissance" class="control-label">Date de naissance</label>
+                                <input type="date"  name="x_studio_date_de_naissance" value="" id="x_studio_date_de_naissance" class="form-control" required="1"
+                                />
+
+                                <label for="x_studio_date_adresse_1" id="label_x_studio_date_adresse_1" class="control-label">Adresse</label>
+                                <input type="text"  name="x_studio_date_adresse_1" value="" id="x_studio_date_adresse_1" class="form-control" required="1"
+                                />
+
+                                <label for="x_studio_date_de_cration" id="label_x_studio_date_de_cration" class="control-label">Date de création</label>
+                                <input type="date"  name="x_studio_date_de_cration" value="" id="x_studio_date_de_cration" class="form-control" required="1"
+                                />
+                                <br/>
+
+                                <!--<div>
+                                <input type="checkbox" name="x_studio_pc_housse_sourisclavier" readonly="1" id="x_studio_pc_housse_sourisclavier"
+                                />
+                                <label for="x_studio_pc_housse_sourisclavier" id="label_x_studio_pc_housse_sourisclavier" class="control-label">PC + Housse + Souris/Clavier</label>
+                                </div>
+
+                                <div>
+
+                                <input type="checkbox"  name="x_studio_ecran" readonly="1"  id="x_studio_ecran"
+                                />
+                                <label for="x_studio_ecran" id="label_x_studio_ecran" class="control-label">Ecran</label>
+                                </div>
+
+                                <div>
+                                <input type="checkbox"  name="x_studio_ecran_supplmentaire" id="x_studio_ecran_supplmentaire"
+                                />
+                                <label for="x_studio_ecran_supplmentaire" id="label_x_studio_ecran_supplmentaire" class="control-label">Ecran supplémentaire</label>
+
+                                </div>
+                                <br/>-->
+
+                                <!--<label for="x_studio_email_cc" id="label_x_studio_email_cc" class="control-label">Email cc</label>
+                                <input type="text"  name="x_studio_email_cc" id="x_studio_email_cc" class="form-control"
+                                />-->
+
+                                <label for="x_studio_date_darrive" id="label_x_studio_date_darrive" class="control-label">Date arrivé</label>
+                                <input type="date"  name="x_studio_date_darrive" value="" id="x_studio_date_darrive" class="form-control"
+                                />
+
+                                <label for="x_studio_date_de_depart" id="label_x_studio_date_de_depart" class="control-label">Date de départ</label>
+                                <input type="date"  name="x_studio_date_de_depart" value="" id="x_studio_date_de_depart" class="form-control" required="1"
+                                />
+
+                                <label for="x_studio_type_de_recrutement" id="label_x_studio_type_de_recrutement" class="control-label">Type de recrutement</label>
+                                <select id="x_studio_type_de_recrutement" name="x_studio_type_de_recrutement" class="form-select" required="1">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="Création de poste">
+                                        Création de poste
+                                    </option>
+                                    <option value="Changement interne">
+                                        Changement interne
+                                    </option>
+                                    <option value="Remplacement">
+                                        Remplacement
+                                    </option>
+
+
+                                </select>
+
+
+                                <label for="x_studio_type_de_contrat" id="label_x_studio_type_de_contrat" class="control-label">Type de contrat</label>
+                                <select id="x_studio_type_de_contrat" name="x_studio_type_de_contrat" class="form-select" required="1">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="CDD">
+                                        CDD
+                                    </option>
+                                    <option value="CDI" >
+                                        CDI
+                                    </option>
+                                    <option value="Stage/intérim">
+                                        Stage/intérim
+                                    </option>
+                                    <option value="Intérim">
+                                        Intérim
+                                    </option>
+                                    <option value="Saisonnier">
+                                        Saisonnier
+                                    </option>
+                                    <option value="Changement de contrat">
+                                        Changement de contrat
+                                    </option>
+                                    <option value="Contrat d'apprentissage">
+                                        Contrat d'apprentissage
+                                    </option>
+
+
+
+                                </select>
+
+
+                                <label for="x_studio_matricule" id="label_x_studio_matricule" class="control-label">Matricule</label>
+                                <input type="text"  name="x_studio_matricule" id="x_studio_matricule" class="form-control" required="1"
+                                />
+
+                                <label for="x_studio_centre_de_cot" id="label_x_studio_centre_de_cot" class="control-label">Centre de coût</label>
+                                <input type="text"  name="x_studio_centre_de_cot" id="type" class="form-control"
+                                />
+
+                                <label for="x_studio_site_de_rattachement" id="label_x_studio_site_de_rattachement" class="control-label">Site de rattachement</label>
+                                <select id="x_studio_site_de_rattachement" name="x_studio_site_de_rattachement" class="form-select" required="1">
+                                    <option value="">
+                                    </option>
+                                    <option value="Siège"
+                                    >
+                                     Siège
+                                    </option>
+
+                                    <option value="Bourgoin"
+                                    >
+                                     Bourgoin
+                                    </option>
+                                    <option value="Montaingu"
+                                    >
+                                        Montaingu
+                                    </option>
+                                    <option value="Castelnau"
+                                    >
+                                        Castelnau
+                                    </option>
+                                    <option value="Lisses"
+                                    >
+                                        Lisses
+                                    </option>
+                                </select>
+
+                                <label for="x_studio_direction" id="label_x_studio_direction" class="control-label">Direction</label>
+                                <select id="x_studio_direction" name="x_studio_direction" class="form-select" required="1">
+                                    <option value="">
+                                    </option>
+                                    <option value="RH"
+                                    >
+                                     RH
+                                    </option>
+                                    <option value="Logistique"
+                                    >
+                                        Logistique
+                                    </option>
+                                    <option value="Système informatique"
+                                    >
+                                        Système informatique
+                                    </option>
+                                    <option value="Commerce"
+                                    >
+                                        Commerce
+                                    </option>
+                                    <option value="Finance"
+                                    >
+                                        Finance
+                                    </option>
+                                    <option value="Achat &amp; Marketing"
+                                    >
+                                        Achat &amp; Marketing
+                                    </option>
+                                </select>
+
+                                <!--<label for="x_studio_nom_du_n1" id="label_x_studio_nom_du_n1" class="control-label">Nom de N+1</label>
+                                <input type="text"  name="x_studio_nom_du_n1"  id="x_studio_nom_du_n1" class="form-control" required="1"
+                                />-->
+
+                               <!-- <label for="x_studio_adresse_mail_du_n1" id="label_x_studio_adresse_mail_du_n1" class="control-label">Adresse mail de N+1</label>
+                                <input type="text"  name="x_studio_adresse_mail_du_n1" id="x_studio_adresse_mail_du_n1" class="form-control" required="1"
+                                />-->
+
+                                <label for="x_studio_type_de_fontion" id="label_x_studio_type_de_fontion" class="control-label">Type de Fonction</label>
+                                <t t-set="jobs_records" t-value="request.env['hr.job'].search([])"/>
+                                <select id="x_studio_type_de_fontion" name="x_studio_type_de_fontion" class="form-select" required="1">
+                                    <option value="">
+                                    </option>
+                                    <option t-foreach="jobs_records" t-as="job"
+                                    >
+                                        <t t-esc="job.name"/>
+                                    </option>
+                                </select>
+
+
+                            </div>
+
+                            <br/>
+
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-primary pull-left" id="toggle-button" >Soumettre</button>
+                            </div>
+                            <br/>
+                            <br/>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record model="website.page" id="ticket_thanksss">
+        <field name="name">Thanks</field>
+        <field name="type">qweb</field>
+        <field name="url">/ticket-thank-you</field>
+        <field name="website_published">True</field>
+        <field name="key">custom_helpdesk_website.ticket_thanksss</field>
+        <field name="arch" type="xml">
+            <t name="Thanks" t-name="custom_helpdesk_website.ticket_thanksss">
+                <div id="wrap" style="margin-left:500px; margin-top:200px;">
+                    <div class="container">
+                        <h1>Thanks !</h1>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="alert alert-success" role="status">
+                                    Votre demande est bien prise en compte
+                                    vous pouvez la suivre via les notifications email ou dans mon compte => Ticket RH
+
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="clearfix oe_login_buttons">
+                                <button class="btn btn-primary pull-left"><a class="btn btn-primary" href="/ticket_webform_rh">Retourner</a></button>
+                                <!--<a class="btn btn-primary" href="/ticket_webform">Go to My Page</a>-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </field>
+    </record>
+    </data>
+</odoo>

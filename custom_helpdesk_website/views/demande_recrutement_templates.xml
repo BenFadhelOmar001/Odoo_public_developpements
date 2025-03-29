@@ -1,0 +1,1336 @@
+<odoo>
+    <data>
+
+
+    <template id="customize_portal_my_home_menu_helpdesk" name=" Customize Portal layout : helpdesk tickets menu entries" inherit_id="helpdesk.portal_my_home_menu_helpdesk">
+        <xpath expr="//li[@t-if='ticket']" position="replace">
+            <li t-if="ticket" class="breadcrumb-item active">
+                <span t-field="ticket.name"/> (#<span t-field="ticket.id"/>)
+            </li>
+        </xpath>
+
+    </template>
+
+        <template id="demande_recrutement_send_infos_succes" name="Demande recrutement send infos succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+
+               <t t-if="current_user_group == 'rdrh'">
+                        <div align="center" class="container">
+                            <h1>Merci !</h1>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">Votre demande d'informations a été envoyée à la personne concernée.</span></h4>
+
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                
+
+                <t t-if="current_user_group == 'drh'">
+                        <div align="center" class="container">
+                            <h1>Merci !</h1>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: red;">Votre demande d'informations a été envoyée à la personne concernée.</span></h4>
+
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                
+
+            </div>
+
+        </template>
+
+
+        <template  id="portal_helpdesk_ticket_demande_recrutement" name="My Demandes recrutement">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Demandes recrutement</t>
+                </t>
+                <div t-if="not grouped_tickets" class="alert alert-info">
+                    There are currently no Ticket for your account.
+                </div>
+                <t t-else="">
+                    <t t-call="portal.portal_table">
+                        <thead>
+                            <tr>
+                                <th>Ticket</th>
+                                <th class="text-end" t-if="groupby != 'create_date'">Reported on</th>
+                                <th id="ticket_user_header" t-if="groupby != 'user'">Assigned to</th>
+                                <th t-if="groupby != 'stage'" colspan="5" class="text-end">Stage</th>
+                            </tr>
+                        </thead>
+                        <t t-foreach="grouped_tickets" t-as="tickets">
+                            <tbody>
+                                <tr t-if="not groupby =='none'" class="table-light">
+                                    <th t-if="groupby == 'stage'" colspan="5">
+                                        <span t-field="tickets[0].stage_id.name"/>
+                                    </th>
+                                    <th t-if="groupby == 'user'" colspan="5">
+                                        <span t-if="tickets[0].user_id" t-out="tickets[0].user_id.name"/>
+                                        <span t-else="">Unassigned</span>
+                                    </th>
+                                    <th t-if="groupby == 'create_date'" colspan="5">
+                                        <span t-field="tickets[0].create_date"/>
+                                    </th>
+                                </tr>
+                            </tbody>
+                            <t t-foreach="tickets" t-as="ticket">
+                                <tr>
+                                    <td class="text-start"><a t-attf-href="/helpdesk/ticket_demande_recrutement/#{ticket.id}"><small>#</small><t t-out="ticket.id"/><span class="ms-2" t-field="ticket.name"/></a></td>
+                                    <td class="text-end" t-if="groupby != 'create_date'">
+                                        <span t-field="ticket.create_date" t-options='{"widget": "datetime", "hide_seconds": True}'/>
+                                    </td>
+                                    <td id="ticket_user_body" t-if="groupby != 'user'">
+                                        <img t-if="ticket.user_id" class="rounded-circle o_portal_contact_img" t-attf-src="#{image_data_uri(ticket.user_id.sudo().avatar_1024)}" alt="Contact" style="width: 20px; height: 20px;"/>
+                                        <span t-field="ticket.user_id"/>
+                                    </td>
+                                    <td t-if="groupby != 'stage'" class="text-end">
+                                        <span t-attf-class="badge rounded-pill #{'text-bg-info' if ticket.stage_id.fold else 'text-bg-light'}" t-esc="ticket.stage_id.name"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+        <template id="demande_recrutement_saved_succes" name="Demande recrutement saved succes">
+            <t t-call-assets="web.assets_frontend"/>
+
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+
+                <t t-if="current_user_group == 'demandeur'">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h2><span style="color: red;">Attention!!</span></h2>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <h4><span style="color: black;">Dernière étape : si vous avez oublié quelque chose, cliquez sur ‘Retour pour modification’</span></h4>
+                                    <br/>
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="/helpdesk/ticket_demande_recrutement/{{demande_recrutement.id}}">Retour pour modification</a>
+                                    <br/>
+                                    <br/>
+                                    <h4><span style="color: black;">Sinon ‘Confirmer’ la demande</span></h4>
+                                    <br/>
+                                    <form role="form" action="/demande_recrutement/confirm" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        
+                                        <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                        <t t-if="demande_recrutement.stage_id.etape == 'dr_demande'">
+                                            <button type="submit" class="btn btn-success btn-lg"><a>Confirmer</a></button>
+                                        </t>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                <t t-if="current_user_group == 'rrh'">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h2><span style="color: red;">Attention!!</span></h2>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <h4><span style="color: black;">Dernière étape : si vous avez oublié quelque chose, cliquez sur ‘Retour pour modification’</span></h4>
+                                    <br/>
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Retour pour modification</a>
+                                    <br/>
+                                    <br/>
+                                    <t t-if="demande_recrutement.rrh_acceptation not in ('Valide', 'Refuse')">
+
+                                        <h4><span style="color: black;">Sinon cliquer sur le bouton correspondant</span></h4>
+                                        <br/>
+
+                                        <form role="form" action="/demande_recrutement/rrh_acceptation_valide" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-success btn-lg">Confirmer</button>
+                                        </form>
+
+                                        <form role="form" action="/demande_recrutement/rrh_acceptation_refuse" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-danger btn-lg">Refuser</button>
+                                        </form>
+                                    </t>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                <t t-if="current_user_group == 'rdrh'">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h2><span style="color: red;">Attention!!</span></h2>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <h4><span style="color: black;">Dernière étape : si vous avez oublié quelque chose, cliquez sur ‘Retour pour modification’</span></h4>
+                                    <br/>
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Retour pour modification</a>
+                                    <br/>
+                                    <br/>
+                                    <t t-if="demande_recrutement.rdrh_acceptation not in ('Valide', 'Refuse')">
+                                        <h4><span style="color: black;">Sinon cliquer sur le bouton correspondant</span></h4>
+                                        <br/>
+                                        <form role="form" action="/demande_recrutement/rdrh_demande_infos" method="POST" onsubmit="return validateForm()">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-info btn-lg">Demande d'information</button>
+                                            <script type="text/javascript">
+                                                function validateForm() {
+                                                
+                                                var rdrh_comment_complete = "<t t-esc='demande_recrutement.rdrh_comment_complete'/>";
+                                                var from_rdrh_ck_demandeur = "<t t-esc='demande_recrutement.from_rdrh_ck_demandeur'/>";
+                                                var from_rdrh_ck_rrh = "<t t-esc='demande_recrutement.from_rdrh_ck_rrh'/>";
+
+                                                if (rdrh_comment_complete == '') {
+                                                    alert("Remplir le champ  Infos complementaires  .");
+                                                    return false;
+                                                }
+                                           
+
+                                                if (from_rdrh_ck_demandeur == false &amp;&amp; from_rdrh_ck_rrh == false) {
+                                                    alert("Choisir au moins un parmi demandeur ou rrh");
+                                                    return false;
+                                                }
+
+                                                return true;
+                                            }
+
+                                                
+
+                                            </script>
+                                        </form>
+                                        <br/>
+
+                                        <form role="form" action="/demande_recrutement/rdrh_acceptation_valide" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-success btn-lg">Confirmer</button>
+                                        </form>
+
+                                        <form role="form" action="/demande_recrutement/rdrh_acceptation_refuse" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-danger btn-lg">Refuser</button>
+                                        </form>
+                                    </t>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                <t t-if="current_user_group == 'direction'">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h2><span style="color: red;">Attention!!</span></h2>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <h4><span style="color: black;">Dernière étape : si vous avez oublié quelque chose, cliquez sur ‘Retour pour modification’</span></h4>
+                                    <br/>
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Retour pour modification</a>
+                                    <br/>
+                                    <br/>
+                                    <t t-if="demande_recrutement.direction_acceptation not in ('Valide', 'Refuse')">
+
+                                        <h4><span style="color: black;">Sinon cliquer sur le bouton correspondant</span></h4>
+                                        <br/>
+                                    
+                                        <form role="form" action="/demande_recrutement/direction_acceptation_valide" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-success btn-lg">Confirmer</button>
+                                        </form>
+
+                                        <form role="form" action="/demande_recrutement/direction_acceptation_refuse" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-danger btn-lg">Refuser</button>
+                                        </form>
+                                    </t>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                <t t-if="current_user_group == 'drh'">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h2><span style="color: red;">Attention!!</span></h2>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <h4><span style="color: black;">Dernière étape : si vous avez oublié quelque chose, cliquez sur ‘Retour pour modification’</span></h4>
+                                    <br/>
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Retour pour modification</a>
+                                    <br/>
+                                    <br/>
+                                    <t t-if="demande_recrutement.drh_acceptation not in ('Valide', 'Refuse')">
+                                        <h4><span style="color: black;">Sinon cliquer sur le bouton correspondant</span></h4>
+                                        <br/>
+                                        <form role="form" action="/demande_recrutement/drh_demande_infos" method="POST" onsubmit="return validateForm()">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-info btn-lg">Demande d'information</button>
+                                            <script type="text/javascript">
+                                                function validateForm() {
+                                                
+                                                var drh_comment_complete = "<t t-esc='demande_recrutement.drh_comment_complete'/>";
+                                                var from_drh_ck_demandeur = "<t t-esc='demande_recrutement.from_drh_ck_demandeur'/>";
+                                                var from_drh_ck_rrh = "<t t-esc='demande_recrutement.from_drh_ck_rrh'/>";
+
+                                                if (drh_comment_complete == '') {
+                                                    alert("Remplir le champ  Infos complementaires  .");
+                                                    return false;
+                                                }
+                                           
+
+                                                if (from_drh_ck_demandeur == false &amp;&amp; from_drh_ck_rrh == false) {
+                                                    alert("Choisir au moins un parmi demandeur ou rrh");
+                                                    return false;
+                                                }
+
+                                                return true;
+                                            }
+
+                                                
+
+                                            </script>
+                                        </form>
+
+                                        <br/>
+
+                                        <form role="form" action="/demande_recrutement/drh_acceptation_valide" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-success btn-lg">Confirmer</button>
+                                        </form>
+
+                                        <form role="form" action="/demande_recrutement/drh_acceptation_refuse" method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                            <button type="submit" class="btn btn-danger btn-lg">Refuser</button>
+                                        </form>
+                                    </t>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+            </div>
+        
+           
+        
+        </template>
+
+        <template id="demande_recrutement_confirmed_succes" name="Demande recrutement confirmed succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <h2>Merci !</h2>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> est passée au <span t-esc="demande_recrutement.stage_id.name"/>.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="/helpdesk/ticket_demande_recrutement/{{demande_recrutement.id}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+
+        </template>
+
+
+        <template id="demande_recrutement_rrh_acceptation_valide_succes" name="Demande recrutement rrh acceptation valide succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <h2>Merci !</h2>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> est passée au <span t-esc="demande_recrutement.stage_id.name"/>.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_rrh_acceptation_refuse_succes" name="Demande recrutement rrh acceptation refuse succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> a été refusée.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_rdrh_acceptation_valide_succes" name="Demande recrutement rdrh acceptation valide succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <h2>Merci !</h2>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> est passée au <span t-esc="demande_recrutement.stage_id.name"/>.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_rdrh_acceptation_refuse_succes" name="Demande recrutement rdrh acceptation refuse succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> a été refusée.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_direction_acceptation_valide_succes" name="Demande recrutement direction acceptation valide succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <h2>Merci !</h2>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> est passée au <span t-esc="demande_recrutement.stage_id.name"/>.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_direction_acceptation_refuse_succes" name="Demande recrutement direction acceptation refuse succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> a été refusée.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_drh_acceptation_valide_succes" name="Demande recrutement drh acceptation valide succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <h2>Merci !</h2>
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> a été <span t-esc="demande_recrutement.stage_id.name"/>.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        <template id="demande_recrutement_drh_acceptation_refuse_succes" name="Demande recrutement drh acceptation refuse succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+                        <div align="center" class="container">
+                            <!-- <h1>Merci !</h1> -->
+                            <div class="row">
+                                <div>
+                                    <!-- <div class="alert alert-success" role="status"> -->
+                                        <h4><span style="color: black;">La demande de recrutement de <span t-esc="demande_recrutement.partner_id.name"/> a été refusée.</span></h4>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+
+                                    <a class="btn btn-secondary btn-lg" t-attf-href="{{demande_recrutement.demande_recrutement_link}}">Visualiser la demande</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+        </template>
+
+        
+<template id="demande_recrutement_form_new" name="Demande recrutement form new">
+    <t t-set="dr_metier_commerce_ids" t-value="request.env['dr.metier'].sudo().search([('is_commerce', '=', True)]).ids"/>
+    <t t-set="dr_metier_autre_ids" t-value="request.env['dr.metier'].sudo().search([('is_autre', '=', True)]).ids"/>
+        <t t-call="portal.portal_layout">
+                    <br/>
+                    <div id="prest" class="col-12 col-lg justify-content-end">
+
+                        <div id="card" class="card">
+                                <div id="card_header" class="card-header container" data-anchor="true">
+                                    <div class="row gs-0">
+                                        <div class="col-md">
+                                            <h5 class="row mx-1 mb-1 mb-md-0">
+                                                <div class="col-9 text-truncate">
+                                                    
+                                                    <small class="text-muted "></small>
+                                                </div>
+                                                <div class="col-3 text-end">
+                                                    <small class="text-end">Status:</small>
+                                                    <span class=" badge rounded-pill text-bg-info" title="Current stage of this ticket">Nouvelle Demande</span>
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                        <div id="card_body" class="card-body">
+
+                            <div class="form_group">
+
+                                <form id="demande_recrutement_form_create" role="form" action="/demande_recrutement/save" method="POST" enctype="multipart/form-data">
+
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <br/>
+                                    <label for="name" class="control-label"><strong>Sujet</strong></label>
+                                    <input type="text" name="name" class="form-control" t-att-value="sujet" readonly="1"/>
+                                    <br/>
+                                    <label for="demandeur_id" class="control-label" style="display:none"><strong>Demandeur ID</strong></label>
+                                    <input type="hidden" name="demandeur_id" class="form-control" t-att-value="demandeur_id" readonly="1"/>
+                                    <br/>
+
+                                    <div style="overflow: hidden;position:relative">
+                                
+                                        <div style="float:left;width:45%;">
+
+                                            <label for="nom_du_demandeur_a_afficher" class="control-label"><strong>Nom du demandeur</strong></label>
+                                            <input type="text" name="nom_du_demandeur_a_afficher" class="form-control" t-att-value="nom_du_demandeur_a_afficher"  readonly="1"/>
+                                            <br/>
+
+                                            <t t-set="res_partner_records" t-value="request.env['res.partner'].sudo().search([])"/>
+                                            <label for="manager_recrutement">Manager</label>
+                                            <select name="manager_recrutement" id="manager_recrutement" class="form-select" required="required">
+                                                <option value=""></option>
+                                                <t t-foreach="res_partner_records" t-as="record">
+                                                    <option t-att-value="record.id"><t t-esc="record.name"/></option>
+                                                </t>
+
+                                            </select>
+                                            <br/>
+
+                                            <label for="etablissement" class="control-label"><strong>Site de recrutement</strong></label>
+                                            <select id="etablissement" name="etablissement" class="form-select"  onchange="OnChange_etablissement_select(this)" required="required">
+                                                <option value=""></option>
+                                                <option value="MONTAIGU">MONTAIGU</option>
+                                                <option value="LISSES">LISSES</option>
+                                                <option value="PARIS">PARIS</option>
+                                                <option value="GESLOT">GESLOT</option>
+                                                <option value="BOURGOIN">BOURGOIN</option>
+                                                <option value="CASTELNAU">CASTELNAU</option>
+
+                                            </select>
+                                            <br/>
+
+                                            <label for="rrh" class="control-label"><strong>RRH</strong></label>
+                                            <select id="rrh" name="rrh" class="form-select" disabled="disabled">
+                                                <option value=""></option>
+                                                <option value="Juliette FABIEN">Juliette FABIEN</option>
+                                                <option value="Carole LARRAUD">Carole LARRAUD</option>
+                                                <option value="Coralie BERTHET">Coralie BERTHET</option>
+
+                                            </select>
+                                            
+                                            <br/>
+
+                                            <t t-set="dr_direction_records" t-value="request.env['dr.direction'].sudo().search([])"/>
+                                            <label for="direction_a_choisir_id">Direction</label>
+                                            <select name="direction_a_choisir_id" id="direction_a_choisir_id" class="form-select" required="required">
+                                                <option value=""></option>
+                                                <t t-foreach="dr_direction_records" t-as="record">
+                                                    <option t-att-value="record.id"><t t-esc="record.name"/></option>
+                                                </t>
+
+                                            </select>
+                                            <br/>
+
+
+                                            <label for="metier_a_choisir_id" id="label_metier_a_choisir_id">Métier</label>
+                                            <select id="metier_a_choisir_id" name="metier_a_choisir_id" class="form-select" required="required"  onchange="OnChange_metier_a_choisir_id_select(this)">
+                                                <option value=""></option>
+                                                
+                                            </select>
+                                            <br/>
+
+                                            <div id="poste_a_choisir_div">
+                                                <label for="poste_a_choisir" id="label_poste_a_choisir">Poste</label>
+                                                <select id="poste_a_choisir" name="poste_a_choisir" class="form-select" required="required">
+                                                    <option value=""></option>
+                                                    
+                                                </select>
+                                                <br/>
+                                            </div>
+
+                                            <div id="poste_a_choisir_autre_div" style="display:none">
+                                                <label for="poste_a_choisir_autre" id="label_poste_a_choisir_autre" class="control-label"><strong>Poste</strong></label>
+                                                <input type="text" id="poste_a_choisir_autre" name="poste_a_choisir_autre" class="form-control"/>
+                                                <br/>
+                                            </div>
+
+                                            <label for="commentaire_demandeur" id="label_commentaire_demandeur" class="control-label"><strong>Commentaire</strong></label>
+                                            <input type="text" id="commentaire_demandeur" name="commentaire_demandeur" class="form-control"/>
+                                            
+                                        </div>
+
+                                        <div style="float:right;width:45%">
+
+                                            <label for="date_de_creation_a_afficher" class="control-label"><strong>Date de création</strong></label>
+                                            <input type="date" name="date_de_creation_a_afficher" class="form-control" t-att-value="date_de_creation_a_afficher" readonly="1"/>
+                                            
+
+                                            <br/>
+                                            <label for="motif_de_recrutement" class="control-label"><strong>Motif de recrutement</strong></label>
+                                            <select id="motif_de_recrutement" name="motif_de_recrutement" class="form-select" onchange="OnChange_motif_de_recrutement_select(this)" required="required">
+                                                <option value=""></option>
+                                                <option value="Création">Création</option>
+                                                <option value="Remplacement Départ CDI">Remplacement Départ CDI</option>
+                                                <option value="Remplacement Départ CDD">Remplacement Départ CDD</option>
+                                                <option value="Remplacement interimaire">Remplacement interimaire</option>
+                                                <option value="Remplacement CDI AML/AT/etc.">Remplacement CDI AML/AT/etc.</option>
+                                            </select>
+
+                                            <br/>
+                                            <label for="si_remplacement_qui" id="label_si_remplacement_qui" class="control-label"  style="display:none"><strong>Personne remplacée</strong></label>
+                                            <input type="text" name="si_remplacement_qui" id="si_remplacement_qui" class="form-control"  style="display:none"/>
+                                            <br/>
+                                            
+                                            <label for="type_contrat" class="control-label"><strong>Type de contrat souhaité</strong></label>
+                                            <select id="type_contrat" name="type_contrat" class="form-select" onchange="OnChange_type_contrat_select(this)" required="required">
+                                                <option value=""></option>
+                                                <option value="CDI">CDI</option>
+                                                <option value="CDD">CDD</option>
+                                                <option value="Saisonnier">Saisonnier</option>
+                                                <option value="Stage">Stage</option>
+                                                <option value="Alternant">Alternant</option>
+                                            </select>
+                                            <br/>
+
+                                            <label for="date_de_debut_souhaite" id="label_date_de_debut_souhaite" class="control-label" style="display:none"><strong>Date de début souhaitée</strong></label>
+                                            <input type="date" id ="date_de_debut_souhaite" name="date_de_debut_souhaite" class="form-control" style="display:none"/>
+                                            <br/>
+
+                                            <label for="date_de_debut" id="label_date_de_debut" class="control-label" style="display:none"><strong>Date de début</strong></label>
+                                            <input type="date" id ="date_de_debut" name="date_de_debut" class="form-control" style="display:none"/>
+                                            <br/>
+
+                                            <label for="date_de_fin" id="label_date_de_fin" class="control-label" style="display:none"><strong>Date de fin</strong></label>
+                                            <input type="date" data-date-format="YYYY-MM-DD" id ="date_de_fin" name="date_de_fin" class="form-control" style="display:none"/>
+                                            <br/>
+                                            
+                                            <label for="missions_principales" class="control-label"><strong>Missions principales</strong></label>
+                                            <input type="text" name="missions_principales" class="form-control"/>
+
+                                        </div>
+
+                                    </div>
+                                    <br/>
+
+                                    <div id="commercial" style="overflow: hidden;position:relative; display:none">
+                                
+                                        <div style="float:left;width:45%;">
+
+                                            <label for="secteur_geographique" id="label_secteur_geographique" class="control-label"><strong>Secteur géographique</strong></label>
+                                            <input type="text" name="secteur_geographique" id="secteur_geographique" class="form-control"/>
+                                            
+                                            <br/>
+                                            <label for="specificite_clients" id="label_specificite_clients" class="control-label"><strong>Type Clientèle</strong></label>
+                                            <select id="specificite_clients" name="specificite_clients" class="form-select">
+                                                <option value=""></option>
+                                                <option value="Détail">Détail</option>
+                                                <option value="Pétrolier">Pétrolier</option>
+                                                <option value="GMS">GMS</option>
+                                                <option value="Hybride">Hybride</option>
+                                                <option value="Autres">Autres</option>
+                                            </select>
+
+                                            <br/>
+                                            <label for="lieu_habitation_souhaite" id="label_lieu_habitation_souhaite" class="control-label"><strong>Lieu d’habitation souhaité</strong></label>
+                                            <input type="text" name="lieu_habitation_souhaite" id="lieu_habitation_souhaite" class="form-control"/>
+
+                                        </div>
+
+                                        <div style="float:right;width:45%">
+                                            <table class="table" border="0">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th>Actuel</th>
+                                                <th>Visé</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Chiffre d’affaires du secteur</th>
+                                                <td><input type="text" name="chiffre_affaires_du_secteur_actuel" class="form-control"/></td>
+                                                <td><input type="text" name="chiffre_affaires_du_secteur_vise" class="form-control"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Evaluation rémunération annuelle</th>
+                                                <td><input type="text" name="evaluation_remuneration_annuelle_actuel" class="form-control"/></td>
+                                                <td><input type="text" name="evaluation_remuneration_annuelle_vise" class="form-control"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Garantie de salaire</th>
+                                                <td><input type="text" name="garantie_de_salaire_actuel" class="form-control"/></td>
+                                                <td><input type="text" name="garantie_de_salaire_vise" class="form-control"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nombre de clients</th>
+                                                <td><input type="text" name="nombre_de_clients_actuel" class="form-control"/></td>
+                                                <td><input type="text" name="nombre_de_clients_vise" class="form-control"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Panier moyen</th>
+                                                <td><input type="text" name="panier_moyen_actuel" class="form-control"/></td>
+                                                <td><input type="text" name="panier_moyen_vise" class="form-control"/></td>
+                                            </tr>
+                                            
+                                        </table>
+                                        <br/>
+
+                                        <label for="attachment" id="label_piece_jointe" class="control-label"><strong>Pièce jointe</strong></label>
+                                        <input type="file" name="upload_files" multiple="multiple" />
+                                   
+                            
+                                        
+
+                                        </div>
+
+                                    </div>
+                                    <br/>
+                                    
+                                    <div class="clearfix oe_login_buttons" style="margin-left:550px">
+                                        <button type="submit" class="btn btn-primary pull-left btn-lg" id="toggle-button" >Enregistrer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+
+        </t>
+        <!-- begin js code -->
+        <script type="text/javascript">
+
+            document.querySelector("form").addEventListener("submit", function() {
+                document.getElementById("rrh").disabled = false;
+            });
+
+            
+
+            function OnChange_metier_a_choisir_id_select(obj) {
+
+
+                //console.log("enter in onchange from xml");
+                var dr_metier_commerce_ids = <t t-esc="dr_metier_commerce_ids"/>;
+                var dr_metier_autre_ids = <t t-esc="dr_metier_autre_ids"/>;
+
+                var metier_a_choisir_id = document.getElementById("metier_a_choisir_id");
+                var commercial = document.getElementById("commercial");
+
+                var poste_a_choisir = document.getElementById("poste_a_choisir");
+                var poste_a_choisir_div = document.getElementById("poste_a_choisir_div");
+
+                var poste_a_choisir_autre = document.getElementById("poste_a_choisir_autre");
+                var poste_a_choisir_autre_div = document.getElementById("poste_a_choisir_autre_div");
+
+                
+                console.log(metier_a_choisir_id.value);
+                console.log(dr_metier_autre_ids);
+
+                if (dr_metier_commerce_ids.includes(Number(metier_a_choisir_id.value)))
+                    {
+                        //console.log("enter in if cond");
+                        
+                        commercial.style.display = 'block';
+                    }
+                else
+                    {
+                        //console.log("enter in else cond");
+
+                        commercial.style.display = 'none';
+                    } 
+
+
+                if (dr_metier_autre_ids.includes(Number(metier_a_choisir_id.value)))
+                    {
+                        console.log("enter in if cond autre");
+                        
+                        poste_a_choisir_autre_div.style.display = 'block';
+                        poste_a_choisir_autre.setAttribute('required', '');
+
+                        poste_a_choisir_div.style.display = 'none';
+                        poste_a_choisir.removeAttribute('required');
+
+                    }
+                else
+                    {
+                        console.log("enter in else cond autre");
+
+                        poste_a_choisir_autre_div.style.display = 'none';
+                        poste_a_choisir_autre.removeAttribute('required');
+
+                        poste_a_choisir_div.style.display = 'block';
+                        poste_a_choisir.setAttribute('required', '');
+                    } 
+
+                }
+
+
+            function OnChange_etablissement_select(obj) {
+                //console.log("OnChange_etablissement_select")
+                var etablissement = document.getElementById("etablissement");
+                var rrh = document.getElementById("rrh");
+                if (etablissement.value == "MONTAIGU" || etablissement.value == "CASTELNAU")
+                    {
+                        rrh.value= "Juliette FABIEN"
+                    }
+                else if (etablissement.value == "BOURGOIN")
+                    {
+                        rrh.value= "Coralie BERTHET"
+                    }
+                else if (etablissement.value == "GESLOT" || etablissement.value == "PARIS" || etablissement.value == "LISSES")
+                    {
+                        rrh.value= "Carole LARRAUD"
+                    }
+                else
+                    {
+                        rrh.value= false
+                    }
+                }
+
+
+            function OnChange_type_contrat_select(obj) {
+                //console.log("OnChange_type_contrat_select")
+                var type_contrat = document.getElementById("type_contrat");
+
+                var label_date_de_debut_souhaite = document.getElementById("label_date_de_debut_souhaite");
+                var date_de_debut_souhaite = document.getElementById("date_de_debut_souhaite");
+
+                var label_date_de_debut = document.getElementById("label_date_de_debut");
+                var date_de_debut = document.getElementById("date_de_debut");
+
+                var label_date_de_fin = document.getElementById("label_date_de_fin");
+                var date_de_fin = document.getElementById("date_de_fin");
+
+                if (type_contrat.value == "CDI")
+                    {
+                        label_date_de_debut_souhaite.style.display = 'block';
+                        date_de_debut_souhaite.style.display = 'block';
+                        date_de_debut_souhaite.setAttribute('required', '');
+
+                        label_date_de_debut.style.display = 'none';
+                        date_de_debut.style.display = 'none';
+                        date_de_debut.removeAttribute('required');
+
+                        label_date_de_fin.style.display = 'none';
+                        date_de_fin.style.display = 'none';
+                        date_de_fin.removeAttribute('required');
+                    }
+                else if (type_contrat.value == "CDD" || type_contrat.value == "Saisonnier" || type_contrat.value == "Stage" || type_contrat.value == "Alternant")
+                    {
+                        label_date_de_debut.style.display = 'block';
+                        date_de_debut.style.display = 'block';
+                        date_de_debut.setAttribute('required', '');
+
+                        label_date_de_fin.style.display = 'block';
+                        date_de_fin.style.display = 'block';
+                        date_de_fin.setAttribute('required', '');
+                        
+                        label_date_de_debut_souhaite.style.display = 'none';
+                        date_de_debut_souhaite.style.display = 'none';
+                        date_de_debut_souhaite.removeAttribute('required');
+                    }
+                else
+                    {
+                        label_date_de_debut_souhaite.style.display = 'none';
+                        date_de_debut_souhaite.style.display = 'none';
+                        date_de_debut_souhaite.removeAttribute('required');
+
+                        label_date_de_debut.style.display = 'none';
+                        date_de_debut.style.display = 'none';
+                        date_de_debut.removeAttribute('required');
+
+                        label_date_de_fin.style.display = 'none';
+                        date_de_fin.style.display = 'none';
+                        date_de_fin.removeAttribute('required');
+                    }
+                }
+
+
+            function OnChange_motif_de_recrutement_select(obj) {
+
+                var motif_de_recrutement = document.getElementById("motif_de_recrutement");
+                var label_si_remplacement_qui = document.getElementById("label_si_remplacement_qui");
+                var si_remplacement_qui = document.getElementById("si_remplacement_qui");
+
+                if (motif_de_recrutement.value == "Remplacement Départ CDI" || motif_de_recrutement.value == "Remplacement Départ CDD" || motif_de_recrutement.value == "Remplacement interimaire" || motif_de_recrutement.value == "Remplacement CDI AML/AT/etc.")
+                    {
+                        label_si_remplacement_qui.style.display = 'block';
+                        si_remplacement_qui.style.display = 'block';
+                        si_remplacement_qui.setAttribute('required', '');
+                    }
+                else
+                    {
+                        label_si_remplacement_qui.style.display = 'none';
+                        si_remplacement_qui.style.display = 'none';
+                        si_remplacement_qui.removeAttribute('required');
+                    }
+                }
+
+        </script>
+        <!-- end js code -->
+
+    </template>
+
+
+
+</data>
+
+</odoo>

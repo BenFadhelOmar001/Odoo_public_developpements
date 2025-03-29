@@ -1,0 +1,125 @@
+<odoo>
+    <data>
+<template id="prestataire_form" name="prestataire form">
+        <t t-call="portal.portal_layout">
+            
+
+                    <br/><br/><br/><br/>
+
+                    <div id="prest" class="col-12 col-lg justify-content-end">
+
+                        
+
+                        <div id="card" class="card">
+                                <div id="card_header" class="card-header container" data-anchor="true">
+                                    <div class="row gs-0">
+                                        <div class="col-md">
+                                            <h5 class="row mx-1 mb-1 mb-md-0">
+                                                <div class="col-9 text-truncate">
+                                                    <span t-esc="the_ticket.name"/>
+                                                    <small class="text-muted "> (#<span t-esc="the_ticket.id"/>)</small>
+                                                </div>
+                                                <div class="col-3 text-end">
+                                                    <small class="text-end">Status:</small>
+                                                    <span t-esc="the_ticket.stage_id.name" class=" badge rounded-pill text-bg-info" title="Current stage of this ticket"/>
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                        <div id="card_body" class="card-body">
+
+                            <div class="form_group">
+
+                                <form role="form" action="/helpdesk/update_prestataire" method="POST">
+
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="ticket_id" class="form-control" t-att-value="the_ticket.id"/>
+                            
+
+                                    <t t-if="access_for_numero_de_mobile == True">
+
+                                        <label for="numero_de_mobile" class="control-label"><strong>Numéro de mobile</strong></label>
+                                        <input type="text" name="numero_de_mobile" class="form-control" t-att-value="the_ticket.numero_de_mobile"/>
+                                    </t>
+
+                                    <t t-if="access_for_code_sim == True">
+
+                                        <label for="code_sim" class="control-label"><strong>Code SIM</strong></label>
+                                        <input type="text" name="code_sim" class="form-control" t-att-value="the_ticket.code_sim"/>
+                                    </t>
+
+                                    <t t-if="access_for_numero_de_ligne_fixe == True">
+
+                                        <label for="numero_de_ligne_fixe" class="control-label"><strong>Numéro de ligne fixe</strong></label>
+                                        <input type="text" name="numero_de_ligne_fixe" class="form-control" t-att-value="the_ticket.numero_de_ligne_fixe"/>
+                                    </t>
+
+                                    <t t-if="access_for_adresse_mail == True">
+
+                                        <label for="adresse_mail" class="control-label"><strong>Adresse mail</strong></label>
+                                        <input type="text" name="adresse_mail" class="form-control" t-att-value="the_ticket.adresse_mail"/>
+                                    </t>
+
+                                    <t t-if="access_for_mot_de_passe_windows == True">
+
+                                        <label for="mot_de_passe_windows" class="control-label"><strong>Mot de passe windows</strong></label>
+                                        <input type="text" name="mot_de_passe_windows" class="form-control" t-att-value="the_ticket.mot_de_passe_windows"/>
+                                    </t>
+
+                                    <t t-if="access_for_commentaires_prestataires == True">
+
+                                        <label for="commentaires_prestataires" class="control-label"><strong>Commentaires prestataires</strong></label>
+                                        <input type="text" name="commentaires_prestataires" class="form-control" t-att-value="the_ticket.commentaires_prestataires"/>
+                                    </t>
+
+                            
+                                    <br/>
+                                    <div class="clearfix oe_login_buttons" style="margin-left:550px">
+                                        <button type="submit" class="btn btn-primary pull-left btn-lg" id="toggle-button" >Enregistrer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+
+        </t>
+
+    </template>
+
+
+
+
+    <template id="prestataire_succes" name="prestataire succes">
+
+        <div id="wrap" style="margin-top:200px;">
+                    <div align="center" class="container">
+                        <h1>Merci !</h1>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="alert alert-success" role="status">
+                                    Bonjour, les données du ticket numéro <span t-esc="ticket_id"/> sont bien enregistrées
+                                </div>
+                            </div>
+                            <div class="clearfix oe_login_buttons">
+                                <button class="btn btn-primary pull-left"><a class="btn btn-primary" href="/my/home">Retourner</a></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+       
+
+    </template>
+
+
+
+    </data>
+</odoo>

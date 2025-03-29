@@ -1,0 +1,30 @@
+<odoo>
+  <data>
+    <!--<record id="website_menus_form_view_custom" model="ir.ui.view">
+            <field name="name">website.menu.form</field>
+            <field name="model">website.menu</field>
+            <field name="inherit_id" ref="website.website_menus_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='website_id']" position="after">
+                    <field name="visible"/>
+                    <field name="is_visible" readonly="0"/>
+
+                </xpath>
+            </field>
+    </record>-->
+
+    <record id="helpdesk_ticket_form_custom_inheritt" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="custom_helpdesk_add_standard_fields.helpdesk_ticket_form_custom_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_helpdesk_ticket']" position="after">
+                        <button class="oe_stat_button" type="object" name="action_compute_mail" icon="fa-life-ring" string="email to manager"/>
+
+                </xpath>
+            </field>
+    </record>
+
+
+  </data>
+</odoo>

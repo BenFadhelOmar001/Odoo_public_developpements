@@ -1,0 +1,292 @@
+<odoo>
+    <data>
+
+
+        <template id="ticket_rh_saved_succes" name="Ticket rh saved succes">
+            <t t-call-assets="web.assets_frontend"/>
+            <div id="wrap" style="margin-top:200px;">
+                <div align="center" class="container">
+                    <h1>Merci !</h1>
+                    <div class="row">
+                        <div>
+                            <div class="alert alert-success" role="status">
+                                Votre ticket RH numéro <span t-esc="ticket_rh.id"/> a bien été enregistrée.
+                            </div>
+                        </div>
+                        <div class="clearfix oe_login_buttons">
+                            
+                            <a class="btn btn-primary btn-lg" href="/my">Retourner</a>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+
+        
+<template id="ticket_rh_form_new" name="Ticket rh form new">
+        <t t-call="portal.portal_layout">
+                    <br/>
+                    <div id="prest" class="col-12 col-lg justify-content-end">
+
+                        <div id="card" class="card">
+                                <div id="card_header" class="card-header container" data-anchor="true">
+                                    <div class="row gs-0">
+                                        <div class="col-md">
+                                            <h5 class="row mx-1 mb-1 mb-md-0">
+                                                <div class="col-9 text-truncate">
+                                                    
+                                                    <small class="text-muted "></small>
+                                                </div>
+                                                <div class="col-3 text-end">
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                        <div id="card_body" class="card-body">
+
+                            <div class="form_group">
+
+                                <form role="form" action="/ticket_rh/save" method="POST">
+
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <br/>
+
+
+                                    <label for="name" class="control-label"><strong>Sujet</strong></label>
+                                    <input type="text" name="name" placeholder="Par ex. Nouvel arrivant M. Bernard" class="form-control"/>
+                                    <br/>
+                                    
+                                    <div style="overflow: hidden;position:relative">
+                                
+                                        <div style="float:left;width:45%;">
+
+                                            
+
+                                            <label for="x_studio_type_de_recrutement" class="control-label"><strong>Type de recrutement</strong></label>
+                                            <select name="x_studio_type_de_recrutement" class="form-select" id="x_studio_type_de_recrutement"  onchange="OnChange_x_studio_type_de_recrutement_select(this)">
+                                                <option value=""></option>
+                                                <option value="Création de poste">Création de poste</option>
+                                                <option value="Changement interne">Changement interne</option>
+                                                <option value="Remplacement">Remplacement</option>
+                                            </select>
+                                            <br/>
+
+                                            <t t-set="personne_remplace_records" t-value="request.env['res.partner'].sudo().search([])"/>
+                                            <label for="personne_remplace" id="label_personne_remplace" style="display:none">Personne Remplacée</label>
+                                            <select name="personne_remplace" id="personne_remplace" class="form-select" style="display:none">
+                                                <option value=""></option>
+                                                <t t-foreach="personne_remplace_records" t-as="record">
+                                                    <option t-att-value="record.id"><t t-esc="record.name"/></option>
+                                                </t>
+
+                                            </select>
+                                            <br/>
+
+                                            <label for="x_studio_type_de_contrat" class="control-label"><strong>Type de contrat</strong></label>
+                                            <select name="x_studio_type_de_contrat" class="form-select" id="x_studio_type_de_contrat" onchange="OnChange_x_studio_type_de_contrat_select(this)">
+                                                <option value=""></option>
+                                                <option value="CDI">CDI</option>
+                                                <option value="CDD">CDD</option>
+                                                <option value="Stage">Stage</option>
+                                                <option value="Intérim">Intérim</option>
+                                                <option value="Saisonnier">Saisonnier</option>
+                                                <option value="Changement de contrat">Changement de contrat</option>
+                                                <option value="Contrat d'apprentissage">Contrat d'apprentissage</option>
+                                            </select>
+                                            <br/>
+
+                                            <label for="x_studio_matricule" class="control-label"><strong>Matricule</strong></label>
+                                            <input type="text" name="x_studio_matricule" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_centre_de_cot" class="control-label"><strong>Centre de coût</strong></label>
+                                            <input type="text" name="x_studio_centre_de_cot" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_site_de_rattachement" class="control-label"><strong>Site de rattachement</strong></label>
+                                            <select name="x_studio_site_de_rattachement" class="form-select">
+                                                <option value=""></option>
+                                                <option value="Paris">Paris</option>
+                                                <option value="Bourgoin">Bourgoin</option>
+                                                <option value="Montaigu">Montaigu</option>
+                                                <option value="Castelnau">Castelnau</option>
+                                                <option value="geslot">geslot</option>
+                                                <option value="Lisses">Lisses</option>
+                                            </select>
+                                            <br/>
+
+                                            <label for="x_studio_direction" class="control-label"><strong>Direction</strong></label>
+                                            <select name="x_studio_direction" class="form-select">
+                                                <option value=""></option>
+                                                <option value="RH">RH</option>
+                                                <option value="Logistique">Logistique</option>
+                                                <option value="Informatique">Informatique</option>
+                                                <option value="Commerce">Commerce</option>
+                                                <option value="Finance">Finance</option>
+                                                <option value="Achat &amp; Marketing">Achat &amp; Marketing</option>
+                                            </select>
+                                            <br/>
+
+                                            <t t-set="hr_job_records" t-value="request.env['hr.job'].sudo().search([])"/>
+                                            <label for="x_studio_type_de_fontion" id="label_poste_a_choisir">Type de foncion</label>
+                                            <select name="x_studio_type_de_fontion" class="form-select">
+                                                <option value=""></option>
+                                                <t t-foreach="hr_job_records" t-as="record">
+                                                    <option t-att-value="record.id"><t t-esc="record.name"/></option>
+                                                </t>
+
+                                            </select>
+                                            <br/>
+
+                                        </div>
+
+                                        <div style="float:right;width:45%">
+
+
+                                            <t t-set="res_partner_records" t-value="request.env['res.partner'].sudo().search([])"/>
+                                            <label for="partner_id">Manager</label>
+                                            <select name="partner_id" id="partner_id" class="form-select">
+                                                <option value=""></option>
+                                                <t t-foreach="res_partner_records" t-as="record">
+                                                    <option t-att-value="record.id" t-att-data-email="record.email"><t t-esc="record.name"/></option>
+                                                </t>
+
+                                            </select>
+                                            <br/>
+
+                                            <label for="partner_email" class="control-label"><strong>Email</strong></label>
+                                            <input type="text" name="partner_email" id="partner_email" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_civilit_1" class="control-label"><strong>Civilité</strong></label>
+                                            <select name="x_studio_civilit_1" class="form-select">
+                                                <option value=""></option>
+                                                <option value="mme">Mme</option>
+                                                <option value="mr">Mr</option>
+                                            </select>
+                                            <br/>
+
+                                            <label for="x_studio_nom_2" class="control-label"><strong>Nom</strong></label>
+                                            <input type="text" name="x_studio_nom_2" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_prnom" class="control-label"><strong>Prénom</strong></label>
+                                            <input type="text" name="x_studio_prnom" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_date_de_naissance" class="control-label"><strong>Date de naissance</strong></label>
+                                            <input type="date" name="x_studio_date_de_naissance" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_date_adresse_1" class="control-label"><strong>Adresse</strong></label>
+                                            <input type="text" name="x_studio_date_adresse_1" class="form-control"/>
+                                            <br/>
+
+                                            <label for="num_professionnel" class="control-label"><strong>Numéro professionnel</strong></label>
+                                            <input type="text" name="num_professionnel" class="form-control"/>
+                                            <br/>
+                                            
+                                            <label for="x_studio_date_de_cration" class="control-label"><strong>Date de création</strong></label>
+                                            <input type="date" name="x_studio_date_de_cration" class="form-control" t-att-value="current_date"/>
+                                            <br/>
+
+                                            <label for="x_studio_date_darrive" class="control-label"><strong>Date d'arrivée</strong></label>
+                                            <input type="date" name="x_studio_date_darrive" class="form-control"/>
+                                            <br/>
+
+                                            <label for="x_studio_date_de_depart" class="control-label" id="label_x_studio_date_de_depart"><strong>Date de départ</strong></label>
+                                            <input type="date" name="x_studio_date_de_depart" class="form-control" id="x_studio_date_de_depart"/>
+                                            <br/>
+                                            
+
+                                        </div>
+
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    
+                                    <div class="clearfix oe_login_buttons" style="margin-left:550px">
+                                        <button type="submit" class="btn btn-primary pull-left btn-lg" id="toggle-button" >Enregistrer</button>
+                                    </div>
+                                </form>
+                                <!-- script -->
+                                    <script type="text/javascript">
+                                        document.getElementById('partner_id').addEventListener('change', function() {
+                                            var selectedOption = this.options[this.selectedIndex];
+                                            var email = selectedOption.getAttribute('data-email');
+                                            
+                                            document.getElementById('partner_email').value = email;
+                                        });
+
+
+                                        function OnChange_x_studio_type_de_recrutement_select(obj) {
+                                            //console.log("OnChange_x_studio_type_de_recrutement_select")
+                                            var x_studio_type_de_recrutement = document.getElementById("x_studio_type_de_recrutement");
+
+
+                                            var label_personne_remplace = document.getElementById("label_personne_remplace");
+                                            var personne_remplace = document.getElementById("personne_remplace");
+
+                                            if (x_studio_type_de_recrutement.value == "Remplacement")
+                                                {
+
+
+                                                    label_personne_remplace.style.display = 'block';
+                                                    personne_remplace.style.display = 'block';
+                                                }
+                                          
+                                            else
+                                                {
+
+                                                    label_personne_remplace.style.display = 'none';
+                                                    personne_remplace.style.display = 'none';
+                                                }
+                                            }
+
+
+                                        function OnChange_x_studio_type_de_contrat_select(obj) {
+                                            //console.log("OnChange_x_studio_type_de_contrat_select")
+                                            var x_studio_type_de_contrat = document.getElementById("x_studio_type_de_contrat");
+
+
+                                            var label_x_studio_date_de_depart = document.getElementById("label_x_studio_date_de_depart");
+                                            var x_studio_date_de_depart = document.getElementById("x_studio_date_de_depart");
+
+                                            if (x_studio_type_de_contrat.value == "CDI")
+                                                {
+
+                                                    label_x_studio_date_de_depart.style.display = 'none';
+                                                    x_studio_date_de_depart.style.display = 'none';
+                                                }
+                                          
+                                            else
+                                                {
+
+                                                    label_x_studio_date_de_depart.style.display = 'block';
+                                                    x_studio_date_de_depart.style.display = 'block';
+                                                }
+                                            }
+                                    </script>
+
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+
+        </t>
+    </template>
+
+
+
+</data>
+
+</odoo>

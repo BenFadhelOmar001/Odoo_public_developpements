@@ -1,0 +1,147 @@
+<odoo>
+    <data>
+
+
+ 
+
+        <template id="demande_recrutement_form_access" name="Demande recrutement form access">
+            <t t-call-assets="web.assets_frontend"/>
+            <style>
+                .btn-primary {
+                    background-color: #0d6efd !important;
+                    border-color: #0d6efd !important;
+                }
+
+                .btn-secondary {
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+
+                .btn-success {
+                    background-color: #198754 !important;
+                    border-color: #198754 !important;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545 !important;
+                    border-color: #dc3545 !important;
+                }
+
+                .btn-info {
+                    background-color: #0dcaf0!important;
+                    border-color: #0dcaf0 !important;
+                }
+
+            </style>
+
+            <style>
+              .fixed-size-button {
+                width: 170px; /* Set the desired width */
+                height: 50px; /* Set the desired height */
+              }
+            </style>
+
+            <div id="wrap" style="margin-top:50px;">
+
+                <div align="center" class="container">
+                    <h3>Accès au formulaire en tant que :</h3>
+                        <div class="row">
+                            <div class="clearfix oe_login_buttons">
+
+
+                                    <t t-foreach="access_list" t-as="group">
+
+                                        <!-- <t t-if="group == 'demandeur'">
+
+                                            <form role="form" action="/demande_recrutement/form_access_as" method="POST">
+                                                
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                                <input type="hidden" name="group" value="demandeur"/>
+                                                
+                                                <button type="submit" class="btn btn-info btn-lg fixed-size-button"><a>Demandeur</a></button>
+                                                
+                                            </form>
+
+                                        </t> -->
+
+                                        <t t-if="group == 'rrh'">
+
+                                            <form role="form" action="/demande_recrutement/form_access_as" method="POST">
+                                                
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                                <input type="hidden" name="group" value="rrh"/>
+                                                
+                                                <button type="submit" class="btn btn-info btn-lg fixed-size-button"><a>RRH</a></button>
+                                                
+                                            </form>
+
+                                        </t>
+
+                                        <t t-if="group == 'rdrh'">
+
+                                            <form role="form" action="/demande_recrutement/form_access_as" method="POST">
+                                                
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                                <input type="hidden" name="group" value="rdrh"/>
+                                                
+                                                <button type="submit" class="btn btn-info btn-lg fixed-size-button"><a>RDRH</a></button>
+                                                
+                                            </form>
+
+                                        </t>
+
+                                        <t t-if="group == 'direction'">
+
+                                            <form role="form" action="/demande_recrutement/form_access_as" method="POST">
+                                                
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                                <input type="hidden" name="group" value="direction"/>
+                                                
+                                                <button type="submit" class="btn btn-info btn-lg fixed-size-button"><a>Direction</a></button>
+                                                
+                                            </form>
+
+                                        </t>
+
+                                        <t t-if="group == 'drh'">
+
+                                            <form role="form" action="/demande_recrutement/form_access_as" method="POST">
+                                                
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="demande_recrutement_id" t-att-value="demande_recrutement.id"/>
+                                                <input type="hidden" name="group" value="drh"/>
+                                                
+                                                <button type="submit" class="btn btn-info btn-lg fixed-size-button"><a>DRH</a></button>
+                                                
+                                            </form>
+
+                                        </t>
+
+
+                                    
+                                    </t>
+
+                                    <!-- <br/>
+                                    <a class="btn btn-secondary btn-lg" href="/my/home">Retourner</a> -->
+
+
+                            </div>
+                        </div>
+                </div>
+               
+
+            </div>
+
+        </template>
+
+
+        
+
+
+</data>
+
+</odoo>

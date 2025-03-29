@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record model="website.menu"  id="menu_form_it">
+        <field name="name">Support IT</field>
+        <field name="url">/ticket_webform</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">55</field>
+    </record>
+
+    <template id="create_ticket" name="Create Ticket">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container">
+                        <img src="/custom_helpdesk_website/static/img/logo.jpg" style="height:300px; width:1290px;"/>
+                        <br/>
+                        <br/>
+                        <form role="form" action="/create/ticket" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+
+
+                            <div class="form_group">
+                                <!-- <t t-set="records" t-value="request.env['hr.employee'].search([])"/>
+                                 <t t-foreach="records" t-as="record">
+                                     <p>
+                                         <t t-esc="record.name"/>
+                                     </p>
+                                     <p>
+                                         <t t-esc="record.description"/>
+                                     </p>
+                                 </t>-->
+                                <!--<t t-set="employees_records" t-value="request.env['hr.employee'].search([])"/>
+                                <label for="employee_id">Employé</label>
+                                <select id="employee_id" name="employee_id" class="form-select" required="1">
+                                    <option value="">
+                                    </option>
+                                    <option t-foreach="employees_records" t-as="employee"
+                                    >
+                                        <t t-esc="employee.name"/>
+                                    </option>
+                                </select>-->
+
+
+                                <label for="site_rattachment">Site Rattachment</label>
+                                <select id="site_rattachment" name="site_rattachment" class="form-select" required="1">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="lisses">
+                                        Lisses
+                                    </option>
+                                    <option value="paris">
+                                        Paris
+                                    </option>
+                                    <option value="montaigu">
+                                        Montaigu
+                                    </option>
+                                    <option value="bourgoin">
+                                        Bourgoin
+                                    </option>
+                                    <option value="castelnau">
+                                        Castelnau
+                                    </option>
+                                </select>
+
+
+                                <label for="partner_phone" class="control-label">Numéro Téléphone</label>
+                                <input type="text" name="partner_phone" t-att-value="partner_phone" id="num_tel" required="1"
+                                       class="form-control" placeholder="Numéro Téléphone"/>
+
+                                <label for="mail" class="control-label">Adresse email</label>
+                                <input type="text" name="partner_email" t-att-value="partner_email" id="mail" required="1"
+                                       class="form-control" placeholder="Adresse email"/>
+
+
+                                <label for="question_concerne">Question concerne</label>
+                                <select id="question_concerne" name="question" class="form-select" required="1">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="materiel">
+                                        Materiel
+                                    </option>
+                                    <option value="logiciel">
+                                        Logiciel
+                                    </option>
+                                    <option value="master_data">
+                                        Master data
+                                    </option>
+
+                                </select>
+
+
+                                <label for="materiel" id="label_question_materiel" style="display:none">Le matériel est</label>
+                                <select id="materiel" name="materiel" class="form-select" style="display:none">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="pc">
+                                        PC
+                                    </option>
+                                    <option value="smartphone">
+                                        Smartphone
+                                    </option>
+                                    <option value="ipad">
+                                        Ipad
+                                    </option>
+                                    <option value="imprimante">
+                                        Imprimante
+                                    </option>
+                                    <option value="reseau_sasety">
+                                        Réseau sasety
+                                    </option>
+                                    <option value="flasheuse">
+                                        Flasheuse
+                                    </option>
+                                    <option value="voice_picking">
+                                        Appareil Voice Picking
+                                    </option>
+                                    <option value="wap_logistique">
+                                        Wap logistique
+                                    </option>
+                                    <option value="autres">
+                                        Autres
+                                    </option>
+
+                                </select>
+
+                                <label for="num_imprimante" id="label_num_imprimante" style="display:none" class="control-label">Numéro imprimante</label>
+                                <input type="text" name="num_imprimante" style="display:none" t-att-value="num_imprimante" id="num_imprimante" class="form-control"
+                                       placeholder="Numéro imprimante" />
+
+
+
+                                <label for="nouveau_materiel" id="label_nouveau_materiel" style="display:none">Demande nouveau matèriel</label>
+                                <select id="nouveau_materiel" style="display:none" name="nouveau_materiel" class="form-select">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="oui">
+                                        Oui
+                                    </option>
+                                    <option value="non" selected="selected">
+                                        Non
+                                    </option>
+
+
+                                </select>
+
+
+                            </div>
+                            <label for="responsable_hierarchique" id="label_responsable_hierarchique" class="control-label" style="display:none">Responsable hiérarchique</label>
+                            <input type="text" name="responsable_hierarchique" t-att-value="responsable_hierarchique" style="display:none"
+                                   id="responsable_hierarchique" class="form-control" placeholder="Responsable"/>
+
+
+
+
+
+
+
+                            <label for="type_materiel" id="label_type_materiel" style="display:none">Type de matèriel</label>
+                            <div style="margin-left:150px;">
+                                <fieldset id="type_materiel" style="display:none">
+
+                                    <div>
+
+                                        <input type="checkbox" id="pc" name="pc"/>
+                                        <label for="pc">PC</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="smartphone" name="smartphone"/>
+                                        <label for="smartphone">Smartphone</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="ipad" name="ipad"/>
+                                        <label for="ipad">Ipad</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="ecran" name="ecran"/>
+                                        <label for="smartphone">Ecran</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="imprimante" name="imprimante"/>
+                                        <label for="smartphone">Imprimante</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="hub" name="hub"/>
+                                        <label for="hub">Hub(Station)</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="cable" name="cable"/>
+                                        <label for="cable">Câble</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="autres" name="autres"/>
+                                        <label for="autres">Autres</label>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+
+
+
+
+                            <label for="logiciel" id="label_logiciel" style="display:none">Logiciel</label>
+                                <select id="logiciel"  style="display:none" name="logiciel" class="form-select">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="sap">
+                                        SAP
+                                    </option>
+                                    <option value="nomad">
+                                        Nomad
+                                    </option>
+                                    <option value="office">
+                                        Office (teams, outlook)
+                                    </option>
+                                     <option value="edi">
+                                        EDI
+                                    </option>
+
+                                    <option value="start">
+                                        Start
+                                    </option>
+                                    <option value="argu">
+                                        L argu au bout des doigts
+                                    </option>
+                                    <option value="ecommerce">
+                                        Site E-commerce
+                                    </option>
+                                    <option value="cleemy">
+                                        Cleemy/Timmy
+                                    </option>
+                                    <option value="note_frais">
+                                        Note de frais/Congés
+                                    </option>
+                                    <option value="kyriba">
+                                        kyriba
+                                    </option>
+                                    <option value="wechek">
+                                        Wechek
+                                    </option>
+                                    <option value="vim">
+                                        VIM
+                                    </option>
+
+                                </select>
+
+                            <label for="num_transaction" id="label_num_transaction" style="display:none" class="control-label">Numéro transaction</label>
+                                <input type="text" name="num_transaction" style="display:none" t-att-value="num_transaction" id="num_transaction" class="form-control"
+                                       placeholder="Numéro transaction" />
+
+                                <!--<label for="sujet" id="label_sujet" style="display:none" class="control-label">Sujet</label>
+                                <input type="text" style="display:none" name="sujet" t-att-value="sujet" id="sujet" class="form-control"
+                                       placeholder="Sujet" />-->
+
+                           <label for="seul_impacte" id="label_seul_impacte" style="display:none">Est le seul impacté ?</label>
+                                <select id="seul_impacte" style="display:none" name="seul_impacte" class="form-select">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="oui">
+                                        Oui
+                                    </option>
+                                    <option value="non">
+                                        Non
+                                    </option>
+
+
+                                </select>
+
+
+                            <label for="travaille" id="label_travaille" style="display:none">Pouvez vous continuer à travailler ?</label>
+                                <select id="travaille" style="display:none" name="travaille" class="form-select">
+                                    <option value="" >
+
+                                    </option>
+                                    <option value="oui" >
+                                        Oui
+                                    </option>
+                                    <option value="non" >
+                                        Non
+                                    </option>
+
+
+                                </select>
+
+
+
+
+
+
+
+                            <label for="type_master_data" id="label_type_master_data" style="display:none">Type</label>
+                                <select id="type_master_data" style="display:none" name="type_master_data" class="form-select">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="creation">
+                                        Création
+                                    </option>
+                                    <option value="modification" >
+                                        Modification
+                                    </option>
+                                    <option value="erreur" >
+                                        Erreur
+                                    </option>
+
+
+                                </select>
+
+                            <div class="form_group my-element">
+                                <label for="ticket_name" class="control-label">Sujet</label>
+                                <input type="text" name="name" t-att-value="name" id="ticket_name" class="form-control" required="1"
+                                       placeholder="Sujet" />
+                            </div>
+
+                            <label for="comment" id="label_comment" class="control-label" style="display:none">Commentaire</label>
+                            <input type="textarea" name="comment" t-att-value="comment" id="comment" style="display:none"
+                                   class="form-control"/>
+                            <label for="piece" id="label_piece" class="control-label" style="display:none">Document</label>
+                            <input type="file" style="display:none" name="piece" t-att-value="piece" id="piece" class="form-control"/>
+
+
+                            <!--<label for="sujet_master_data" id="label_sujet_master_data" style="display:none" class="control-label">Sujet</label>
+                                <input type="text" name="sujet_master_data" style="display:none" t-att-value="sujet_master_data" id="sujet_master_data" class="form-control"
+                                       placeholder="Sujet" />-->
+
+                            <label for="comment_master_data" id="label_comment_master_data" style="display:none" class="control-label">Commentaire</label>
+                            <input type="textarea" style="display:none" name="comment_master_data" t-att-value="comment_master_data" id="comment_master_data"
+                                   class="form-control"/>
+
+
+                            <label for="piece_master_data" id="label_piece_master_data" style="display:none" class="control-label">Document</label>
+                            <input type="file" style="display:none" name="piece_master_data" id="piece_master_data" class="form-control"/>
+
+                            <label for="seul_impacte_master_data" id="label_seul_impacte_master_data" style="display:none">Est le seul impacté</label>
+                                <select id="seul_impacte_master_data" style="display:none" name="seul_impacte_master_data" class="form-select">
+                                    <option value="">
+
+                                    </option>
+                                    <option value="oui">
+                                        Oui
+                                    </option>
+                                    <option value="non" >
+                                        Non
+                                    </option>
+
+                                </select>
+                            <br/>
+
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-primary pull-left" id="toggle-button" >Soumettre</button>
+                            </div>
+                            <br/>
+                            <br/>
+
+                            <script type="text/javascript">
+
+
+        var question_concerne = document.getElementById('question_concerne');
+        var type_master_data = document.getElementById('type_master_data');
+
+
+
+        var label_seul_impacte_master_data = document.getElementById('label_seul_impacte_master_data');
+        var seul_impacte_master_data = document.getElementById('seul_impacte_master_data');
+
+
+
+       // type_master_data.addEventListener('change', function() {
+
+
+            //if (question_concerne.value === 'master_data' &amp;&amp; type_master_data.value === 'erreur') {
+            //label_seul_impacte_master_data.style.display = 'block';  // Make field2 visible
+            //seul_impacte_master_data.setAttribute('required', '');
+            //seul_impacte_master_data.style.display = 'block';
+
+
+            //comment_master_data.style.display = 'none';   // Hide field2
+            //label_comment_master_data.style.display = 'none';   // Hide field2
+            //comment_master_data.removeAttribute('required');
+
+            //label_piece_master_data.style.display = 'none';   // Hide field2
+            //piece_master_data.style.display = 'none';   // Hide field2
+            //piece_master_data.removeAttribute('required');
+            //}
+              //  else {
+            //label_seul_impacte_master_data.style.display = 'none';   // Hide field2
+            //seul_impacte_master_data.style.display = 'none';   // Hide field2
+            //seul_impacte_master_data.removeAttribute('required');
+
+
+
+            //comment_master_data.style.display = 'block';   // Hide field2
+            //label_comment_master_data.style.display = 'block';   // Hide field2
+            //comment_master_data.setAttribute('required', '');
+
+            //label_piece_master_data.style.display = 'block';   // Hide field2
+            //piece_master_data.style.display = 'block';   // Hide field2
+            //piece_master_data.setAttribute('required', '');
+
+              //          }
+
+
+
+        //});
+
+
+
+
+    </script>
+
+                            <script type="text/javascript">
+
+
+        var question_concerne = document.getElementById('question_concerne');
+        var label_type_master_data = document.getElementById('label_type_master_data');
+        var type_master_data = document.getElementById('type_master_data');
+
+
+
+        var label_comment_master_data = document.getElementById('label_comment_master_data');
+        var comment_master_data = document.getElementById('comment_master_data');
+
+        var label_piece_master_data = document.getElementById('label_piece_master_data');
+        var piece_master_data = document.getElementById('piece_master_data');
+
+        var label_seul_impacte_master_data = document.getElementById('label_seul_impacte_master_data');
+        var seul_impacte_master_data = document.getElementById('seul_impacte_master_data');
+
+
+
+        question_concerne.addEventListener('change', function() {
+          if (question_concerne.value === 'master_data') {
+
+            label_type_master_data.style.display = 'block';  // Make field2 visible
+            type_master_data.style.display = 'block';  // Make field2 visible
+            type_master_data.setAttribute('required', '');
+
+
+
+            label_comment_master_data.style.display = 'block';  // Make field2 visible
+            comment_master_data.style.display = 'block';  // Make field2 visible
+            comment_master_data.setAttribute('required', '');
+
+            label_piece_master_data.style.display = 'block';  // Make field2 visible
+            piece_master_data.style.display = 'block';  // Make field2 visible
+            piece_master_data.setAttribute('required', '');
+
+            //if (type_master_data.value === 'erreur') {
+            //label_seul_impacte_master_data.style.display = 'block';  // Make field2 visible
+            //seul_impacte_master_data.setAttribute('required', '');
+            //seul_impacte_master_data.style.display = 'block';
+           // }
+             //   else {
+            //label_seul_impacte_master_data.style.display = 'none';   // Hide field2
+            //seul_impacte_master_data.style.display = 'none';   // Hide field2
+            //seul_impacte_master_data.removeAttribute('required');
+              //          }
+
+
+
+
+          } else {
+            label_type_master_data.style.display = 'none';   // Hide field2
+            type_master_data.style.display = 'none';   // Hide field2
+            type_master_data.removeAttribute('required');
+
+
+
+            comment_master_data.style.display = 'none';   // Hide field2
+            label_comment_master_data.style.display = 'none';   // Hide field2
+            comment_master_data.removeAttribute('required');
+
+            label_piece_master_data.style.display = 'none';   // Hide field2
+            piece_master_data.style.display = 'none';   // Hide field2
+            piece_master_data.removeAttribute('required');
+
+            label_seul_impacte_master_data.style.display = 'none';   // Hide field2
+            seul_impacte_master_data.style.display = 'none';   // Hide field2
+            seul_impacte_master_data.removeAttribute('required');
+
+
+
+
+          }
+
+
+
+        });
+
+
+
+
+    </script>
+
+                            <script type="text/javascript">
+
+
+        var question_concerne = document.getElementById('question_concerne');
+        var label_logiciel = document.getElementById('label_logiciel');
+        var logiciel = document.getElementById('logiciel');
+        var label_seul_impacte = document.getElementById('label_seul_impacte');
+        var seul_impacte = document.getElementById('seul_impacte');
+        var label_travaille = document.getElementById('label_travaille');
+        var travaille = document.getElementById('travaille');
+
+        var label_num_transaction = document.getElementById('label_num_transaction');
+        var num_transaction = document.getElementById('num_transaction');
+
+
+
+        question_concerne.addEventListener('change', function() {
+          if (question_concerne.value === 'logiciel') {
+            console.log("ommmaaarrr"+question_concerne.value)
+            logiciel.style.display = 'block';  // Make field2 visible
+            label_logiciel.style.display = 'block';  // Make field2 visible
+            logiciel.setAttribute('required', '');
+            label_seul_impacte.style.display = 'block';  // Make field2 visible
+            seul_impacte.style.display = 'block';  // Make field2 visible
+            label_travaille.style.display = 'block';  // Make field2 visible
+            travaille.style.display = 'block';  // Make field2 visible
+
+
+            if (logiciel.value === 'sap') {
+            label_num_transaction.style.display = 'block';
+            num_transaction.style.display = 'block';
+            num_transaction.setAttribute('required', '');
+
+
+
+          } else {
+            label_num_transaction.style.display = 'none';
+            num_transaction.style.display = 'none';
+            num_transaction.removeAttribute('required');
+          }
+
+
+
+
+          } else {
+            label_logiciel.style.display = 'none';   // Hide field2
+            logiciel.style.display = 'none';   // Hide field2
+            logiciel.removeAttribute('required');
+            label_seul_impacte.style.display = 'none';   // Hide field2
+            seul_impacte.style.display = 'none';   // Hide field2
+            label_travaille.style.display = 'none';   // Hide field2
+            travaille.style.display = 'none';   // Hide field2
+
+            label_num_transaction.style.display = 'none';
+            num_transaction.style.display = 'none';
+            num_transaction.removeAttribute('required');
+          }
+
+
+
+        });
+
+
+
+
+    </script>
+                            <script type="text/javascript">
+                var question_concerne = document.getElementById('question_concerne');
+                var label_num_transaction = document.getElementById('label_num_transaction');
+                var num_transaction = document.getElementById('num_transaction');
+                var logiciel = document.getElementById('logiciel');
+
+
+                logiciel.addEventListener('change', function() {
+          if (question_concerne.value === 'logiciel' &amp;&amp; logiciel.value === 'sap') {
+            label_num_transaction.style.display = 'block';
+            num_transaction.style.display = 'block';
+            num_transaction.setAttribute('required', '');
+
+
+
+          } else {
+            label_num_transaction.style.display = 'none';
+            num_transaction.style.display = 'none';
+            num_transaction.removeAttribute('required');
+          }
+
+
+
+        });
+
+    </script>
+
+            <script type="text/javascript">
+                var question_concerne = document.getElementById('question_concerne');
+                var label_num_imprimante = document.getElementById('label_num_imprimante');
+                var num_imprimante = document.getElementById('num_imprimante');
+                var materiel = document.getElementById('materiel');
+
+
+                materiel.addEventListener('change', function() {
+          if (question_concerne.value === 'materiel' &amp;&amp; materiel.value === 'imprimante') {
+            label_num_imprimante.style.display = 'block';
+            num_imprimante.style.display = 'block';
+            num_imprimante.setAttribute('required', '');
+
+
+
+          } else {
+            label_num_imprimante.style.display = 'none';
+            num_imprimante.style.display = 'none';
+            num_imprimante.removeAttribute('required');
+          }
+
+
+
+        });
+
+    </script>
+                    <script type="text/javascript">
+                var question_concerne = document.getElementById('question_concerne');
+
+                var label_comment = document.getElementById('label_comment');
+                var comment = document.getElementById('comment');
+
+
+                question_concerne.addEventListener('change', function() {
+          if (question_concerne.value === 'master_data' ) {
+
+            label_comment.style.display = 'none';  // Make field2 visible
+            comment.style.display = 'none';
+            comment.removeAttribute('required');
+
+
+
+
+          } else {
+
+            label_comment.style.display = 'block';  // Make field2 visible
+            comment.style.display = 'block';
+            comment.setAttribute('required', '');
+
+          }
+
+
+
+        });
+
+    </script>
+
+
+                            <script type="text/javascript">
+                var question_concerne = document.getElementById('question_concerne');
+                var label_responsable_hierarchique = document.getElementById('label_responsable_hierarchique');
+                var responsable_hierarchique = document.getElementById('responsable_hierarchique');
+                var label_comment = document.getElementById('label_comment');
+                var comment = document.getElementById('comment');
+                var label_type_materiel = document.getElementById('label_type_materiel');
+                var type_materiel = document.getElementById('type_materiel');
+                var label_piece = document.getElementById('label_piece');
+                var piece = document.getElementById('piece');
+                var nouveau_materiel = document.getElementById('nouveau_materiel');
+                console.log("********question_concerne "+nouveau_materiel)
+
+                nouveau_materiel.addEventListener('change', function() {
+          if (question_concerne.value === 'materiel' &amp;&amp; nouveau_materiel.value === 'oui') {
+            console.log("ommmaaarrr2222222"+nouveau_materiel.value)
+            label_responsable_hierarchique.style.display = 'block';  // Make field2 visible
+            responsable_hierarchique.style.display = 'block';
+            responsable_hierarchique.setAttribute('required', '');
+            //label_comment.style.display = 'block';  // Make field2 visible
+            //comment.style.display = 'block';
+            //comment.setAttribute('required', '');
+            //label_type_materiel.style.display = 'block';  // Make field2 visible
+            //type_materiel.style.display = 'block';
+            //type_materiel.setAttribute('required', '');
+            label_piece.style.display = 'block';  // Make field2 visible
+            piece.style.display = 'block';
+
+
+
+          } else {
+            label_responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.removeAttribute('required')
+            //label_comment.style.display = 'none';  // Make field2 visible
+            //comment.style.display = 'none';
+            //comment.removeAttribute('required');
+            //label_type_materiel.style.display = 'none';  // Make field2 visible
+            //type_materiel.style.display = 'none';
+            //type_materiel.removeAttribute('required');
+            label_piece.style.display = 'none';  // Make field2 visible
+            piece.style.display = 'none';
+          }
+
+
+
+        });
+
+    </script>
+
+                             <script type="text/javascript">
+        <!--function customFunction() {
+            alert("Button clicked!");
+            var ticket = document.getElementById("ticket_name");
+            document.getElementById("ticket_name").value = 'block';
+            console.log(ticket);
+        }-->
+        <!--var button = document.getElementById('toggle-button');
+        var element = document.querySelector('.my-element');
+
+        button.addEventListener('click', function() {
+          if (element.style.display === 'none') {
+            element.style.display = 'block';
+          } else {
+            element.style.display = 'none';
+          }
+        });-->
+
+        var question_concerne = document.getElementById('question_concerne');
+        var materiel = document.getElementById('materiel');
+        var label_question_materiel = document.getElementById('label_question_materiel');
+        var label_nouveau_materiel = document.getElementById('label_nouveau_materiel');
+        var nouveau_materiel = document.getElementById('nouveau_materiel');
+        var label_responsable_hierarchique = document.getElementById('label_responsable_hierarchique');
+        var responsable_hierarchique = document.getElementById('responsable_hierarchique');
+        var label_num_imprimante = document.getElementById('label_num_imprimante');
+        var num_imprimante = document.getElementById('num_imprimante');
+
+
+
+        // Initial visibility state based on field1 value
+         // if (question_concerne.value === 'some value') {
+            //materiel.style.display = 'block';  // Make field2 visible
+          //} else {
+            //materiel.style.display = 'none';   // Hide field2
+          //}
+
+        // Update visibility on field1 value change
+        question_concerne.addEventListener('change', function() {
+
+          if (question_concerne.value === 'materiel') {
+            console.log("ommmaaarrr"+nouveau_materiel.value)
+            materiel.style.display = 'block';  // Make field2 visible
+            materiel.setAttribute('required', '');
+            label_question_materiel.style.display = 'block';  // Make field2 visible
+            label_nouveau_materiel.style.display = 'block';  // Make field2 visible
+            nouveau_materiel.style.display = 'block';  // Make field2 visible
+            //label_type_materiel.style.display = 'block';  // Make field2 visible
+            //type_materiel.style.display = 'block';
+             if (nouveau_materiel.value === 'oui') {
+            console.log("ommmaaarrr"+nouveau_materiel.value)
+            label_responsable_hierarchique.style.display = 'block';  // Make field2 visible
+            responsable_hierarchique.setAttribute('required', '');
+            responsable_hierarchique.style.display = 'block';
+            //label_comment.style.display = 'block';  // Make field2 visible
+            //comment.style.display = 'block';
+            //comment.setAttribute('required', '');
+            //label_type_materiel.style.display = 'block';  // Make field2 visible
+            //type_materiel.style.display = 'block';
+            //type_materiel.setAttribute('required', '');
+            label_piece.style.display = 'block';  // Make field2 visible
+            piece.style.display = 'block';
+
+          }
+         else {
+                  label_responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.removeAttribute('required')
+            //label_comment.style.display = 'none';  // Make field2 visible
+            //comment.style.display = 'none';
+            //comment.removeAttribute('required');
+            //label_type_materiel.style.display = 'none';  // Make field2 visible
+            //type_materiel.style.display = 'none';
+            //type_materiel.removeAttribute('required');
+            label_piece.style.display = 'none';  // Make field2 visible
+            piece.style.display = 'none';
+
+             }
+             if (materiel.value === 'imprimante') {
+            label_num_imprimante.style.display = 'block';
+            num_imprimante.style.display = 'block';
+            num_imprimante.setAttribute('required', '');
+
+
+
+          } else {
+            label_num_imprimante.style.display = 'none';
+            num_imprimante.style.display = 'none';
+            num_imprimante.removeAttribute('required');
+          }
+
+
+
+
+          } else {
+            materiel.style.display = 'none';   // Hide field2
+            materiel.removeAttribute('required');
+            label_question_materiel.style.display = 'none';   // Hide field2
+            label_nouveau_materiel.style.display = 'none';   // Hide field2
+            nouveau_materiel.style.display = 'none';   // Hide field2
+             label_responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.style.display = 'none';   // Hide field2
+            responsable_hierarchique.removeAttribute('required')
+            //label_comment.style.display = 'none';  // Make field2 visible
+            //comment.style.display = 'none';
+            //comment.removeAttribute('required');
+            //label_type_materiel.style.display = 'none';  // Make field2 visible
+            //type_materiel.style.display = 'none';
+            //type_materiel.removeAttribute('required');
+            label_piece.style.display = 'none';  // Make field2 visible
+            piece.style.display = 'none';
+            label_num_imprimante.style.display = 'none';
+            num_imprimante.style.display = 'none';
+            num_imprimante.removeAttribute('required');
+
+          }
+
+
+
+        });
+
+
+
+
+    </script>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record model="website.page" id="ticket_thanks">
+        <field name="name">Thanks</field>
+        <field name="type">qweb</field>
+        <field name="url">/ticket-thank-you</field>
+        <field name="website_published">True</field>
+        <field name="key">custom_helpdesk_website.ticket_thanks</field>
+        <field name="arch" type="xml">
+            <t name="Thanks" t-name="custom_helpdesk_website.ticket_thanks">
+                <div id="wrap" style="margin-left:500px; margin-top:200px;">
+                    <div class="container">
+                        <h1>Thanks !</h1>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="alert alert-success" role="status">
+                                    Votre demande est bien prise en compte
+                                    vous pouvez la suivre via les notifications email ou dans mon compte => Ticket IT
+
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="clearfix oe_login_buttons">
+                                <button class="btn btn-primary pull-left"><a class="btn btn-primary" href="/ticket_webform">Retourner</a></button>
+                                <!--<a class="btn btn-primary" href="/ticket_webform">Go to My Page</a>-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </field>
+    </record>
+    </data>
+
+</odoo>

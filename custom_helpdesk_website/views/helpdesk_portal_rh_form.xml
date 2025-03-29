@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <template id="portal_my_home_helpdesk_tickett" name="Show Tickets" customize_show="True"
+                  inherit_id="portal.portal_my_home" priority="50">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <!--<t  t-call="portal.portal_docs_entry">
+                    <t t-set="title">Tickets 2</t>
+                    <t t-set="url" t-value="'/my/tickets'"/>
+                    <t t-set="placeholder_count" t-value="'ticket_count'"/>
+                </t>-->
+
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Tickets RH</t>
+                    <t t-set="url" t-value="'/my/ticketss'"/>
+                    <t t-set="placeholder_count" t-value="'ticket_countt'"/>
+                </t>
+
+            </xpath>
+        </template>
+
+
+        <template id="portal_helpdesk_tickett" name="My Tickets">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Tickets</t>
+                </t>
+                <div t-if="not grouped_tickets" class="alert alert-info">
+                    There are currently no Ticket for your account.
+                </div>
+                <t t-else="">
+                    <t t-call="portal.portal_table">
+                        <thead>
+                            <tr>
+                                <th>Ticket</th>
+                                <th class="text-end" t-if="groupby != 'create_date'">Reported on</th>
+                                <th id="ticket_user_header" t-if="groupby != 'user'">Assigner à</th>
+                                <th t-if="groupby != 'stage'" colspan="5" class="text-end">Status</th>
+                            </tr>
+                        </thead>
+                        <t t-foreach="grouped_tickets" t-as="tickets">
+                            <tbody>
+                                <tr t-if="not groupby =='none'" class="table-light">
+                                    <th t-if="groupby == 'stage'" colspan="5">
+                                        <span t-field="tickets[0].stage_id.name"/>
+                                    </th>
+                                    <th t-if="groupby == 'user'" colspan="5">
+                                        <span t-if="tickets[0].user_id" t-out="tickets[0].user_id.name"/>
+                                        <span t-else="">Unassigned</span>
+                                    </th>
+                                    <th t-if="groupby == 'create_date'" colspan="5">
+                                        <span t-field="tickets[0].create_date"/>
+                                    </th>
+                                </tr>
+                            </tbody>
+                            <t t-foreach="tickets" t-as="ticket">
+                                <tr>
+                                    <td class="text-start">
+                                        <a t-attf-href="/helpdesk/tickett/#{ticket.id}">
+                                            <small>#</small>
+                                            <t t-out="ticket.id"/>
+                                            <span class="ms-2" t-field="ticket.name"/>
+                                        </a>
+                                    </td>
+                                    <td class="text-end" t-if="groupby != 'create_date'">
+                                        <span t-field="ticket.create_date"
+                                              t-options='{"widget": "datetime", "hide_seconds": True}'/>
+                                    </td>
+                                    <td id="ticket_user_body" t-if="groupby != 'user'">
+                                        <img t-if="ticket.user_id" class="rounded-circle o_portal_contact_img"
+                                             t-attf-src="#{image_data_uri(ticket.user_id.sudo().avatar_1024)}"
+                                             alt="Contact" style="width: 20px; height: 20px;"/>
+                                        <span t-field="ticket.user_id"/>
+                                    </td>
+                                    <td t-if="groupby != 'stage'" class="text-end">
+                                        <span t-attf-class="badge rounded-pill #{'text-bg-info' if ticket.stage_id.fold else 'text-bg-light'}"
+                                              t-esc="ticket.stage_id.name"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="tickets_followupp" name="Helpdesk Tickets">
+            <t t-call="portal.portal_layout">
+                <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
+
+                <t t-set="o_portal_fullwidth_alert" groups="helpdesk.group_helpdesk_user">
+                    <t t-call="portal.portal_back_in_edit_mode">
+                        <t t-set="backend_url"
+                           t-value="'/web#model=helpdesk.tickett&amp;id=%s&amp;view_type=form' % (ticket.id)"/>
+                    </t>
+                </t>
+
+                <div class="row mt16 o_project_portal_sidebar">
+                    <t t-call="portal.portal_record_sidebar">
+                        <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                        <t t-set="entries">
+                            <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                <li t-if="ticket.team_id.allow_portal_ticket_closing and not ticket.stage_id.fold and not ticket.closed_by_partner"
+                                    class="list-group-item flex-grow-1">
+                                    <div class="d-grid flex-sm-nowrap">
+                                        <button class="btn btn-secondary pt-1"
+                                                data-bs-target="#helpdesk_ticket_close_modal" data-bs-toggle="modal">
+                                            Close Ticket
+                                        </button>
+                                    </div>
+
+                                    <div class="modal" tabindex="-1" role="dialog" id="helpdesk_ticket_close_modal">
+                                        <div class="modal-dialog mt-5" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Close ticket</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you wish to proceed?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a role="button" class="btn btn-primary"
+                                                       t-att-href="'/my/tickett/close/%s/%s' % (ticket.id, ticket.access_token)">
+                                                        Close the ticket
+                                                    </a>
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                                        Discard
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li id="ticket-nav" class="list-group-item ps-0 flex-grow-1" t-ignore="true"
+                                    role="complementary">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item" id="nav-header">
+                                            <a class="nav-link ps-3" href="#card_header" style="max-width: 200px;">
+                                                Ticket
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" id="nav-chat">
+                                            <a class="nav-link ps-3" href="#ticket_chat">
+                                                History
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li id="ticket-links" t-if="ticket_link_section" class="list-group-item flex-grow-1"
+                                    t-ignore="true" role="complementary" invisible="1">
+                                    <ul class="nav flex-column">
+                                        <t t-foreach="sorted(ticket_link_section, key=lambda r: r['sequence'])"
+                                           t-as="ticket_link">
+                                            <li class="nav-item">
+                                                <a class="nav-link ps-0" t-att-href="ticket_link['access_url']">
+                                                    <t t-out="ticket_link['title']"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+
+                                <li t-if="ticket.user_id or ticket.partner_id" class="list-group-item flex-grow-1">
+                                    <div class="col-12 col-md-12 pb-2" t-if="ticket.user_id">
+                                        <strong>Assigned to</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img"
+                                                 t-att-src="image_data_uri(ticket.user_id.avatar_1024)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-out="ticket.user_id"
+                                                     t-options='{"widget": "contact", "fields": ["name"]}'
+                                                     class="mt-2"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-12 pb-2" t-if="ticket.partner_id">
+                                        <strong>Client</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img"
+                                                 t-att-src="image_data_uri(ticket.partner_id.avatar_1024)"
+                                                 alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-field="ticket.partner_id"
+                                                     t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <a t-attf-href="mailto:{{ticket.partner_id.email}}"
+                                                   t-if="ticket.partner_id.email">
+                                                    <div t-field="ticket.partner_id"
+                                                         t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                                </a>
+                                                <a t-attf-href="tel:{{ticket.partner_id.phone}}"
+                                                   t-if="ticket.partner_id.phone">
+                                                    <div t-field="ticket.partner_id"
+                                                         t-options='{"widget": "contact", "fields": ["phone"]}'/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                    <div id="ticket_content" class="col-12 col-lg justify-content-end">
+                        <div id="card" class="card">
+                            <div id="card_header" class="card-header container" data-anchor="true">
+                                <div class="row gs-0">
+                                    <div class="col-md">
+                                        <h5 class="row mx-1 mb-1 mb-md-0">
+                                            <div class="col-8 text-truncate">
+                                                <span t-field="ticket.name"/>
+                                                <small class="text-muted ">(#<span t-field="ticket.id"/>)
+                                                </small>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <small class="text-end">Status:</small>
+                                                <span t-field="ticket.stage_id.name"
+                                                      class=" badge rounded-pill text-bg-info"
+                                                      title="Current stage of this ticket"/>
+                                            </div>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="card_body" class="card-body">
+
+                                <form role="form" action="/update/ticket" method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="text" name="id" style="display:none" t-att-value="ticket.id"/>
+
+
+                                    <div class="form_group">
+                                        <!-- <t t-set="records" t-value="request.env['hr.employee'].search([])"/>
+                                         <t t-foreach="records" t-as="record">
+                                             <p>
+                                                 <t t-esc="record.name"/>
+                                             </p>
+                                             <p>
+                                                 <t t-esc="record.description"/>
+                                             </p>
+                                         </t>-->
+                                        <label for="sujet" id="label_sujet" class="control-label">Sujet</label>
+                                        <input type="text" name="sujet" readonly="1" t-att-value="ticket.name"
+                                               id="equipe" class="form-control"
+                                        />
+
+                                        <label for="equipe" id="label_equipe" class="control-label">Equipe</label>
+                                        <input type="text" name="equipe" readonly="1" t-att-value="ticket.team_id.name"
+                                               id="equipe" class="form-control"
+                                        />
+
+                                        <!--<label for="user" id="label_user" class="control-label">Assigné à</label>
+                                        <input type="text"  name="user" readonly="1" t-att-value="ticket.user_id.name" id="user" class="form-control"
+                                        />-->
+
+                                        <label for="x_studio_civilit_1" id="label_x_studio_civilit_1"
+                                               class="control-label">Civilité
+                                        </label>
+                                        <input type="text" name="x_studio_civilit_1" readonly="1"
+                                               t-att-value="ticket.x_studio_civilit_1" id="x_studio_civilit_1"
+                                               class="form-control"
+                                        />
+
+                                        <!--<label for="x_studio_selection_field_7Bvj3" id="label_x_studio_selection_field_7Bvj3" class="control-label">New selection</label>
+                                        <input type="text"  name="x_studio_selection_field_7Bvj3" readonly="1" t-att-value="ticket.x_studio_selection_field_7Bvj3" id="x_studio_selection_field_7Bvj3" class="form-control"
+                                        />-->
+
+                                        <!--<label for="x_studio_nom1" id="label_x_studio_nom1" class="control-label">Nom</label>
+                                        <input type="text"  name="x_studio_nom1" readonly="1" id="x_studio_nom1" class="form-control"
+                                        />-->
+                                        <!--<label for="x_studio_prnom" id="collaborateur" class="control-label">
+                                            Collaborateur
+                                        </label>
+                                        <input type="text" name="collaborateur" readonly="1"
+                                               t-att-value="ticket.collaborateur.name" id="collaborateur"
+                                               class="form-control"
+                                        />-->
+                                        <label for="partner_id" id="label_partner_id" class="control-label">
+                                            Manager
+                                        </label>
+                                        <input type="text" name="partner_id" readonly="1"
+                                               t-att-value="ticket.partner_id.name" id="partner_id"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_prnom" id="label_x_studio_prnom" class="control-label">
+                                            Prénom
+                                        </label>
+                                        <input type="text" name="x_studio_prnom" readonly="1"
+                                               t-att-value="ticket.x_studio_prnom" id="x_studio_prnom"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_date_de_naissance" id="label_x_studio_date_de_naissance"
+                                               class="control-label">Date de naissance
+                                        </label>
+                                        <input type="text" name="x_studio_date_de_naissance" readonly="1"
+                                               t-att-value="ticket.x_studio_date_de_naissance"
+                                               id="x_studio_date_de_naissance" class="form-control"
+                                        />
+
+                                        <label for="x_studio_date_adresse_1" id="label_x_studio_date_adresse_1"
+                                               class="control-label">Adresse mail professionnelle
+                                        </label>
+                                        <input type="text" name="x_studio_date_adresse_1" readonly="1"
+                                               t-att-value="ticket.x_studio_date_adresse_1" id="x_studio_date_adresse_1"
+                                               class="form-control"
+                                        />
+                                        <label for="num_professionnel" id="label_num_professionnel"
+                                               class="control-label">Numéro professionnel
+                                        </label>
+                                        <input type="text" name="num_professionnel" readonly="1"
+                                               t-att-value="ticket.num_professionnel" id="num_professionnel"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_date_de_cration" id="label_x_studio_date_de_cration"
+                                               class="control-label">Date de création
+                                        </label>
+                                        <input type="text" name="x_studio_date_de_cration" readonly="1"
+                                               t-att-value="ticket.x_studio_date_de_cration"
+                                               id="x_studio_date_de_cration" class="form-control"
+                                        />
+
+                                        <label for="x_studio_date_darrive" id="label_x_studio_date_darrive"
+                                               class="control-label">Date d'arrivée
+                                        </label>
+                                        <input type="text" name="x_studio_date_darrive" readonly="1"
+                                               t-att-value="ticket.x_studio_date_darrive" id="x_studio_date_darrive"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_date_de_depart" id="label_x_studio_date_de_depart"
+                                               class="control-label">Date de départ
+                                        </label>
+                                        <input type="text" name="x_studio_date_de_depart" readonly="1"
+                                               t-att-value="ticket.x_studio_date_de_depart" id="x_studio_date_de_depart"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_type_de_recrutement"
+                                               id="label_x_studio_type_de_recrutement" class="control-label">Type de
+                                            recrutement
+                                        </label>
+                                        <input type="text" name="x_studio_type_de_recrutement" readonly="1"
+                                               t-att-value="ticket.x_studio_type_de_recrutement"
+                                               id="x_studio_type_de_recrutement" class="form-control"
+                                        />
+
+
+                                        <!--<label for="personne_remplace">Personne remplacée</label>
+
+                                        <input type="text" name="personne_remplace" readonly="1"
+                                               t-att-value="ticket.personne_remplace.name" id="personne_remplace"
+                                               class="form-control"
+                                        />-->
+
+                                        <label for="x_studio_type_de_contrat" id="label_x_studio_type_de_contrat"
+                                               class="control-label">Type de contrat
+                                        </label>
+                                        <input type="text" name="x_studio_type_de_contrat" readonly="1"
+                                               t-att-value="ticket.x_studio_type_de_contrat"
+                                               id="x_studio_type_de_contrat" class="form-control"
+                                        />
+
+                                        <label for="x_studio_matricule" id="label_x_studio_matricule"
+                                               class="control-label">Matricule
+                                        </label>
+                                        <input type="text" name="x_studio_matricule" readonly="1"
+                                               t-att-value="ticket.x_studio_matricule" id="x_studio_matricule"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_centre_de_cot" id="label_x_studio_centre_de_cot"
+                                               class="control-label">Centre de coût
+                                        </label>
+                                        <input type="text" name="x_studio_centre_de_cot" readonly="1"
+                                               t-att-value="ticket.x_studio_centre_de_cot" id="type"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_site_de_rattachement"
+                                               id="label_x_studio_site_de_rattachement" class="control-label">Site de
+                                            rattachement
+                                        </label>
+                                        <input type="text" name="x_studio_site_de_rattachement" readonly="1"
+                                               t-att-value="ticket.x_studio_site_de_rattachement" id="type"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_direction" id="label_x_studio_direction"
+                                               class="control-label">Direction
+                                        </label>
+                                        <input type="text" name="x_studio_direction" readonly="1"
+                                               t-att-value="ticket.x_studio_direction" id="x_studio_direction"
+                                               class="form-control"
+                                        />
+
+                                        <label for="x_studio_type_de_fontion" id="label_x_studio_type_de_fontion"
+                                               class="control-label">Type de Fonction
+                                        </label>
+                                        <input type="text" name="x_studio_type_de_fontion" readonly="1"
+                                               t-att-value="ticket.x_studio_type_de_fontion.name"
+                                               id="x_studio_type_de_fontion" class="form-control"
+                                        />
+
+                                        <t t-if="ticket.x_studio_type_de_fontion.is_autre == True">
+                                            <label for="autre_type_de_fonction" id="label_autre_type_de_fonction"
+                                                   class="control-label">Autre type de fonction
+                                            </label>
+                                            <input type="text" name="autre_type_de_fonction" readonly="1"
+                                                   t-att-value="ticket.autre_type_de_fonction"
+                                                   id="autre_type_de_fonction" class="form-control"
+                                            />
+                                        </t>
+
+
+
+
+                                        <t t-set="collaborateurs_records"
+                                           t-value="request.env['res.partner'].sudo().search([])"/>
+                                        <label for="collaborateur">Personne avec un poste similaire</label>
+                                        <select id="collaborateur" name="collaborateur" class="form-select">
+                                            <option value=""></option>
+                                            <t t-foreach="collaborateurs_records" t-as="record">
+                                                <option t-att-value="record.id"
+                                                        t-att-selected="ticket.collaborateur.id == record.id and 'selected' or None">
+                                                    <t t-esc="record.name"/>
+                                                </option>
+                                            </t>
+
+                                        </select>
+
+                                        <label for="pc_housse" id="label_pc_housse">Pc Portable + Chargeur + Housse
+                                        </label>
+                                        <select id="pc_housse" name="pc_housse" class="form-select">
+                                            <option value="">
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.pc_housse == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.pc_housse == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+                                        </select>
+
+
+
+                                         <label for="materiel_supp" id="label_clavier">Matèriel
+                                            Supplémentaire
+                                        </label>
+                                         <div style="margin-left:170px;">
+                                            <fieldset id="materiel_supp">
+
+                                            <div>
+
+                                        <input type="checkbox" id="clavier" name="clavier"
+                                                           />
+                                                    <label for="clavier">Clavier</label>
+                                            </div>
+                                        <div>
+                                        <input type="checkbox" id="souris" name="souris"
+                                                           />
+                                                    <label for="souris">Souris</label>
+                                        </div>
+                                        <div>
+                                        <input type="checkbox" id="ecran" name="ecran"
+                                                           />
+                                                    <label for="ecran">Ecran</label>
+                                                </div>
+                                            </fieldset>
+                                             </div>
+                                        <label for="tablette_chargeur_housse_clavier"
+                                               id="label_tablette_chargeur_housse_clavier">Tablette + Chargeur
+                                        </label>
+                                        <select id="tablette_chargeur_housse_clavier"
+                                                name="tablette_chargeur_housse_clavier" class="form-select">
+                                            <option value="">
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.tablette_chargeur_housse_clavier == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.tablette_chargeur_housse_clavier == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+                                        <label for="x_studio_smartphone" id="label_x_studio_smartphone">Smartphone +
+                                            Accessoires
+                                        </label>
+                                        <select id="x_studio_smartphone" name="x_studio_smartphone" class="form-select">
+                                            <option value="">
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.x_studio_smartphone == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.x_studio_smartphone == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+                                        <br/>
+                                        <label for="x_studio_ligne_fixe" id="label_x_studio_ligne_fixe">Besoin d'une
+                                            ligne fixe
+                                        </label>
+                                        <select id="x_studio_ligne_fixe" name="x_studio_ligne_fixe" class="form-select"
+                                                onchange="OnChange_x_studio_ligne_fixe_select(this)">
+                                            <option value="">
+
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.x_studio_ligne_fixe == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.x_studio_ligne_fixe == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+                                        </select>
+                                        <br/>
+                                        <label for="cx" id="label_cx">3CX ou INO
+                                        </label>
+                                        <select id="cx" name="cx" class="form-select"
+                                                >
+                                            <option value="">
+
+                                            </option>
+                                            <option value="3CX"
+                                                    t-att-selected="ticket.cx == '3CX' and 'selected' or None">
+                                                3CX
+                                            </option>
+                                            <option value="INO"
+                                                    t-att-selected="ticket.cx == 'INO' and 'selected' or None">
+                                                INO
+                                            </option>
+
+                                        </select>
+                                        <br/>
+
+                                        <label for="x_studio_ligne" id="label_x_studio_ligne">Ligne fixe</label>
+                                        <select id="x_studio_ligne" name="x_studio_ligne" class="form-select"
+                                                onchange="OnChange_x_studio_ligne_select(this)">
+                                            <option value=""></option>
+                                            <option value="Nouvelle ligne"
+                                                    t-att-selected="ticket.x_studio_ligne == 'Nouvelle ligne' and 'selected' or None">
+                                                Nouvelle ligne
+                                            </option>
+                                            <option value="Reprise d'une ligne"
+                                                    t-att-selected="ticket.x_studio_ligne == &quot;Reprise d'une ligne&quot; and 'selected' or None">
+                                                Reprise d'une ligne
+                                            </option>
+
+
+                                        </select>
+
+                                        <br/>
+
+                                        <div>
+                                            <label name="label_nom_1" id="label_nom_1" for="nom_1">Nom ou N° de la nouvelle ligne</label>
+                                            <input type="text" id="nom_1" name="nom_1" t-att-value="ticket.nom_1"
+                                                   class="form-control"/>
+
+                                        </div>
+                                         <div>
+                                            <label name="label_nom_2" id="label_nom_2" for="nom_1">Nom ou N° de la ligne à reprendre</label>
+                                            <input type="text" id="nom_2" name="nom_2" t-att-value="ticket.nom_2"
+                                                   class="form-control"/>
+
+                                        </div>
+                                        <br/>
+
+                                        <label for="logiciel_commerce" id="label_logiciel_commercee">Logiciel commerce
+                                        </label>
+                                        <div style="margin-left:170px;">
+                                            <fieldset id="logiciel_commercee">
+
+                                                <div>
+                                                    <!--<select id="nomad_select" name="nomad_select" class="form-select" style="display:none">
+
+
+                                                <option id="nomad_option" t-att-value="ticket.nomad">
+                                                    <t t-esc="ticket.nomad"/>
+                                                </option>
+
+
+                                            </select>
+
+                                                    <select id="start_select" name="start_select" class="form-select" style="display:none">
+
+
+                                                <option id="start_option" t-att-value="ticket.start">
+                                                    <t t-esc="ticket.start"/>
+                                                </option>
+
+
+                                            </select>
+
+                                                    <select id="aucun_select" name="aucun_select" class="form-select" style="display:none">
+
+
+                                                <option id="aucun_option" t-value="ticket.aucun">
+                                                    <t t-esc="ticket.aucun"/>
+                                                </option>
+
+
+                                            </select>-->
+
+
+                                                    <input type="checkbox" id="nomad" name="nomad"
+                                                           onchange="OnChange_lc_checkbox(this)"/>
+                                                    <label for="nomad">Nomad</label>
+                                                </div>
+
+                                                <div>
+                                                    <input type="checkbox" id="start" name="start"
+                                                           onchange="OnChange_lc_checkbox(this)"/>
+                                                    <label for="start">Start</label>
+                                                </div>
+
+
+                                                <div>
+                                                    <input type="checkbox" id="sales_apps" name="sales_apps"
+                                                           onchange="OnChange_lc_checkbox(this)"/>
+                                                    <label for="sales_apps">SalesApps</label>
+                                                </div>
+                                                <div>
+                                                    <input type="checkbox" id="aucun" name="aucun"
+                                                           onchange="OnChange_lc_checkbox(this)"/>
+                                                    <label for="aucun">aucun</label>
+                                                </div>
+
+
+                                            </fieldset>
+                                        </div>
+
+
+                                        <label for="logiciel_finance" id="label_logiciel_finance">Logiciel finance
+                                        </label>
+                                        <div style="margin-left:170px;">
+                                            <fieldset id="logiciel_commerce">
+
+
+                                                <div>
+
+                                                    <input type="checkbox" id="etafi" name="etafi"
+                                                           onchange="OnChange_lf_checkbox(this)"/>
+                                                    <label for="etafi">Etafi (Liasse Fiscale)</label>
+                                                </div>
+
+                                                <div>
+                                                    <input type="checkbox" id="kyriba" name="kiryba"
+                                                           onchange="OnChange_lf_checkbox(this)"/>
+                                                    <label for="kyriba">Kyriba</label>
+                                                </div>
+
+                                                <div>
+                                                    <input type="checkbox" id="wecheck" name="wecheck"
+                                                           onchange="OnChange_lf_checkbox(this)"/>
+                                                    <label for="wecheck">Wecheck</label>
+                                                </div>
+
+                                                <div>
+                                                    <input type="checkbox" id="aucun_f" name="aucun_f"
+                                                           onchange="OnChange_lf_checkbox(this)"/>
+                                                    <label for="aucun_f">aucun</label>
+                                                </div>
+
+
+                                            </fieldset>
+                                        </div>
+                                        <br/>
+
+
+                                        <label for="profil_fairjungle" id="label_profil_fairjungle">Profil fairjungle
+                                        </label>
+                                        <select id="profil_fairjungle" name="profil_fairjungle" class="form-select">
+                                            <option value="">
+
+                                            </option>
+                                            <option value="utilisateur"
+                                                    t-att-selected="ticket.profil_fairjungle == 'utilisateur' and 'selected' or None">
+                                                Utilisateur
+                                            </option>
+                                            <option value="Contrôleur"
+                                                    t-att-selected="ticket.profil_fairjungle == 'Contrôleur' and 'selected' or None">
+                                                Contrôleur
+                                            </option>
+                                            <option value="manager"
+                                                    t-att-selected="ticket.profil_fairjungle == 'manager' and 'selected' or None">
+                                                Manager
+                                            </option>
+                                            <option value="admin"
+                                                    t-att-selected="ticket.profil_fairjungle == 'admin' and 'selected' or None">
+                                                Admin
+                                            </option>
+
+
+                                        </select>
+
+                                        <!-- <label for="logiciel_paye" id="label_logiciel_paye" >Profil logiciel paie</label>
+                                         <select id="logiciel_paye"  name="logiciel_paye" class="form-select">
+                                             <option value="">
+
+                                             </option>
+                                             <option value="utilisateur">
+                                                 Utilisateur
+                                             </option>
+                                             <option value="Contrôleur">
+                                                 Contrôleur
+                                             </option>
+                                             <option value="manager">
+                                                 Manager
+                                             </option>
+                                             <option value="admin">
+                                                 Admin
+                                             </option>
+
+                                             <option id="logiciel_paye_option" t-att-value="ticket.logiciel_paye" selected="selected"
+                                             >
+                                                 <t t-esc="ticket.logiciel_paye"/>
+                                             </option>
+
+
+                                         </select>-->
+
+                                        <label for="logiciel_sap" id="label_logiciel_sap">Logiciel SAP</label>
+                                        <select id="logiciel_sap" name="logiciel_sap" class="form-select"
+                                                >
+                                            <option value="">
+
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.logiciel_sap == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.logiciel_sap == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+
+                                        <label for="vehicule_1" id="label_vehicule_1">Véhicule</label>
+                                        <select id="vehicule_1" name="vehicule_1" class="form-select"
+                                                onchange="OnChange_vehicule_1(this)">
+                                            <option value="">
+
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.vehicule_1 == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.vehicule_1 == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+
+                                        <label for="vehicule_marque" id="label_vehicule_marque">Marque</label>
+                                        <select id="vehicule_marque" name="vehicule_marque" class="form-select"
+                                                >
+                                            <option value="">
+
+                                            </option>
+                                            <option value="VP0"
+                                                    t-att-selected="ticket.vehicule_marque == 'VP0' and 'selected' or None">
+                                                VP0
+                                            </option>
+                                            <option value="VP0RM"
+                                                    t-att-selected="ticket.vehicule_marque == 'VP0RM' and 'selected' or None">
+                                                VP0RM
+                                            </option>
+                                            <option value="VP1"
+                                                    t-att-selected="ticket.vehicule_marque == 'VP1' and 'selected' or None">
+                                                VP1
+                                            </option>
+                                            <option value="VP3"
+                                                    t-att-selected="ticket.vehicule_marque == 'VP3' and 'selected' or None">
+                                                VP3
+                                            </option>
+
+
+                                        </select>
+
+
+                                        <label for="logiciel_sap_analytic" id="label_logiciel_sap_analytic">Logiciel SAP
+                                            Analytic
+                                        </label>
+                                        <select id="logiciel_sap_analytic" name="logiciel_sap_analytic"
+                                                class="form-select" >
+                                            <option value="">
+
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.logiciel_sap_analytic == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.logiciel_sap_analytic == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+
+                                        <label for="vehicule" id="label_vehicule">Véhicule de fonction</label>
+                                        <select id="vehicule" name="vehicule" class="form-select"
+                                                onchange="OnChange_vehicule_select(this)">
+
+                                            <option value="">
+                                            </option>
+                                            <option value="nouveau"
+                                                    t-att-selected="ticket.vehicule == 'nouveau' and 'selected' or None">
+                                                Nouveau véhicule
+                                            </option>
+                                            <option value="reprise"
+                                                    t-att-selected="ticket.vehicule == 'reprise' and 'selected' or None">
+                                                Reprise du véhicule d'un collaborateur
+                                            </option>
+                                            <option value="aucun"
+                                                    t-att-selected="ticket.vehicule == 'aucun' and 'selected' or None">
+                                                Aucun
+                                            </option>
+
+
+                                        </select>
+
+
+                                        <label for="personne_vehicule" id="label_personne_vehicule" style="display:none"
+                                               class="control-label">Nom de la personne dont le véhicule est à reprendre
+                                        </label>
+                                        <input type="text" style="display:none" name="personne_vehicule"
+                                               t-att-value="ticket.personne_vehicule" id="personne_vehicule"
+                                               class="form-control"
+                                        />
+
+
+
+                                        <label for="access_dossier" id="label_access_dossier">Accès aux dossiers du
+                                            réseau Supergroup
+                                        </label>
+                                        <select id="access_dossier" name="acces_dossier" class="form-select" onchange="OnChange_access_dossier(this)">
+                                            <option value="">
+                                            </option>
+                                            <option value="oui"
+                                                    t-att-selected="ticket.acces_dossier == 'oui' and 'selected' or None">
+                                                Oui
+                                            </option>
+                                            <option value="non"
+                                                    t-att-selected="ticket.acces_dossier == 'non' and 'selected' or None">
+                                                Non
+                                            </option>
+
+
+                                        </select>
+
+
+
+                                        <label for="nom_reseau" id="label_nom_reseau" style="display:none"
+                                               class="control-label">Nom des réseaux
+                                        </label>
+                                        <input type="text" style="display:none" name="nom_reseau"
+                                               t-att-value="ticket.nom_reseau" id="nom_reseau" class="form-control"
+                                        />
+
+                                        <label for="list_dossiers" id="label_list_dossiers"
+                                               class="control-label">Liste des dossiers (lecteurs réseau)
+                                        </label>
+                                        <input type="text"  name="list_dossiers"
+                                               t-att-value="ticket.list_dossiers" id="list_dossiers" class="form-control"
+                                        />
+
+                                        <label for="bal_partagee" id="label_bal_partagee"
+                                               class="control-label">BAL Partagée
+                                        </label>
+                                        <input type="text" name="bal_partagee"
+                                               t-att-value="ticket.bal_partagee" id="bal_partagee" class="form-control"
+                                        />
+
+
+
+
+
+                                        <label for="comment_manager" id="label_comment_manager" class="control-label">
+                                            Commentaire de manager
+                                        </label>
+                                        <input type="textarea" name="comment_manager"
+                                               t-att-value="ticket.comment_manager" id="comment_manager"
+                                               class="form-control"
+                                        />
+
+                                    </div>
+                                    <br/>
+
+                                    <div class="clearfix oe_login_buttons">
+                                        <button type="submit" class="btn btn-primary pull-left btn-lg"
+                                                id="toggle-button">Enregistrer
+                                        </button>
+                                    </div>
+                                    <script type="text/javascript">
+
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                        // Access the template values in JavaScript
+
+
+                                        var nom_1 = document.getElementById("nom_1");
+                                        var nom_2 = document.getElementById("nom_2");
+                                        var x_studio_ligne_fixe = "<t t-esc='ticket.x_studio_ligne_fixe'/>";
+                                        var x_studio_ligne = "<t t-esc='ticket.x_studio_ligne'/>"
+                                        var cx = "<t t-esc='ticket.cx'/>"
+                                        var x_studio_ligne_fixe_to_check =
+                                        document.getElementById("x_studio_ligne_fixe");
+                                        var x_studio_ligne_to_check = document.getElementById("x_studio_ligne");
+                                        var cx_to_check = document.getElementById("cx");
+
+
+                                        var label_nom_1 = document.getElementById("label_nom_1");
+                                        var label_nom_2 = document.getElementById("label_nom_2");
+                                        var label_x_studio_ligne_fixe =
+                                        document.getElementById("label_x_studio_ligne_fixe");
+                                        var label_x_studio_ligne = document.getElementById("label_x_studio_ligne");
+                                        var label_cx = document.getElementById("label_cx");
+
+
+                                        var nomad = "<t t-esc='ticket.nomad'/>";
+                                        var nomad_to_check = document.getElementById("nomad");
+                                        var start = "<t t-esc='ticket.start'/>";
+                                        var start_to_check = document.getElementById("start");
+                                        var aucun = "<t t-esc='ticket.aucun'/>";
+                                        var sales_apps = "<t t-esc='ticket.sales_apps'/>";
+                                        var aucun_to_check = document.getElementById("aucun");
+                                        var sales_apps_to_check = document.getElementById("sales_apps");
+                                        var etafi = "<t t-esc='ticket.etafi'/>";
+                                        var etafi_to_check = document.getElementById("etafi");
+                                        var kyriba = "<t t-esc='ticket.kyriba'/>";
+                                        var kyriba_to_check = document.getElementById("kyriba");
+                                        var wecheck = "<t t-esc='ticket.wecheck'/>";
+                                        var wecheck_to_check = document.getElementById("wecheck");
+                                        var aucun_f = "<t t-esc='ticket.aucun_f'/>";
+                                        var aucun_f_to_check = document.getElementById("aucun_f");
+
+
+
+
+                                        var personne_vehicule = document.getElementById('personne_vehicule');
+                                        var vehicule = "<t t-esc='ticket.vehicule'/>";
+                                        var label_personne_vehicule =
+                                        document.getElementById('label_personne_vehicule');
+
+                                        var nom_reseau = document.getElementById('nom_reseau');
+                                        var access_dossier = "<t t-esc='ticket.acces_dossier'/>";
+                                        var label_nom_reseau = document.getElementById('label_nom_reseau');
+
+                                        var x_studio_type_de_contrat = "<t t-esc='ticket.x_studio_type_de_contrat'/>";
+
+
+                                            var label_x_studio_date_de_depart = document.getElementById("label_x_studio_date_de_depart");
+                                            var x_studio_date_de_depart = document.getElementById("x_studio_date_de_depart");
+
+                                            var clavier = "<t t-esc='ticket.clavier'/>";
+                                        var clavier_to_check = document.getElementById("clavier");
+                                        var souris = "<t t-esc='ticket.souris'/>";
+                                        var souris_to_check = document.getElementById("souris");
+                                        var ecran = "<t t-esc='ticket.ecran'/>";
+                                        var ecran_to_check = document.getElementById("ecran");
+                                        if (clavier == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        clavier_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        clavier_to_check.checked = false;
+                                        }
+
+                                        if (souris == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        souris_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        souris_to_check.checked = false;
+                                        }
+
+                                        if (ecran == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        ecran_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        ecran_to_check.checked = false;
+                                        }
+
+                                        if (x_studio_type_de_contrat == "CDI")
+                                                {
+
+                                                    label_x_studio_date_de_depart.style.display = 'none';
+                                                    x_studio_date_de_depart.style.display = 'none';
+                                                }
+
+                                            else
+                                                {
+
+                                                    label_x_studio_date_de_depart.style.display = 'block';
+                                                    x_studio_date_de_depart.style.display = 'block';
+                                                }
+
+                                        if (access_dossier == 'oui') {
+                                        nom_reseau.style.display = 'block';
+                                        label_nom_reseau.style.display = 'block';
+                                        nom_reseau.setAttribute('required', '');
+
+
+                                        }
+
+                                        else {
+
+                                        label_nom_reseau.style.display = 'none';
+                                        nom_reseau.style.display = 'none';
+                                        nom_reseau.removeAttribute('required');
+                                        }
+
+                                        if (vehicule == 'reprise') {
+                                        console.log('vehicule '+ vehicule);
+                                        personne_vehicule.style.display = 'block';
+                                        label_personne_vehicule.style.display = 'block';
+                                        personne_vehicule.setAttribute('required', '');
+
+
+                                        }
+
+                                        else {
+
+                                        label_personne_vehicule.style.display = 'none';
+                                        personne_vehicule.style.display = 'none';
+                                        personne_vehicule.removeAttribute('required');
+                                        }
+
+
+
+
+
+
+
+                                        if (aucun_f == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        aucun_f_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        aucun_f_to_check.checked = false;
+                                        }
+                                        if (wecheck == 'True')
+                                        {
+                                        console.log("enter second true")
+                                        wecheck_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        wecheck_to_check.checked = false;
+                                        }
+                                        if (etafi == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        etafi_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        etafi_to_check.checked = false;
+                                        }
+                                        if (kyriba == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        kyriba_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        kyriba_to_check.checked = false;
+                                        }
+                                        if (start == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        start_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        start_to_check.checked = false;
+                                        }
+
+                                        if (sales_apps == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        sales_apps_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        sales_apps_to_check.checked = false;
+                                        }
+                                        if (aucun == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        aucun_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        aucun_to_check.checked = false;
+                                        }
+                                        if (nomad == 'True')
+                                        {
+                                        //console.log("enter second true")
+                                        nomad_to_check.checked = true;
+                                        }
+                                        else
+                                        {
+                                        //console.log("enter second false")
+                                        nomad_to_check.checked = false;
+                                        }
+
+                                        if (x_studio_ligne_fixe == 'oui')
+                                        {
+                                        console.log('x_studio_ligne_fixe == oui ');
+                                        label_x_studio_ligne.style.display = 'block';
+                                        label_cx.style.display = 'block';
+                                        cx_to_check.style.display = 'block';
+                                        x_studio_ligne_to_check.style.display = 'block';
+                                        x_studio_ligne_to_check.setAttribute('required', '');
+                                        }
+                                        else
+                                        {
+
+                                        console.log('_fixe == non ');
+                                        label_x_studio_ligne.style.display = 'none';
+                                        label_cx.style.display = 'none';
+                                        cx_to_check.style.display = 'none';
+                                        x_studio_ligne_to_check.removeAttribute('required', '');
+                                        }
+                                        if (x_studio_ligne == 'Nouvelle ligne')
+                                        {
+                                        console.log('x_studio_ligne == Nouvelle ligne ');
+                                        label_nom_1.style.display = 'block';
+                                        label_nom_2.style.display = 'none';
+                                        nom_1.style.display = 'block';
+                                        nom_2.style.display = 'none';
+                                        nom_1.setAttribute('required', '');
+                                        }
+                                        else
+                                        {
+                                        console.log('x_studio_ligne == ELSE ');
+
+                                        label_nom_1.style.display = 'none';
+                                        label_nom_2.style.display = 'block';
+                                        nom_1.style.display = 'none';
+                                        nom_2.style.display = 'block';
+                                        nom_1.removeAttribute('required');
+                                        }
+
+
+                                        });
+
+
+                                    </script>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+
+                    function OnChange_access_dossier(obj)
+
+                    {
+
+
+                        var nom_reseau = document.getElementById('nom_reseau');
+                                        var access_dossier = document.getElementById('access_dossier');
+                                        var label_nom_reseau = document.getElementById('label_nom_reseau');
+
+                                        if (access_dossier.value == 'oui') {
+                                        nom_reseau.style.display = 'block';
+                                        label_nom_reseau.style.display = 'block';
+                                        nom_reseau.setAttribute('required', '');
+
+
+                                        }
+
+                                        else {
+
+                                        label_nom_reseau.style.display = 'none';
+                                        nom_reseau.style.display = 'none';
+                                        nom_reseau.removeAttribute('required');
+                                        }
+                    }
+
+                    function OnChange_vehicule_1(obj)
+
+                    {
+
+
+                    var vehicule_1 = document.getElementById('vehicule_1');
+                    var vehicule_marque = document.getElementById('vehicule_marque');
+
+                    var label_vehicule_marque =
+                    document.getElementById('label_vehicule_marque');
+
+
+                    if (vehicule_1.value == 'oui')
+                    {
+
+
+                    vehicule_marque.style.display = 'block';
+                    label_vehicule_marque.style.display = 'block';
+
+
+                    }
+                    else
+                    {
+
+
+
+                    vehicule_marque.style.display = 'none';
+                    label_vehicule_marque.style.display = 'none';
+                    }
+                    }
+
+
+
+
+
+
+
+                    function OnChange_vehicule_select(obj)
+
+                    {
+
+
+                    var personne_vehicule = document.getElementById('personne_vehicule');
+                    var vehicule = document.getElementById('vehicule');
+                    var label_personne_vehicule = document.getElementById('label_personne_vehicule');
+
+                    if (vehicule.value === 'reprise') {
+
+                    personne_vehicule.style.display = 'block';
+                    label_personne_vehicule.style.display = 'block';
+                    personne_vehicule.setAttribute('required', '');
+
+
+                    }
+
+                    else {
+
+                    label_personne_vehicule.style.display = 'none';
+                    personne_vehicule.style.display = 'none';
+                    personne_vehicule.removeAttribute('required');
+                    }
+                    }
+
+
+                    function OnChange_x_studio_ligne_fixe_select(obj)
+
+                    {
+
+
+                    var x_studio_ligne_fixe = document.getElementById("x_studio_ligne_fixe");
+                    var x_studio_ligne = document.getElementById("x_studio_ligne");
+                    var cx = document.getElementById("cx");
+
+                    var label_x_studio_ligne = document.getElementById("label_x_studio_ligne");
+                    var label_cx = document.getElementById("label_cx");
+
+                    if (x_studio_ligne_fixe.value == "oui")
+                    {
+                    console.log('*********** x_studio_ligne_fixe == oui onchange');
+                    label_x_studio_ligne.style.display = 'block';
+                    label_cx.style.display = 'block';
+                    x_studio_ligne.style.display = 'block';
+                    cx.style.display = 'block';
+                    x_studio_ligne.setAttribute('required', '');
+                    }
+
+                    else {
+
+                    label_x_studio_ligne.style.display = 'none';
+                    label_cx.style.display = 'none';
+                    x_studio_ligne.style.display = 'none';
+                    cx.style.display = 'none';
+                    x_studio_ligne.removeAttribute('required', '');
+                    }
+                    }
+
+
+                    function OnChange_x_studio_ligne_select(obj)
+
+                    {
+
+
+                    var x_studio_ligne = document.getElementById("x_studio_ligne");
+
+                    var label_nom_1 = document.getElementById("label_nom_1");
+                    var label_nom_2 = document.getElementById("label_nom_2");
+                    var nom_1 = document.getElementById("nom_1");
+                    var nom_2 = document.getElementById("nom_2");
+
+                    if (x_studio_ligne.value == "Nouvelle ligne")
+                    {
+
+                    label_nom_1.style.display = 'block';
+                    label_nom_2.style.display = 'none';
+                    nom_1.style.display = 'block';
+                    nom_2.style.display = 'none';
+                    nom_1.setAttribute('required', '');
+                    }
+
+                    else
+                    {
+
+                    label_nom_1.style.display = 'none';
+                    label_nom_2.style.display = 'block';
+                    nom_1.style.display = 'none';
+                    nom_2.style.display = 'block';
+                    nom_1.removeAttribute('required', '');
+                    }
+                    }
+
+
+                    function OnChange_lc_checkbox(obj) {
+                    const lc_options = ["nomad", "start"];
+
+                    if (lc_options.includes(obj.id))
+                    {
+                    if (obj.checked == true)
+                    {
+                    var aucun = document.getElementById("aucun");
+
+                    aucun.checked = false
+                    
+
+                    }
+                    }
+                    else
+                    {
+                    if (obj.checked == true)
+                    {
+                    for (var i = 0; i &lt; lc_options.length; i++)
+                    {
+                    var element = document.getElementById(lc_options[i]);
+                    element.checked = false;
+                    }
+
+
+                    }
+
+                    }
+
+                    }
+                    function OnChange_lf_checkbox(obj) {
+                    const lf_options = ["etafi", "kyriba", "wecheck"];
+
+                    if (lf_options.includes(obj.id))
+                    {
+                    if (obj.checked == true)
+                    {
+                    var aucun = document.getElementById("aucun_f");
+                    aucun.checked = false
+
+                    }
+                    }
+                    else
+                    {
+                    if (obj.checked == true)
+                    {
+                    for (var i = 0; i &lt; lf_options.length; i++)
+                    {
+                    var element = document.getElementById(lf_options[i]);
+                    element.checked = false;
+                    }
+
+
+                    }
+
+                    }
+
+                    }
+
+                </script>
+
+
+            </t>
+        </template>
+
+        <record model="website.page" id="ticket_thankss">
+            <field name="name">Thanks</field>
+            <field name="type">qweb</field>
+            <field name="url">/ticket-thank-you</field>
+            <field name="website_published">True</field>
+            <field name="key">custom_helpdesk_website.ticket_thankss</field>
+            <field name="arch" type="xml">
+                <t name="Thanks" t-name="custom_helpdesk_website.ticket_thankss">
+                    <div id="wrap" style="margin-left:500px; margin-top:200px;">
+                        <div class="container">
+                            <h1>Merci !</h1>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="alert alert-success" role="status">
+                                        Bonjour vore ticket a bien été transmis au service Informatique et sera traité
+                                        dans les plus bref délais
+                                    </div>
+                                </div>
+                                <div class="clearfix oe_login_buttons">
+                                    <button class="btn btn-primary pull-left">
+                                        <a class="btn btn-primary" href="/my/ticketss">Retourner</a>
+                                    </button>
+                                    <!--<a class="btn btn-primary" href="/ticket_webform">Go to My Page</a>-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </field>
+        </record>
+        <record model="website.page" id="not_user">
+            <field name="name">Thanks</field>
+            <field name="type">qweb</field>
+            <field name="url">/not-user</field>
+            <field name="website_published">True</field>
+            <field name="key">custom_helpdesk_website.not_user</field>
+            <field name="arch" type="xml">
+                <t name="Thanks" t-name="custom_helpdesk_website.not_user">
+                    <div id="wrap" style="margin-top:200px;">
+                        <div align="center" class="container">
+                            <h1>Merci de vous connecter à votre compte et de remplir à nouveau les champs</h1>
+                            <div class="row">
+
+                                <div class="clearfix oe_login_buttons">
+                                    <button class="btn btn-primary pull-left">
+                                        <a class="btn btn-primary" href="/my/ticketss">Connecter</a>
+                                    </button>
+                                    <!--<a class="btn btn-primary" href="/ticket_webform">Go to My Page</a>-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
