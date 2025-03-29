@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_stt_view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!--<xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="nbre_colis" string="Nbre colis"/>
+                <field name="poids_total_brut" string="Pds Tot. Brut"/>
+                <field name="poids_total_net" string="Pds Tot. Net"/>
+                
+                
+            </xpath>-->
+
+            <xpath expr="//notebook/page[@name='other_info']/group[1]/group[1]/field[@name='partner_bank_id']" position="after">
+                
+                <!--<field name="total_en_dinar" string="Total en Dinar"/>
+                <field name="total_lettre_dinar" string="Total lettre Dinar"/>
+                <field name="total_lettre" string="Total lettre"/>-->
+<!--                <field name="montant_tva_exonere" string="Montant TVA19% exonéré"/>-->
+<!--                <field name="cours" string="Cours"/>-->
+<!--                <field name="mode_de_paiement" string="Mode de paiement"/>-->
+                <!--<field name="mode_de_livraison" string="Mode de livraison"/>-->
+                <!--<field name="cours_float" string="cours_float" invisible="1"/>-->
+                <field name="mt_regle_dnt" string="mt_regle_dnt" invisible="1"/>
+                <field name="solde_due_dnt" string="solde_due_dnt" invisible="1"/>
+                
+
+                
+            </xpath>
+        </field>
+    </record>
+
+    
+</odoo>

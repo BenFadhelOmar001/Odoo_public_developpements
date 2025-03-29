@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <template id="releve_partner_wiz_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <br/>
+                            <div style="overflow: hidden;position:relative">
+
+                                <div style="float:left;width:70%;position:absolute;top:0px;">
+
+                                    <t t-if="doc.the_move_type == 'client'">
+                                        <h3><b><span>Releve client</span></b></h3>
+                                    </t>
+                                    <t t-if="doc.the_move_type == 'fournisseur'">
+                                        <h3><b><span>Releve fournisseur</span></b></h3>
+                                    </t>
+
+                                </div>
+
+                                <div style="float:right;width:30%">
+                                    <b><span t-field="doc.partner_id.name"/></b>
+                                    <br/>   
+                                    Matricule Fiscale : <span t-field="doc.partner_id.vat"/>
+
+                                </div>
+
+                            </div>
+                            <br/>
+                            <t t-if="doc.the_move_type == 'client'">
+
+                            RELEVE DE COMPTES DU <span t-field="doc.date_debut"/> AU <span t-field="doc.date_fin"/>
+                            <br/>
+                            Nous vous remettons ci-aprés le relevé de nos factures, tout en vous prions de proceder au règlement des factures dont la date est échu
+
+                            <br/>
+                            <br/> 
+
+                            <table class="table table-sm">
+                                <thead>
+                                <tr style="font-size:13px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Type</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Numéro</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Date pièce</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Echéance</b>
+                                    </th>
+
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Total HT TND</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Mt Réglé TND</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Solde Dû TND</b>
+                                    </th>
+                                    <th class="text-center" style="max-width: 300px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Règlement</b>
+                                    </th>
+                                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr t-foreach="get_records(doc)" t-as="record" style="font-size:15px;">
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <t t-if="record.move_type == 'out_invoice' or record.move_type == 'in_invoice'">
+                                        <span>F</span>
+                                    </t>
+                                    <t t-if="record.move_type == 'out_refund' or record.move_type == 'in_refund'">
+                                        <span>A</span>
+                                    </t>
+                                    
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-field="record.name"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-esc="record.invoice_date" t-options='{"widget": "date","format": "dd/MM/yyyy"}'/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-field="record.invoice_date_due"/>
+                                    </td>
+
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <t t-if="record.move_type == 'out_refund' or record.move_type == 'in_refund'"><span>- </span></t><span t-esc="'%.3f'% record.total_en_dinar"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <t t-if="record.move_type == 'out_refund' or record.move_type == 'in_refund'"><span>- </span></t><span t-esc="'%.3f'% record.mt_regle_dnt"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <t t-if="record.move_type == 'out_refund' or record.move_type == 'in_refund'"><span>- </span></t><span t-esc="'%.3f'% record.solde_due_dnt"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-raw="get_reglement_from_move(doc,record)"/>
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                <td colspan="3" style="font-size:12px; border-bottom: 0px white solid; border-top: 0px white solid; border-left: 0px white solid; border-right: 1px black solid;"></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b>Total général</b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.2f'% total_amount_untaxed(doc)"/></b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_dinar_ht(doc)"/></b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_mt_regle_dnt(doc)"/></b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_solde_due_dnt(doc)"/></b></td>
+                                </tr>
+                                
+
+                                </tbody>
+                            </table>
+
+                            </t>
+
+                            <t t-else="">
+
+                            RELEVE DE COMPTES DU <span t-field="doc.date_debut"/> AU <span t-field="doc.date_fin"/>
+
+                            <br/>
+                            <br/>
+
+                            <table class="table table-sm">
+                                <thead>
+                                <tr style="font-size:13px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Type</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Numéro</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Réference facture</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Date pièce</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Echéance</b>
+                                    </th>
+
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Total HT TND</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Mt Réglé TND</b>
+                                    </th>
+                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Solde Dû TND</b>
+                                    </th>
+                                    <th class="text-center" style="max-width: 300px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <b>Règlement</b>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr t-foreach="get_records(doc)" t-as="record" style="font-size:15px;">
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <t t-if="record.move_type == 'out_invoice' or record.move_type == 'in_invoice'">
+                                        <span>F</span>
+                                    </t>
+                                    <t t-if="record.move_type == 'out_refund' or record.move_type == 'in_refund'">
+                                        <span>A</span>
+                                    </t>
+
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-field="record.name"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-field="record.ref"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-esc="record.invoice_date" t-options='{"widget": "date","format": "dd/MM/yyyy"}'/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-field="record.invoice_date_due"/>
+                                    </td>
+
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-esc="'%.3f'% record.total_en_dinar"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-esc="'%.3f'% record.mt_regle_dnt"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-esc="'%.3f'% record.solde_due_dnt"/>
+                                    </td>
+                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">
+                                    <span t-raw="get_reglement_from_move(doc,record)"/>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                <td colspan="3" style="font-size:12px; border-bottom: 0px white solid; border-top: 0px white solid; border-left: 0px white solid; border-right: 1px black solid;"></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b>Total général</b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.2f'% total_amount_untaxed(doc)"/></b></td>
+                                <!--<td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_dinar_ht(doc)"/></b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_mt_regle_dnt(doc)"/></b></td>
+                                <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><b><span t-esc="'%.3f'% total_solde_due_dnt(doc)"/></b></td>-->
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+
+                            </t>
+
+
+
+
+
+
+                                
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

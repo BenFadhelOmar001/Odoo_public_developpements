@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="releve_partner_wiz_form_view">
+       <field name="name">Releve</field>
+       <field name="model">releve.partner.wiz</field>
+       <field name="arch" type="xml">
+           <form string="Leave">
+               <sheet>
+                   <group>
+                       <group>
+                           <field name="date_debut" string="Date debut"/>
+                       </group>
+                       <group>
+                           <field name="date_fin" string="Date fin"/>
+                       </group>
+                   </group>
+
+                   <group>
+                       <group>
+                           <field name="the_move_type" string="Type" widget="radio" />
+                       </group>
+                       <group>
+                       </group>
+                   </group>
+                   
+               <field name="partner_id" invisible="1"/>
+               
+               </sheet>
+               <footer>
+                   <button type="object" name="generer_releve_report" class="btn btn-primary"
+                           string="Generer PDF"/>
+                   <button string="Annuler" special="cancel"/>
+               </footer>
+           </form>
+       </field>
+</record> 
+
+    
+</odoo>
