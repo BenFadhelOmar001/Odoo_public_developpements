@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        
+
+        
+
+        <record id="helpdesk_ticket_form_custom_inherit" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email_cc']" position="after">
+                    <field name="x_studio_civilit_1" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+<!--                     <field name="x_studio_selection_field_7Bvj3" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/> -->
+                    <!--<field name="x_studio_nom1"/>-->
+                    <field name="x_studio_nom_2" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_prnom" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_date_de_naissance" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_date_adresse_1" string="Adresse mail professionnelle" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="num_professionnel" string="Numéro professionnel" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <!--<field name="x_studio_pc_housse_sourisclavier"/>
+                    <field name="x_studio_ecran"/>
+                    <field name="x_studio_ecran_supplmentaire"/>
+                    <field name="x_studio_email_cc"/>-->
+                    <field name="x_studio_date_de_cration" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_date_darrive" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_date_de_depart" attrs="{'invisible': ['|', ('equipe', '!=', 'support_rh'), ('x_studio_type_de_contrat', '=', 'CDI')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="x_studio_type_de_recrutement" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="personne_remplace" attrs="{'invisible': [('x_studio_type_de_recrutement', '!=', 'Remplacement')], 'required': [('x_studio_type_de_recrutement', '=', 'Remplacement')]}" string="Personne Remplacée"/>
+                    <field name="x_studio_type_de_contrat" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_matricule" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_centre_de_cot" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_site_de_rattachement" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <field name="x_studio_direction" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+                    <!--<field name="x_studio_nom_du_n1" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>-->
+                    <!--<field name="x_studio_adresse_mail_du_n1" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>-->
+                    <!--<field name="x_studio_nom_dun_collaboratteur_avec_un_poste_quivalent"/>-->
+                    <field name="x_studio_type_de_fontion" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}" widget='selection'/>
+                        
+                    <field name="is_autre_fonction" invisible="1"/>
+                    <field name="autre_type_de_fonction" attrs="{'invisible': ['|',('equipe', '!=', 'support_rh'),('is_autre_fonction', '!=', True)]}"/>
+
+                </xpath>
+                
+                
+
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
