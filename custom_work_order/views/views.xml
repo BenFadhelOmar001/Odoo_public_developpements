@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="workorder_production_inherit_tree_view" model="ir.ui.view">
+            <field name="name">mrp.workorder.tree editable inherit</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+            <field name="arch" type="xml">
+
+              <!--<xpath expr="//notebook[1]/page[@name='operations']/field[1]/tree[1]/field[@name='workcenter_id']" position="after">-->
+              <xpath expr="//field[@name='workcenter_id']" position="after">
+
+                  <field name="employee_id" string="Employé" />
+                  <!--<field name="current_user_id" string="current_user_id" />
+                  <field name="current_employee_id" string="current_employee_id" />
+                  <field name="is_user" string="is_user" />-->
+
+              </xpath>
+
+            </field>
+        </record>
+
+        <record id="mrp_workordertt_view_search" model="ir.ui.view">
+                <field name="name">mrp.workorder</field>
+                <field name="model">mrp.workorder</field>
+                <field name="arch" type="xml">
+                    <search string="Mes ordres de travaille">
+                        <!-- <field name="cycle_production_id" class="oe_inline" string="Cycle production"/> -->
+
+                            <filter name="my_orders" string="Mes ordres de travaille" domain="[('is_user', '=', True)]"/>
+
+                   </search>
+                </field>
+            </record>
+
+
+
+       <record model="ir.actions.act_window" id="mrp.mrp_workorder_todo">
+        <field name="name">Work Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
+        <field name="search_view_id" ref="mrp_workordertt_view_search"/>
+
+           <field name="view_id" ref="workorder_production_inherit_tree_view"/>
+        <field name="context">{'search_default_my_orders': 1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
+
+
+
+
+
+    </data>
+</odoo>

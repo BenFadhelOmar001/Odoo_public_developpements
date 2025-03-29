@@ -1,0 +1,139 @@
+
+<odoo>
+
+    <record id="action_mrp_production_report_custom" model="ir.actions.report">
+        <field name="name">Ordre de fabrication par employé</field>
+        <field name="model">mrp.production.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_production_cm.print_custom_mrp_production</field>
+        <field name="report_file">custom_production_cm.print_custom_mrp_production</field>
+        <field name="binding_model_id" ref="model_mrp_production_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+    <template id="print_custom_mrp_production">
+
+        <t t-call="web.html_container">
+            <t t-set="orders_records"
+                                           t-value="request.env['mrp.production'].sudo().search([('id', '=', form['production_id'][0])], limit=1)"/>
+        <t t-foreach="orders_records" t-as="o">
+            <t  t-foreach="o.workorder_ids" t-as="wrk" t-if="form['employee_id'][0] == wrk.employee_id.id">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-7">
+                            <h2><span t-field="o.name"/>-<span t-if="wrk.workcenter_id.code" t-esc="wrk.workcenter_id.code"/></h2>
+                        </div>
+                        <div class="col-5">
+                            <span class="text-right">
+                                <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-3" t-if="o.origin">
+                            <strong>Origine:</strong><br/>
+                            <span t-field="o.origin"/>
+                        </div>
+                        <div class="col-3">
+                            <strong>Responsible:</strong><br/>
+                            <span t-field="o.user_id"/>
+                        </div>
+                    </div>
+
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Produit fini:</strong><br/>
+                            <span t-field="o.product_id"/>
+                        </div>
+                        <div class="col-3" t-if="o.product_description_variants">
+                            <strong>Description:</strong><br/>
+                            <span t-field="o.product_description_variants"/>
+                        </div>
+                        <div class="col-3">
+                            <strong>Quantité pour produire:</strong><br/>
+                            <span t-field="o.product_qty"/>
+                            <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
+                        </div>
+                    </div>
+
+                    <div t-if="wrk" groups="mrp.group_mrp_routings">
+                        <h3>
+                            <span t-if="o.state == 'done'">Operations Validés</span>
+                            <span t-else="">Operations Planifiers</span>
+                        </h3>
+                        <table class="table table-sm">
+                            <tr>
+                                <th><strong>Opérations</strong></th>
+                                <th><strong>Poste de travaille</strong></th>
+                                <th><strong>Nbre. de Minutes</strong></th>
+                            </tr>
+                            <tr t-foreach="wrk" t-as="line2">
+
+                                <td t-if="form['employee_id'][0] == line2.employee_id.id"><span t-field="line2.name"/></td>
+                                <td t-if="form['employee_id'][0] == line2.employee_id.id"><span t-field="line2.workcenter_id.name"/></td>
+                                <td t-if="form['employee_id'][0] == line2.employee_id.id">
+                                    <span t-if="o.state != 'done' and form['employee_id'][0] == line2.employee_id.id" t-field="line2.duration_expected"/>
+                                    <span t-if="o.state == 'done' and form['employee_id'][0] == line2.employee_id.id" t-field="line2.duration"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3 t-if="o.move_raw_ids">
+                        <span t-if="o.state == 'done'">
+                            Produits consommés
+                        </span>
+                        <span t-else="">
+                            Produits à consommés
+                        </span>
+                    </h3>
+
+                    <table class="table table-sm" t-if="o.move_raw_ids">
+                        <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
+                                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="wrk">
+                                <t t-foreach="wrk" t-as="raw">
+                                <tr t-if="raw.employee_id.id == form['employee_id'][0]" t-foreach="raw.move_raw_ids" t-as="raw_line">
+                                    <td >
+                                        <span t-field="raw_line.product_id"/>
+                                    </td>
+                                    <td  t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                                        <t t-if="o.state == 'done'">
+                                            <span t-field="raw_line.quantity_done"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="raw_line.product_uom_qty"/>
+                                        </t>
+                                        <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
+                                    </td>
+                                    <td t-if="has_product_barcode" width="15%" class="text-center">
+                                        <t t-if="raw_line.product_id.barcode">
+                                            <div t-field="raw_line.product_id.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                    </t>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+        </t>
+        </template>
+
+
+
+</odoo>
