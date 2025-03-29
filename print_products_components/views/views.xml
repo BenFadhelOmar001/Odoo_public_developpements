@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+       <record model="ir.actions.server" id="action_get_products_components">
+       <field name="name">Générer les composants</field>
+       <field name="model_id" ref="sale.model_sale_order"/>
+       <field name="binding_model_id" ref="sale.model_sale_order"/>
+       <field name="state">code</field>
+       <field name="code">
+           action = records.action_generate_components()
+       </field>
+   </record>
+
+        <record id="components_report_xlsx" model="ir.actions.report">
+        <field name="name">Products Components</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">print_products_components.products_components_xlsx</field>
+        <field name="report_file">print_products_components.products_components_xlsx</field>
+        <!--<field name="binding_model_id" ref="model_sale_order"/>-->
+        <field name="binding_type">report</field>
+          <field name="attachment_use">False</field>
+    </record>
+
+
+
+
+
+    </data>
+</odoo>
