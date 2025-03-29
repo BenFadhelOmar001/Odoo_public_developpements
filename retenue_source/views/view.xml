@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_type_retenue_tree" model="ir.ui.view">
+            <field name="name">Types Retenues</field>
+            <field name="model">type.retenue</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="name" string="Nom"/>
+                    <field name="pourcentage" string="Pourcentage"/>
+                    <field name="state" string="Statut"/>
+
+
+                </tree>
+
+            </field>
+        </record>
+
+        <record id="view_type_retenue_form" model="ir.ui.view">
+            <field name="name">Types Retenues</field>
+            <field name="model">type.retenue</field>
+            <field name="arch" type="xml">
+                <form >
+                    <header>
+                        <button string="Valider" type="object" name="valide_progressbar" class="oe_highlight" states="draft"/>
+                        <button string="Annuler" type="object" name="cancel_progressbar" class="oe_highlight" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+                        <field name="state" widget="statusbar" string="Statut" readonly="0"/>
+                    </header>
+                    <group>
+                        <field name="name" string="Nom" required="1"/>
+                        <field name="pourcentage" string="Pourcentage"/>
+                    </group>
+
+                </form>
+
+            </field>
+        </record>
+
+        <record id="menu_type_retenue_action" model="ir.actions.act_window">
+            <field name="name">Type Retenue</field>
+            <field name="res_model">type.retenue</field>
+
+            <field name="view_mode">tree,form</field>
+
+        </record>
+
+
+        <menuitem id="type_retenue_menu" parent="account.account_invoicing_menu" name="Types Retenus" sequence="3"
+                  action="menu_type_retenue_action"/>
+
+         <record id="account_journal_form_inherit" model="ir.ui.view">
+        <field name="name">account.journal.view.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+
+                    <field name="retenue_client" string="Journal retenue client"/>
+                    <field name="retenue_frs" string="Journal retenue fournisseur"/>
+
+
+            </xpath>
+        </field>
+         </record>
+
+        <record id="account_payment_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.view.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_bank_id']" position="after">
+
+                    <field name="retenue_type" string="Type Retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="pourcentage" string="Pourcentage" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_base" string="Base retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_brut" string="Brut retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_client" invisible="1"/>
+                    <field name="retenue_frs" invisible="1"/>
+                    <field name="types" invisible="1"/>
+
+
+            </xpath>
+        </field>
+         </record>
+
+        <record id="account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.view.form.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_bank_id']" position="after">
+
+                    <field name="retenue_type" string="Type Retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="pourcentage" string="Pourcentage" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_base" string="Base retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_brut" string="Brut retenue" attrs="{'invisible':[('retenue_client', '!=', True), ('retenue_frs', '!=', True)]}"/>
+                    <field name="retenue_client" invisible="1"/>
+                    <field name="retenue_frs" invisible="1"/>
+                    <!--<field name="types"/>-->
+
+
+            </xpath>
+        </field>
+         </record>
+
+
+    </data>
+</odoo>
