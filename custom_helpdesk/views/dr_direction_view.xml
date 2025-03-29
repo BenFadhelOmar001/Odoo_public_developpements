@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_dr_direction_tree" model="ir.ui.view">
+            <field name="name">dr.direction.tree</field>
+            <field name="model">dr.direction</field>
+            <field name="arch" type="xml">
+                <tree string="Directions">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dr_direction_form" model="ir.ui.view">
+            <field name="name">dr.direction.form</field>
+            <field name="model">dr.direction</field>
+            <field name="arch" type="xml">
+                <form string="Direction">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="metier_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dr_direction" model="ir.actions.act_window">
+            <field name="name">Directions</field>
+            <field name="res_model">dr.direction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dr_direction_tree"/>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_dr_direction" 
+                  name="Directions" 
+                  parent="hr.menu_config_recruitment" 
+                  action="action_dr_direction" 
+                  sequence="10"/>
+    </data>
+</odoo>

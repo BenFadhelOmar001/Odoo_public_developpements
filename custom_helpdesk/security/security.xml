@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="group_it_manager_data" model="res.groups">
+        <field name="name">access helpdek for IT manager data</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+        <!--<record id="group_hr_manager_data" model="res.groups">
+        <field name="name">access helpdek for HR manager data</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>-->
+
+    <record id="group_hr_user_data" model="res.groups">
+        <field name="name">access helpdek for HR user data</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+        <record id="group_channel_data" model="res.groups">
+        <field name="name">access channel tickets</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    </data>
+</odoo>

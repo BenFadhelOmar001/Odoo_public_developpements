@@ -1,0 +1,630 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="email_template_demande_recrutement_manager_notif" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT MANAGER NOTIF</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+
+                    
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_manager_notif_valide" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT MANAGER NOTIF VALIDE</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement de <t t-out="object.partner_id.name"/> a été validée.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_manager_notif_refuse" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT MANAGER NOTIF REFUSE</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement de <t t-out="object.partner_id.name"/> a été refusée.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+        <record id="email_template_demande_recrutement_demandeur_info" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT DEMANDEUR INFO</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement est passée au <t t-out="object.stage_id.name"/>.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                    
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+        <record id="email_template_demande_recrutement_rrh_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT RRH LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Vous avez reçu une demande de recrutement de la part de <t t-out="object.partner_id.name"/>.</p>
+                <br/>
+                <br/>
+                <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Merci de la traiter au plus vite.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_rdrh_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT RDRH LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Vous avez reçu une demande de recrutement de la part de <t t-out="object.partner_id.name"/>.</p>
+                <br/>
+                <br/>
+                <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Merci de la traiter au plus vite.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_direction_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT DIRECTION LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Vous avez reçu une demande de recrutement de la part de <t t-out="object.partner_id.name"/>.</p>
+                <br/>
+                <br/>
+                <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Merci de la traiter au plus vite.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_drh_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT DRH LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Vous avez reçu une demande de recrutement de la part de <t t-out="object.partner_id.name"/>.</p>
+                <br/>
+                <br/>
+                <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Merci de la traiter au plus vite.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+
+        <record id="email_template_demande_recrutement_demande_infos_from_rdrh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT DEMANDE INFOS FROM RDRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement nécessite les compléments d’information suivants : <t t-out="object.rdrh_comment_complete"/></p>
+                <br/>
+                <p>Merci de réviser votre demande en la complétant avec les informations manquantes</p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+
+                <br/>
+                <p>Merci</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+        <record id="email_template_demande_recrutement_demande_infos_from_drh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT DEMANDE INFOS FROM DRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">Vous avez la demande de recrutement de {{object.partner_id.name}} à traiter {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement nécessite les compléments d’information suivants : <t t-out="object.drh_comment_complete"/></p>
+                <br/>
+                <p>Merci de réviser votre demande en la complétant avec les informations manquantes</p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+
+                <br/>
+                <p>Merci</p>
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+        <record id="email_template_demande_recrutement_valide_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT VALIDE LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_link" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE LINK</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Bonjour,</p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_link_from_rrh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE LINK FROM RRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement a été refusée avec les commentaires : <t t-out="object.commentaires"/></p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_link_from_rdrh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE LINK FROM RDRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement a été refusée avec les commentaires : <t t-out="object.rdrh_comment_complete"/></p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_link_from_direction" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE LINK FROM DIRECTION</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement a été refusée avec les commentaires : <t t-out="object.direction_commentaire"/></p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_link_from_drh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE LINK FROM DRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement a été refusée avec les commentaires : <t t-out="object.drh_comment_complete"/></p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_valide_link_from_drh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT VALIDE LINK FROM DRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>La demande de recrutement a été validée</p>
+                <br/>
+                    <a t-attf-href="{{object.demande_recrutement_link}}"><t t-out="object.name"/></a> 
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+        <record id="email_template_demande_recrutement_valide_info" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT VALIDE INFO</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement a été validée.</p>
+                <br/>
+                <p>La recherche va démarrer dans les plus brefs délais. Le recruteur en charge de ce recrutement va prendre contact avec vous pour définir le profil souhaité.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                    
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_info" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE INFO</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement a été refusée avec les commentaires :</p>
+                <br/>
+                <p>Merci de vous rapprocher de votre RRH.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_info_from_rrh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE INFO FROM RRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement a été refusée avec les commentaires : <t t-out="object.commentaires"/></p>
+                <br/>
+                <p>Merci de vous rapprocher de votre RRH.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_info_from_rdrh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE INFO FROM RDRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement a été refusée avec les commentaires : <t t-out="object.rdrh_comment_complete"/></p>
+                <br/>
+                <p>Merci de vous rapprocher de votre RRH.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_info_from_direction" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE INFO FROM DIRECTION</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                <p>Votre demande de recrutement a été refusée avec les commentaires : <t t-out="object.direction_commentaire"/></p>
+                <br/>
+                <p>Merci de vous rapprocher de votre RRH.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+        <record id="email_template_demande_recrutement_refuse_info_from_drh" model="mail.template">
+            <field name="name">DEMANDE RECRUTEMENT REFUSE INFO FROM DRH</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">La demande de recrutement de {{object.partner_id.name}} a été {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+                <br/>
+                
+                <p>Votre demande de recrutement a été refusée avec les commentaires : <t t-out="object.drh_comment_complete"/></p>
+                <br/>
+                <p>Merci de vous rapprocher de votre RRH.</p>
+                <br/>
+                <p>Cordialement,</p>
+                <br/>
+                <p>L’équipe Recrutement</p>
+                
+                <br/>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img src="/website/image/website/1/logo" alt="Company Logo" style="max-width: 100px;"/>
+                </div>
+
+
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

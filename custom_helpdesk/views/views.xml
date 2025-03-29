@@ -1,0 +1,889 @@
+<odoo>
+    <data>
+
+        <record id="view_hr_job_form_custom" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[2]" position="after">
+                    <group>
+                        <field name="is_autre"/>
+<!--                         <field name="metier"/> -->
+                        <field name="metier_id"/>
+                    </group>
+                    
+                </xpath>
+
+            </field>
+        </record>
+        
+        <record id="helpdesk_stage_form_custom" model="ir.ui.view">
+            <field name="name">helpdesk.stage.form</field>
+            <field name="model">helpdesk.stage</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='team_ids']" position="after">
+                    <field name="etape"/>
+                    <field name="besoin_smartphone" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                    <!--<field name="destinataires"/>
+                    <field name="destinataires_besoin_smartphone"
+                           attrs="{'invisible': [('besoin_smartphone', '!=', True)]}"/>-->
+                </xpath>
+
+                <xpath expr="//group[2]" position="after">
+                    <notebook>
+                        <page string="Destinataires">
+                            Destinataires
+                            <field name="destinataires" placeholder="Adresses mails des destinataires"
+                                   string="Destinataires"/>
+                            Destinataires Smartphones
+                            <field name="destinataires_besoin_smartphone"
+                                   attrs="{'invisible': [('besoin_smartphone', '!=', True)]}"
+                                   placeholder="Adresses mails des destinataires smartphones" string="Destinataires Smartphones"/>
+
+                            <group>
+                                <field name="destinataires_for_pc_portable" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_tablette" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_smartphone" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_besoin_ligne_fixe" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_lc_nomad" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_lc_start" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_logiciel_sap" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                                <field name="destinataires_for_vehicule_fonction" placeholder="Adresses mails des destinataires" attrs="{'invisible': [('etape', '!=', 'traitement_prestataire')]}"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <!--<record id="mail_channel_form_custom" model="ir.ui.view">
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
+            <field name="inherit_id" ref="mail.mail_channel_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                <field name="ticket_id"/>
+
+                </xpath>
+
+            </field>
+        </record>-->
+
+        <record id="res_users_form_custom" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[1]" position="inside">
+                    <page name="access_rights_portail" string="Droits d'accés Portail">
+                        <table >
+                                        <tr>
+                                            <td>
+                                        <field name="group_hr_manager_data" string="access helpdek for HR manager data"/>
+                                               
+                            
+                                            </td>
+                                            <td>
+                                                <h5>Access helpdek for HR manager data</h5>
+                                            </td>
+                                        </tr>
+                        </table>
+                        <br/>
+                            <table >
+                                    <tr>
+                                            <td>
+                                        <field name="group_it_manager_data" string="access helpdek for IT manager data"/>
+
+                                            </td>
+                                            <td>
+                                                <h5>Access helpdek for IT manager data</h5>
+                                            </td>
+                                        </tr>
+                        </table>
+                        <group>
+                            <group string="Prestataire">
+                                
+                                <field name="access_for_numero_de_mobile"/>
+                                <field name="access_for_code_sim"/>
+                                <field name="access_for_numero_de_ligne_fixe"/>
+                                <field name="access_for_adresse_mail"/>
+                                <field name="access_for_mot_de_passe_windows"/>
+                                <field name="access_for_commentaires_prestataires"/>
+
+                            </group>
+                            <group string="Demande recrutement">
+
+                                <field name="demande_recrutement_session"/>
+                                
+                                <field name="group_demande_recrutement_demandeur"/>
+                                <field name="group_demande_recrutement_rrh"/>
+                                <field name="group_demande_recrutement_rdrh"/>
+                                <field name="group_demande_recrutement_direction"/>
+                                <field name="group_demande_recrutement_drh"/>
+
+<!--                                 <field name="direction_a_choisir" attrs="{'invisible': [('group_demande_recrutement_direction', '=', False)]}"/> -->
+                                <field name="direction_id" attrs="{'invisible': [('group_demande_recrutement_direction', '=', False)]}"/>
+
+
+                            </group>
+                        </group>
+                    </page>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="helpdesk_team_form_custom" model="ir.ui.view">
+            <field name="name">helpdesk.team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                    Equipe
+                    <field name="equipe" string="Equipe"/>
+                    <br/>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_kanban_custom" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.kanban</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//templates[1]/t[1]/div[1]/div[2]/div[1]" position="replace">
+                    
+                    <strong class="o_kanban_record_title"><field name="name"/> (#<field name="id"/>)</strong>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="helpdesk_ticket_form_custom" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group[1]/group[2]/label[2]" position="replace">
+                    <div>
+                    </div>
+                </xpath>
+                <xpath expr="//group[1]/group[2]/div[2]" position="replace">
+                    <div>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='email_cc']" position="before">
+                    <field name="partner_phone" widget="phone" string="Téléphone" attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/>
+                    
+                </xpath>
+                <xpath expr="//field[@name='email_cc']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('equipe', '=', 'master_data')]}</attribute>
+                </xpath>
+
+                <xpath expr="//div[2]/h1[1]" position="replace">
+
+                    <h1><field name="name" class="field_name" placeholder="e.g. Product arrived damaged"  attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/></h1>
+
+                    <h1><field name="name" class="field_name" placeholder="Par ex. Nouvel arrivant M. Bernard"  attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/></h1>
+
+                </xpath>
+
+                <xpath expr="//field[@name='partner_name']" position="replace">
+
+                    <field name="partner_name" attrs="{'invisible': ['|',('partner_id', '!=', False),('equipe', '=', 'support_rh')]}"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="replace">
+
+                    <field name="partner_id" class="field_partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" widget="res_partner_many2one" context="{'default_name': partner_name, 'default_email': partner_email, 'default_phone': partner_phone}" attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/>
+
+                </xpath>
+
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+
+                    <field name="partner_id" class="field_partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" widget="res_partner_many2one" context="{'default_name': partner_name, 'default_email': partner_email, 'default_phone': partner_phone}" string="Manager" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}"/>
+
+                </xpath>
+
+
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id" class="field_user_id" domain="['&amp;', ('id', 'in', domain_user_ids), ('share', '=', False)]" widget="many2one_avatar_user" attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/>
+                </xpath>
+
+
+                <xpath expr="//field[@name='ticket_type_id']" position="replace">
+
+                    <field name="ticket_type_id" attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='tag_ids']" position="replace">
+
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('equipe', '=', 'support_rh')]}"/>
+
+                </xpath>
+                
+                
+                <!--<xpath expr="//field[@name='x_studio_civilit_1']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_selection_field_7Bvj3']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_nom1']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_nom_2']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_pc_housse_sourisclavier']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_ecran']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_ecran_supplmentaire']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_email_cc']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_date_darrive']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_date_de_depart']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_type_de_recrutement']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_type_de_contrat']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_matricule']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_centre_de_cot']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_site_de_rattachement']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_direction']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_nom_du_n1']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_adresse_mail_du_n1']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                <xpath expr="//field[@name='x_studio_nom_dun_collaboratteur_avec_un_poste_quivalent']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='x_studio_type_de_fontion']" position="attributes">
+                    <attribute name="groups">custom_helpdesk.group_hr_manager_data</attribute>
+                </xpath>-->
+                <xpath expr="//group[1]" position="after">
+                    <field name="equipe" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                    <notebook>
+
+                        <page string="Formulaire Support IT"
+                              attrs="{'invisible': [('equipe', '!=', 'service_clientele')]}"
+                              groups="custom_helpdesk.group_it_manager_data">
+                            <group class="mb-0 mt-4">
+                                <group class="mb-0 mt-4">
+
+                                    <!--<field name="employee_id" string="Employé"/>-->
+                                    <field name="site_rattachment" string="Site rattachment"/>
+                                    <field name="question" string="Question concerne"/>
+                                    <field name="materiel" string="Matèriel"
+                                           attrs="{'invisible': [('question', '!=', 'materiel')], 'required': [('question', '=', 'materiel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="logiciel" string="Logiciel"
+                                           attrs="{'invisible': [('question', '!=', 'logiciel')], 'required': [('question', '=', 'logiciel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="sujet" string="Sujet"
+                                           attrs="{'invisible': [('question', '!=', 'logiciel')], 'required': [('question', '=', 'logiciel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="seul_impacte" string="Seul impacté" widget="radio"
+                                           options="{'horizontal': true}"
+                                           attrs="{'invisible': [('question', '!=', 'logiciel')], 'required': [('question', '=', 'logiciel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="travaille" string="Continuation de travailler" widget="radio"
+                                           options="{'horizontal': true}"
+                                           attrs="{'invisible': [('question', '!=', 'logiciel')], 'required': [('question', '=', 'logiciel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="num_transaction" string="Numéro transaction"
+                                           attrs="{'invisible': ['|', ('logiciel', '!=', 'sap'), ('question', '!=', 'logiciel')], 'required': [('question', '=', 'logiciel'), ('logiciel', '=', 'sap')]}"/>
+                                    <field name="num_imprimante" string="Numéro imprimante"
+                                           attrs="{'invisible': ['|', ('question', '!=', 'materiel'), ('materiel', '!=', 'imprimante')], 'required': [('question', '=', 'materiel'), ('materiel', '=', 'imprimante')]}"/>
+                                    <field name="nouveau_materiel" string="Demande nouveau matèriel" widget="radio"
+                                           options="{'horizontal': true}"
+                                           attrs="{'invisible': [('question', '!=', 'materiel')], 'required': [('question', '=', 'materiel'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <field name="responsable_hierarchique" string="Responsable hierarchique"
+                                           attrs="{'invisible': ['|', ('question', '!=', 'materiel'), ('nouveau_materiel', '!=', 'oui')], 'required': [('question', '=', 'materiel'), ('nouveau_materiel', '=', 'oui'), ('equipe', '=', 'service_clientele')]}"/>
+                                    <!--<field name="type_materiel" attrs="{'invisible': ['|', ('question', '!=', 'materiel'), ('nouveau_materiel', '!=', 'oui')]}"/>-->
+                                </group>
+                                <!--<group attrs="{'invisible': ['|', ('question', '!=', 'materiel'), ('nouveau_materiel', '!=', 'oui')]}">
+                                    <label for="pc" string="Type matèriel"/>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <field name="pc"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>PC</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="smartphone"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Smartphone</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="ipad"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Ipad</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="ecran"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Ecran</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="imprimante"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Imprimante</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="hub"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Hub(station)</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="cable"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Câble</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="autres"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Autres</h5>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+                                </group>-->
+                                <group class="mb-0 mt-4">
+                                    <field name="ticket_url" />
+                                    <field name="reponse_url" />
+
+                                    <field name="comment" string="Commentaire"
+                                           attrs="{'invisible': [('question', '=', 'master_data')], 'required': [('question', '=', 'master_data')]}"/>
+                                    <field name="piece" string="Pièce jointe"
+                                           attrs="{'invisible': ['|', ('question', '!=', 'materiel'), ('nouveau_materiel', '!=', 'oui')], 'required': [('question', '=', 'materiel'), ('nouveau_materiel', '=', 'oui')]}"/>
+                                    <field name="type_master_data"
+                                           attrs="{'invisible': [('question', '!=', 'master_data')], 'required': [('question', '=', 'master_data')]}"/>
+                                    <field name="sujet_master_data"
+                                           attrs="{'invisible': [('question', '!=', 'master_data')], 'required': [('question', '=', 'master_data')]}"/>
+                                    <field name="comment_master_data"
+                                           attrs="{'invisible': [('question', '!=', 'master_data')], 'required': [('question', '=', 'master_data')]}"/>
+                                    <field name="piece_master_data"
+                                           attrs="{'invisible': [('question', '!=', 'master_data')], 'required': [('question', '=', 'master_data')]}"/>
+                                    <!--<field name="seul_impacte_master_data"
+                                           attrs="{'invisible': ['|', ('question', '!=', 'master_data'), ('type_master_data', '!=', 'erreur')], 'required': [('question', '=', 'master_data'), ('type_master_data', '=', 'erreur')]}"
+                                           widget="radio" options="{'horizontal': true}"/>-->
+
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Formulaire Support RH" attrs="{'invisible': [('equipe', '!=', 'support_rh')]}" groups="custom_helpdesk.group_it_manager_data">
+                            <group class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="collaborateur"
+                                           />
+
+
+
+                                    <field name="pc_housse"
+                                           attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}" widget="radio"
+                                           options="{'horizontal': true}"/>
+
+                                    <!--<field name="clavier_souris"
+                                           attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}" widget="radio"
+                                           options="{'horizontal': true}"/>-->
+
+                                    <label for="clavier" string="Matériel supplémentaire" />
+                                    <table >
+                                        <tr>
+                                            <td>
+                                                <field name="clavier" attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Clavier</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="souris" attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Souris</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="ecran" attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Ecran</h5>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                    <field name="tablette_chargeur_housse_clavier"
+                                           attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}" widget="radio"
+                                           options="{'horizontal': true}"/>
+                                    <field name="x_studio_smartphone"
+                                           attrs="{'required': [('status', '=', 'traitement_manager'), ('equipe', '=', 'support_rh')]}" widget="radio"
+                                           options="{'horizontal': true}"/>
+                                    <field name="x_studio_ligne_fixe"
+                                            widget="radio"
+                                           options="{'horizontal': true}"/>
+                                    <field name="cx" string="CX" attrs="{'invisible': [('x_studio_ligne_fixe', '!=', 'oui')]}"/>
+                                    <field name="x_studio_ligne" attrs="{'invisible': [('x_studio_ligne_fixe', '!=', 'oui')]}"
+                                            />
+                                    <field name="nom_1" attrs="{'invisible': [('x_studio_ligne', '!=', 'Nouvelle ligne')]}"
+                                            />
+                                    <field name="nom_2" attrs="{'invisible': [('x_studio_ligne', '=', 'Nouvelle ligne')]}"
+                                            />
+                                    <!--<field name="logiciel_commerce"
+                                           attrs="{'required': [('status', '!=', 'traitement_manager')]}"/>-->
+
+                                    <label for="nomad" string="Logiciel Commerce" />
+                                    <table >
+                                        <tr>
+                                            <td>
+                                                <field name="nomad"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Nomad</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="start"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Start</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="aucun"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Aucun</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="sales_apps"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>SalesApps</h5>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+
+
+                                    <label for="etafi" string="Logiciel Finance"/>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <field name="etafi"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Etafi (Liasse Fiscale)</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="kyriba"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Kyriba</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="wecheck"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Wecheck</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <field name="aucun_f"
+                                                       />
+                                            </td>
+                                            <td>
+                                                <h5>Aucun</h5>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+
+
+
+                                </group>
+                                <group>
+                                      <!--<field name="logiciel_finance"
+                                           attrs="{'required': [('status', '!=', 'traitement_manager')]}"/>-->
+                                    <field name="profil_fairjungle"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                   <!-- <field name="logiciel_paye"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>-->
+
+                                    <field name="logiciel_sap" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <!--<field name="nom"
+                                           attrs="{'required': [('equipe', '=', 'support_rh'), ('logiciel_sap', '=', 'oui')], 'invisible': [('logiciel_sap', '!=', 'oui')]}"/>-->
+
+                                    <field name="logiciel_sap_analytic" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <!--<field name="justification"
+                                           attrs="{'required': [('equipe', '=', 'support_rh'), ('logiciel_sap_analytic', '=', 'oui')], 'invisible': [('logiciel_sap_analytic', '!=', 'oui')]}"/>-->
+                                    <field name="vehicule_1" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <field name="vehicule_marque"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <field name="vehicule"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <field name="personne_vehicule"
+                                           attrs="{'required': [('vehicule', '=', 'reprise'), ('equipe', '=', 'support_rh')], 'invisible': [('vehicule', '=', 'aucun')]}"/>
+
+                                    <field name="acces_dossier" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>
+                                    <field name="nom_reseau"
+                                           attrs="{'required': [('acces_dossier', '=', 'oui'), ('equipe', '=', 'support_rh')], 'invisible': [('acces_dossier', '!=', 'oui')]}"/>
+                                    <field name="list_dossiers"
+                                           />
+                                    <field name="bal_partagee"
+                                           />
+                                    <!--<field name="besoin_imprimante" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>-->
+                                    <!--field name="besoin_epi" widget="radio" options="{'horizontal': true}"
+                                           attrs="{'required': [('equipe', '=', 'support_rh')]}"/>-->
+                                    <field name="comment_manager"/>
+
+                                    <field name="numero_de_mobile"/>
+                                    <field name="code_sim"/>
+                                    <field name="numero_de_ligne_fixe"/>
+                                    <field name="adresse_mail"/>
+                                    <field name="mot_de_passe_windows"/>
+                                    <field name="commentaires_prestataires"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Formulaire Demande recrutement" attrs="{'invisible': [('equipe', '!=', 'demande_recrutement')]}">
+
+                            <group class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="manager_recrutement" readonly="1"/>
+                                    <field name="etablissement" readonly="1"/>
+                                    <field name="rrh" readonly="1"/>
+<!--                                     <field name="direction_a_choisir" readonly="1"/>
+                                    <field name="metier_a_choisir" readonly="1"/> -->
+                                    <field name="direction_a_choisir_id" readonly="1"/>
+                                    <field name="metier_a_choisir_id" readonly="1"/>
+                                    <field name="poste_a_choisir" readonly="1"/>
+                                    <field name="poste_a_choisir_autre" readonly="1"/>
+                                    <field name="commentaire_demandeur" readonly="1"/>
+
+                                    
+                                    
+
+                                </group>
+
+                                <group>
+
+                                    <field name="date_de_creation_a_afficher" readonly="1"/>
+                                    <field name="motif_de_recrutement" readonly="1"/>
+                                    <field name="si_remplacement_qui" readonly="1" attrs="{'invisible': [('motif_de_recrutement', '=', 'Création')]}"/>
+                                    <field name="type_contrat" readonly="1"/>
+                                    <field name="date_de_debut_souhaite" readonly="1" attrs="{'invisible': [('type_contrat', '!=', 'CDI')]}"/>
+                                    <field name="date_de_debut" readonly="1" attrs="{'invisible': [('type_contrat', '=', 'CDI')]}"/>
+                                    <field name="date_de_fin" readonly="1" attrs="{'invisible': [('type_contrat', '=', 'CDI')]}"/>
+                                    <field name="missions_principales" readonly="1"/>
+
+                                </group>
+                                
+                            </group>
+
+                            <group>
+                                <group>
+                                    <br/> 
+                                    <br/>
+                                    
+                                    <field name="secteur_geographique" readonly="1"/>
+                                    <field name="specificite_clients" readonly="1"/>
+                                    <field name="lieu_habitation_souhaite" readonly="1"/>
+
+                                </group>
+
+                                <group>
+                                    <br/> 
+                                    <br/> 
+                                       
+                                        <table class="table" border="0" style="width: 500px;">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th>Actuel</th>
+                                                <th>Visé</th>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>Chiffre d’affaires du secteur</strong>
+                                                </td>
+                                                <td>
+                                                    <field name="chiffre_affaires_du_secteur_actuel" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="chiffre_affaires_du_secteur_vise" readonly="1"/>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>Evaluation rémunération annuelle</strong>
+                                                </td>
+                                                <td>
+                                                    <field name="evaluation_remuneration_annuelle_actuel" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="evaluation_remuneration_annuelle_vise" readonly="1"/>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>Garantie de salaire</strong>
+                                                </td>
+                                                <td>
+                                                    <field name="garantie_de_salaire_actuel" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="garantie_de_salaire_vise" readonly="1"/>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>Nombre de clients</strong>
+                                                </td>
+                                                <td>
+                                                    <field name="nombre_de_clients_actuel" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="nombre_de_clients_vise" readonly="1"/>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>Panier moyen</strong>
+                                                </td>
+                                                <td>
+                                                    <field name="panier_moyen_actuel" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="panier_moyen_vise" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            
+                                        </table>
+                                    
+
+                                </group>
+
+                                
+                                
+                            </group>
+
+                            <group string="INFOS RRH" name="INFOS RRH" class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="poste_budgete" readonly="1"/>
+                                    <field name="statut_a_choisir" readonly="1"/>
+                                    <field name="temps_de_travail_a_choisir" readonly="1"/>
+                                    <field name="commentaires" readonly="1"/>
+                                    <field name="confidentiel" readonly="1"/>
+                                    
+
+                                </group>
+
+                                <group>
+
+                                    <table class="table" border="0" style="width: 500px;">
+                                        <tr>
+                                            <th width="50%"></th>
+                                            <th>Débutant</th>
+                                            <th>Expérimenté(max autorisé)</th>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>Fourchette de rémunération annuelle</strong>
+                                            </td>
+                                            <td>
+                                                <field name="fourchette_de_remuneration_annuelle_debutant" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="fourchette_de_remuneration_annuelle_experimente" readonly="1"/>
+                                            </td>
+                                        </tr>   
+                                            
+                                    </table>
+                                    
+                                </group>
+                                
+                            </group>
+
+                            <group string="RDRH" name="RDRH" class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="rdrh_comment_complete" string="Complément d'informations" readonly="1"/>
+                                    
+                                    
+
+                                </group>
+
+                                <group>
+
+                                    <field name="from_rdrh_ck_demandeur" string="Demandeur" readonly="1"/>
+                                    <field name="from_rdrh_ck_rrh" string="RRH" readonly="1"/>
+                                    
+                                    
+
+                                </group>
+                                
+                            </group>
+
+                            <group string="DIRECTION" name="DIRECTION" class="mb-0 mt-4">
+                                <group>
+                                    <field name="direction_commentaire" string="Commentaire" readonly="1"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+
+                            <group string="DRH" name="DRH" class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="drh_comment_complete" string="Complément d'informations" readonly="1"/>
+                                    
+                                    
+
+                                </group>
+
+                                <group>
+
+                                    <field name="from_drh_ck_demandeur" string="Demandeur" readonly="1"/>
+                                    <field name="from_drh_ck_rrh" string="RRH" readonly="1"/>
+                                    
+                                    
+
+                                </group>
+                                
+                            </group>
+
+                            <group string="Lien" name="Lien" class="mb-0 mt-4">
+                                <group>
+                                    <field name="demande_recrutement_link" string="Lien" readonly="1"/>
+                                </group>
+
+                                <group>
+                                </group>
+                                
+                            </group>
+
+                        </page>
+
+                        <page string="Réponse" >
+                            <group class="mb-0 mt-4">
+                                <group>
+
+                                    <field name="reponse" string="Réponse"
+                                           />
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

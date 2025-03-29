@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_dr_metier_tree" model="ir.ui.view">
+            <field name="name">dr.metier.tree</field>
+            <field name="model">dr.metier</field>
+            <field name="arch" type="xml">
+                <tree string="metiers">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dr_metier_form" model="ir.ui.view">
+            <field name="name">dr.metier.form</field>
+            <field name="model">dr.metier</field>
+            <field name="arch" type="xml">
+                <form string="metier">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="is_commerce"/>
+                                <field name="is_autre"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dr_metier" model="ir.actions.act_window">
+            <field name="name">Metiers</field>
+            <field name="res_model">dr.metier</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dr_metier_tree"/>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_dr_metier" 
+                  name="Metiers" 
+                  parent="hr.menu_config_recruitment" 
+                  action="action_dr_metier" 
+                  sequence="20"/>
+    </data>
+</odoo>

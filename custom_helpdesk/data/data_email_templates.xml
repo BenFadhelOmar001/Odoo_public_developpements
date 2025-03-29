@@ -1,0 +1,132 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="email_template_traitement_prestataire_avec_les_infos_1" model="mail.template">
+            <field name="name">EMAIL TEMPLATE TRAITEMENT PRESTATAIRE AVEC LES INFOs_1</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="subject">le ticket {{object.name}} est devenus {{object.stage_id.name}}</field>
+            <field name="body_html" type="html">
+                <p>Bonjour,</p>
+
+                <p>Un nouvel utilisateur arrive chez Supergroup.</p>
+                <p>Pourriez vous créer son compte et préparer ses accès. Voici les informations du nouvel arrivant:</p>
+                <br/>
+                <div style="overflow: hidden;position:relative">
+
+                    <div style="float:left;width:40%;position:absolute;top:0px;">
+
+                       <t t-if="object.team_id.name"> <h4>Equipe : </h4> <t style="margin-left:100px;" t-out="object.team_id.name"/> <br/> </t>
+                        
+                       <t t-if="object.priority"> <h4>Priorité : </h4><t style="margin-left:100px;" t-out="object.priority"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_type_de_recrutement"> <h4>Type de recrutement : </h4> <t  style="margin-left:100px;" t-out="object.x_studio_type_de_recrutement"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_type_de_contrat"> <h4>Type de contrat : </h4><t  style="margin-left:100px;" t-out="object.x_studio_type_de_contrat"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_matricule"> <h4>Matricule :</h4> <t  style="margin-left:100px;" t-out="object.x_studio_matricule"/> <br/> </t>
+                        
+
+                       <t t-if="object.x_studio_site_de_rattachement"> <h4>Site de rattachement :</h4> <t  style="margin-left:100px;" t-out="object.x_studio_site_de_rattachement"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_direction"> <h4>Direction :</h4> <t  style="margin-left:100px;" t-out="object.x_studio_direction"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_type_de_fontion.name"> <h4>Type de fonction :</h4> <t  style="margin-left:100px;" t-out="object.x_studio_type_de_fontion.name"/> <br/> </t>
+                        
+                        
+                        
+                       <t t-if="object.collaborateur.name"> <h4>Collaborateur :</h4> <t style="margin-left:100px;" t-out="object.collaborateur.name"/> <br/> </t>
+                        
+                       <t t-if="object.pc_housse"> <h4>PC + Housse :</h4> <t style="margin-left:100px;" t-out="object.pc_housse"/> <br/> </t>
+                        
+                       
+                        
+                       <t t-if="object.tablette_chargeur_housse_clavier"> <h4>Tablette + Chargeur + Housse + Clavier :</h4> <t style="margin-left:100px;" t-out="object.tablette_chargeur_housse_clavier"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_smartphone"> <h4>Smartphone + Accessoires :</h4> <t style="margin-left:100px;" t-out="object.x_studio_smartphone"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_ligne_fixe"> <h4>Ligne Fixe :</h4> <t style="margin-left:100px;" t-out="object.x_studio_ligne_fixe"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_ligne"> <h4>Ligne :</h4> <t style="margin-left:100px;" t-out="object.x_studio_ligne"/> <br/> </t>
+                        
+                       <t t-if="object.nom_1"> <h4>Nom :</h4> <t style="margin-left:100px;" t-out="object.nom_1"/> <br/> </t>
+                        
+                        <t t-if=""> <h4>Logiciel Commerce :</h4> <t style="margin-left:100px;" t-if="object.nomad == True">Nomad</t> <t t-if="object.start == True">Démarrer</t>  <t t-if="object.aucun == True">Aucun</t> <br/> </t>
+                        
+                        <t t-if=""> <h4>Logiciel Finance :</h4> <t style="margin-left:100px;" t-if="object.etafi == True">Etafi (Liasse Fiscale)</t> <t t-if="object.kyriba == True">Kyriba</t>  <t t-if="object.wecheck == True">Wecheck</t> <br/> <t t-if="object.aucun_f == True">Aucun</t> </t>
+
+
+                    </div>
+
+
+                    <div style="float:right;width:50%">
+
+                       <t t-if="object.partner_id.name"> <h4>Manager :</h4> <t style="margin-left:1000px;" t-out="object.partner_id.name"/> <br/> </t>
+                        
+
+                       <t t-if="object.email_cc"> <h4>Email cc :</h4> <t t-out="object.email_cc"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_civilit_1"> <h4>Civilité :</h4> <t t-out="object.x_studio_civilit_1"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_nom_2"> <h4>Nom :</h4> <t t-out="object.x_studio_nom_2"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_prnom"> <h4>Prénom :</h4> <t t-out="object.x_studio_prnom"/> <br/> </t>
+                        
+
+                       <t t-if="object.x_studio_date_de_cration"> <h4>Date de création :</h4> <t t-out="object.x_studio_date_de_cration"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_date_darrive"> <h4>Date d'arrivée :</h4> <t t-out="object.x_studio_date_darrive"/> <br/> </t>
+                        
+                       <t t-if="object.x_studio_date_de_depart"> <h4>Date de départ :</h4> <t t-out="object.x_studio_date_de_depart"/> <br/> </t>
+                        
+                        
+                        
+                       
+                        
+                      
+                        
+                       <t t-if="object.logiciel_sap"> <h4>Logiciel SAP :</h4> <t t-out="object.logiciel_sap"/> <br/> </t>
+
+                        
+
+                       
+                        
+                       <t t-if="object.logiciel_sap_analytic"> <h4>Logiciel SAP Analytics :</h4> <t t-out="object.logiciel_sap_analytic"/> <br/> </t>
+
+                       <t t-if="object.acces_dossier"> <h4>Accés au dossiers du réseau Supergroup :</h4> <t t-out="object.acces_dossier"/> <br/> </t>
+                        
+                        <!--Besoin imprimante : <t t-out="object.besoin_imprimante"/> <br/> </t>
+                        -->
+                       
+                        
+                       <t t-if="object.comment_manager"> <h4>Commentaire de manager :</h4> <t t-out="object.comment_manager"/> <br/> </t>
+                        
+
+
+                    </div>
+
+                </div>
+                <br/>
+                <br/>
+                <p>
+                    Merci de vous connecter pour remplir les informations du Nouvel arrivant:
+                     <a t-attf-href="{{object.prestataire_link}}"><t t-out="object.name"/></a> 
+                     <br/>
+<!--                      <t t-out="object.prestataire_link"/>  -->
+
+                </p>
+                <br/>
+                <br/>
+                <div style="margin-left:40px;">
+                    <img t-att-src="image_data_uri(object.company_id.logo)" style="height:130px;" alt="Logo"/>
+                </div>
+            </field>
+
+        </record>
+
+
+        
+
+
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+
+      <record id="custom_helpdesk_helpdesk_tickets_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="id" string="ID"/>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</odoo>
