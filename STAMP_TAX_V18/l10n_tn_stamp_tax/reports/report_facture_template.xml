@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<template id="report_facture_template">
+	        <t t-call="web.html_container">
+	            <t t-foreach="docs" t-as="doc">
+	                <t t-call="web.external_layout">
+	                    <div class="page">
+	                    	<style> 
+							#rounded {
+							  border: 1px solid black;
+							  padding: 10px;
+							  border-radius: 10px;
+							}
+
+							
+							</style>
+	                    <br/>                  
+	                        <div  style="overflow: hidden;position:relative">
+	                            <div id="rounded" style="float:left;width:60%;position:absolute;top:0px;background-color:#acadac">
+	                                <div align="center">
+	                                        <h2><strong>B/L-Facture <span t-field="doc.name"/></strong></h2>
+                                    </div>
+	                                
+	                            </div>
+	                            <div style="float:left;width:60%;position:absolute;bottom:0px">
+	                                <table style="width:100%; border:1px black solid">
+	                                    <thead>
+	                                        
+	                                        <th class="text-center" style="padding:1px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">Date de la facture</th>
+	                                        <th class="text-center" style="padding:1px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;">Date d'échéance</th>
+	                                    </thead>
+	                                    <tbody>
+	                                        <td class="text-center" style="padding:1px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-field="doc.invoice_date"/></td>
+	                                        <td class="text-center" style="padding:1px; border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-field="doc.invoice_date_due"/></td>
+	                                    </tbody>
+	                                </table>
+	                            </div>
+	                            <div id="rounded" style="float:right;width:35%"> 
+	                                <b><span t-field="doc.partner_id.name"/></b>
+	                                <br/><br/>
+	                                <b><span t-field="doc.partner_id.street"/><span t-field="doc.partner_id.city"/><span t-field="doc.partner_id.zip"/></b>
+	                                <br/><br/>
+	                                <t t-if="doc.partner_id.type_identifiant == '1'">
+	                                	<b>MF: <span t-field="doc.partner_id.numero_matricule_fiscal"/><span t-field="doc.partner_id.cle_matricule_fiscal"/>/<span t-field="doc.partner_id.code_tva"/>/<span t-field="doc.partner_id.code_categorie"/>/<span t-field="doc.partner_id.num_etab_secondaire"/></b>
+									</t>
+									<t t-if="doc.partner_id.type_identifiant == '2'">
+	                                	<b>CIN: <span t-field="doc.partner_id.cin"/></b>
+									</t>
+									<t t-if="doc.partner_id.type_identifiant == '3'">
+                                		<b>Carte séjour: <span t-field="doc.partner_id.carte_sejour"/></b>
+                            		</t>
+                            		<t t-if="doc.partner_id.type_identifiant == '4'">
+                                		<b>ID<span t-field="doc.partner_id.id_non_domicile_ni_etablie"/></b>
+                            		</t>
+	                                <br/>
+	                            </div>
+	                        </div>
+	                        <br/>
+	                        
+	                        
+
+
+	                        <table class="table table-sm">
+	                            <thead>
+	                                <tr style="font-size:13px;">
+	                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><i>Description</i></th>
+	                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><i>Quantité</i></th>
+	                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><i>Prix Unitaire</i></th>
+	                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><i>Taxes</i></th>
+	                                    <th class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><i>Montant</i></th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                                <tr t-foreach="doc.invoice_line_ids" t-as="line" style="font-size:13px;">
+	                                    <td class="text-left" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-field="line.name"/></td>
+	                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-esc="'%.0f'% line.quantity"/></td>
+	                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-esc="'%.3f'% line.price_unit"/></td>
+	                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"/></td>
+	                                    <td class="text-center" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 1px black solid;"><span t-esc="'%.3f'% line.price_subtotal"/></td>
+	                                </tr>
+	                            </tbody>
+	                        </table>
+	                        <br/>
+
+	                        <div class="clearfix">
+                        		<div id="total" class="row">
+                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+                                <table class="table table-sm" style="page-break-inside: avoid;">
+
+                                    <!--Tax totals-->
+                                    <t t-set="tax_totals" t-value="json.loads(doc.tax_totals_json)"/>
+                                    <t t-call="l10n_tn_stamp_tax.document_tax_totals_custom"/>
+
+                                    <!--Payments-->
+                                    <t t-if="print_with_payments">
+                                        <t t-if="doc.payment_state != 'invoicing_legacy'">
+                                            <t t-set="payments_vals" t-value="doc.sudo()._get_reconciled_info_JSON_values()"/>
+                                            <t t-foreach="payments_vals" t-as="payment_vals">
+                                                <tr>
+                                                    <td>
+                                                        <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="len(payments_vals) > 0">
+                                                <tr class="border-black">
+                                                    <td><strong>Amount Due</strong></td>
+                                                    <td class="text-right">
+                                                        <span t-field="doc.amount_residual"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </table>
+                            </div>
+                        		</div>
+                    		</div>
+                    		<p t-if="doc.move_type in ('out_invoice', 'in_refund') and doc.payment_reference" name="payment_communication">
+		                        Merci d'utiliser la communication suivante pour votre paiement : <b><span t-field="doc.payment_reference"/></b>
+		                    </p>
+		                    <p t-if="doc.invoice_payment_term_id" name="payment_term">
+		                        <span t-field="doc.invoice_payment_term_id.note"/>
+		                    </p>
+		                    <div t-if="not is_html_empty(doc.narration)" name="comment">
+		                        <span t-field="doc.narration"/>
+		                    </div>
+		                    <p t-if="not is_html_empty(doc.fiscal_position_id.note)" name="note">
+		                        <span t-field="doc.fiscal_position_id.note"/>
+		                    </p>
+		                    <p t-if="doc.invoice_incoterm_id" name="incoterm">
+		                        <strong>Incoterm: </strong><span t-field="doc.invoice_incoterm_id.code"/> - <span t-field="doc.invoice_incoterm_id.name"/>
+		                    </p>
+		                    <div id="qrcode" t-if="doc.display_qr_code and doc.amount_residual > 0">
+		                        <p t-if="qr_code_urls.get(doc.id)">
+		                            <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
+		                            <img class="border border-dark rounded" t-att-src="qr_code_urls[doc.id]"/>
+		                        </p>
+		                    </div>
+	                        
+	                        
+	                        
+	                    </div>
+	                </t>
+	            </t>
+	        </t>
+	    </template>
+
+	    <template id="document_tax_totals_custom">
+            <!--
+                Generic template to display tax totals in pdf reports.
+                Used by invoices, SO and Pdoc.
+
+                ARGUMENTS:
+                - tax_totals: dict in the form generated by account.move's _get_tax_totals.
+            -->
+            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                <tr class="border-black o_subtotal">
+                    <td style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 0px white solid;"><strong t-esc="subtotal['name']"/></td>
+
+                    <td class="text-right" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 0px white solid; border-right: 1px black solid;">
+                        <span
+                            t-att-class="oe_subtotal_footer_separator"
+                            t-esc="subtotal['formatted_amount']"
+                        />
+                    </td>
+                </tr>
+
+                <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                <t t-call="l10n_tn_stamp_tax.tax_groups_totals_custom"/>
+            </t>
+
+            <!--Total amount with all taxes-->
+            <tr class="border-black o_total">
+                <td style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 0px white solid;"><strong>Total</strong></td>
+                <td class="text-right" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 0px white solid; border-right: 1px black solid;">
+                    <span t-esc="tax_totals['formatted_amount_total']"/>
+                </td>
+            </tr>
+        </template>
+
+        <template id="tax_groups_totals_custom">
+            <!--
+                Generic template to display a list of tax groups with the related amounts.
+
+                ARGUMENTS:
+                - tax_totals: dict in the form generated by account.move's _get_tax_totals.
+                - subtotal_to_show: The subtotal we need to render the groups from
+            -->
+            <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
+                <tr>
+                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1">
+                        <td style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 0px white solid;">
+                            <span t-esc="amount_by_group['tax_group_name']"/>
+                            
+                        </td>
+                        <td class="text-right o_price_total" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 0px white solid; border-right: 1px black solid;">
+                            <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                        </td>
+                    </t>
+                    <t t-else="">
+                        <td style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 1px black solid; border-right: 0px white solid;"><span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/></td>
+                        <td class="text-right o_price_total" style="border-bottom: 1px black solid; border-top: 1px black solid; border-left: 0px white solid; border-right: 1px black solid;">
+                            <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']" />
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </template>
+    </data>
+</odoo>

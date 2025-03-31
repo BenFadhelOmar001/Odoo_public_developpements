@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="retenu_report"
+                model="account.payment"
+                string="Retenue"
+                report_type="qweb-pdf"
+                menu="True"
+                name="retenue_source.retenue_report_template"
+                file="retenue_source.retenue_report_template"
+        />
+
+
+        <!--<record id="retenu_report_paperformat_1" model="report.paperformat">
+            <field name="name">retenu_report_paperformat_1</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="retenue_source.retenu_report" model="ir.actions.report">
+            <field name="paperformat_id" ref="retenue_source.retenu_report_paperformat_1"/>
+        </record>-->
+
+        <template id="retenue_report_template">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+
+
+                              <p style="color=white;"></p>
+
+
+                        <div style="float:right; margin-right:20px">
+                              <center> CERTIFICAT DE RETENUE  </center>
+
+                          </div>
+                            <div style="margin-left:60px">
+                               REPUBLIQUE TUNISIENNE
+
+                          </div>
+                        <div style="float:right; margin-right:80px" >
+
+                              <center> D'IMPOT  </center>
+
+                          </div>
+
+                            <div style="margin-left:20px">
+                               MINISTERE DU PLAN ET DES FINANCES
+
+                          </div>
+
+
+                        <div style="float:right">
+
+                              <center> SUR LE REVENU  </center>
+                              <center> OU D'IMPOT SUR LES SOCIETES  </center>
+                          </div>
+
+                    <div>
+
+                                DIRECTION GENERALE DU CONTROLE FISCAL
+                          </div>
+
+                            <!--<div class="col-xs-4">
+                            </div>-->
+
+                </div>
+                <t t-foreach="docs" t-as="doc">
+
+
+                        <div class="page">
+                            <style>
+
+                                table{
+                                border-top: 1px solid black;
+                                border-bottom: 1px solid black;
+                                border-left:0px
+                                border-right:0px
+                                padding:5px;
+                                }
+
+                                .mytd{
+                                border: 1px solid black;
+                                }
+                                .td_1{
+                                border-top: 1px solid black;
+                                }
+                                .td_2{
+                                border-bottom: 1px solid black;
+                                border-left: 1px solid black;
+                                }
+
+
+                                .identifiant{
+                                height:40px
+                                }
+                                .cin{
+                                border: 2px solid black;
+                                width:150px;
+                                height:30px;
+                                margin: auto;
+                                }
+                                .text_cin{
+                                margin-left:60px;
+                                }
+                                //.part1{
+                                //border: 2px solid black;
+                                //border-radius: 15px;
+                                //height:1300px;
+                                //}
+                                .part2{
+                                border: 2px solid black;
+                                border-radius: 15px;
+                                height:400px;
+                                }
+                                .row{
+                                margin-left: 5px;
+                                }
+                                .normal-size{
+                                font-size:20px
+                                }
+                                .big-size{
+                                font-size:30px
+                                }
+                                .small-size{
+                                font-size:18px;
+
+                                }
+
+                                .small-table{
+                                width:600px;
+
+                                }
+
+                                .big-table{
+                                width:1000px;
+
+                                }
+
+                                .identifiant_table{
+                                margin-right:10px;
+                                }
+
+                                .bottom {border-bottom:0px;}
+                                .top {border-top:0px;}
+                                .right {border-bottom:0px;}
+                                .left {border-top:0px;}
+
+
+                            </style>
+
+
+
+        <div class="part1">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <strong class="normal-size">A- PERSONNE OU ORGANISME PAYEUR</strong>
+
+                        </div>
+                        </div>
+        <br/>
+                    <div class="row">
+                        <div class="col-xs-3"/>
+                        <div class="col-xs-3">
+                             <strong>
+                                 <center>
+
+                                 </center>
+                             </strong>
+                        </div>
+                        <div class="col-xs-6" style="margin-left: 400px;">
+                            <center class="normal-size">
+                                <strong>IDENTIFIANT</strong>
+                            </center>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-left: 400px;">
+                        <div class="col-xs-3"/>
+                        <div class="col-xs-3">
+                          <!--<t t-if="doc.payment_type == 'inbound' and doc.partner_id.num_piece">
+                             <div class="cin">
+                                 <center>
+                                     &lt;!&ndash;<t t-set="mat_beneficiaire" t-value="doc.partner_id.type_piece"/>&ndash;&gt;
+                                     <span t-esc="doc.partner_id.num_piece"/>
+                                 </center>
+                             </div>
+                            </t>-->
+                        </div>
+                        <div class="col-xs-6">
+                             <table class="identifiant_table small-size small-table">
+                                    <tr>
+                                        <td class="mytd">
+                                            <center>
+                                          Num Matricule fiscal
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                          Clé Matricule fiscal
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                                code TVA
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                                 code de catégorie(1)
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                               N° Ets Secondaire
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td class="identifiant mytd">
+                                                <center>
+                                                      <t t-if="doc.partner_id.numero_matricule_fiscal ">
+                                                         <t t-set="mat_payeur" t-value="doc.partner_id.numero_matricule_fiscal"/>
+
+                                                          <span t-esc="doc.partner_id.numero_matricule_fiscal"/>
+
+                                                      </t>
+
+                                                </center>
+                                        </td>
+
+                                        <td class="identifiant mytd">
+                                             <center>
+                                                     <t t-if="doc.partner_id.cle_matricule_fiscal ">
+                                                         <t t-set="code_payeur" t-value="doc.partner_id.cle_matricule_fiscal"/>
+
+                                                         <span t-esc="doc.partner_id.cle_matricule_fiscal"/>
+                                                        </t>
+
+
+                                                </center>
+                                        </td>
+					<td class="identifiant mytd">
+						<center>
+                                                      <t t-if="doc.partner_id.code_tva ">
+                                                         <t t-set="code_payeur" t-value="doc.partner_id.code_tva"/>
+
+                                                            <span t-esc="doc.partner_id.code_tva"/>
+
+                                                      </t>
+
+                                                </center>
+                                        </td>
+
+                                        <td class="identifiant mytd">
+						<center>
+                                                      <t t-if="doc.partner_id.code_categorie ">
+                                                         <t t-set="code_payeur" t-value="doc.partner_id.code_categorie"/>
+
+                                                            <span t-esc="doc.partner_id.code_categorie"/>
+
+                                                      </t>
+
+                                                </center>
+                                        </td>
+                                        <td class="identifiant mytd">
+                                             <center>
+                                                      <t t-if="doc.partner_id.num_etab_secondaire ">
+                                                         <t t-set="code_payeur" t-value="doc.partner_id.num_etab_secondaire"/>
+                                                        <span t-esc="doc.partner_id.num_etab_secondaire"/>
+                                                      </t>
+
+                                                </center>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </div>
+
+                    </div>
+            <br/>
+
+
+
+                    <div class="row">
+                        <div class="col-xs-12 normal-size" >
+                            Dénomination de la personne ou de l'organisme payeur :
+                            <strong>
+
+                                <t t-if="doc.payment_type == 'inbound' ">
+                                    <strong><span t-field="doc.partner_id"/> </strong>
+                                </t>
+                                <t t-if="doc.payment_type == 'outbound'">
+                                    <strong><span t-field="doc.company_id.partner_id"/> </strong>
+                                </t>
+
+                            </strong>
+
+                        </div>
+                    </div>
+
+                     <div class="row">
+                        <div class="col-xs-12 normal-size">
+                            Adresse :
+                           <strong>
+
+                                <t t-if="doc.payment_type == 'inbound' ">
+                                    <strong>
+                                        <span t-field="doc.partner_id.street"/>
+                                        <span t-field="doc.partner_id.street2"/>
+                                        <span t-field="doc.partner_id.city"/>
+                                    </strong>
+                                </t>
+                                <t t-if="doc.payment_type == 'outbound'">
+                                    <strong>
+                                        <span t-field="doc.company_id.partner_id.street"/>
+                                        <span t-field="doc.company_id.partner_id.street2"/>
+                                        <span t-field="doc.company_id.partner_id.city"/>
+                                    </strong>
+                                </t>
+
+                           </strong>
+
+                        </div>
+
+                    </div>
+
+                    <br/>
+
+
+                     <div>
+                                <t t-set="tot_brut" t-value="0"/>
+                                <t t-set="tot_ret" t-value="0"/>
+                                <t t-set="tot_net" t-value="0"/>
+                        <table width="90%" cellspacing="0" cellpadding="0" class="small-size big-table" style="margin-left: 10px;">
+                             <tr class="left right">
+                                <td class="col-md-6 td_2">
+                                    <strong>
+                                        B - RETENUES EFFECTUEES SUR
+                                    </strong>
+                                </td>
+                                <td class="col-md-2 mytd">
+                                    <strong>
+                                        <center>
+                                            MNT. BRUT
+                                        </center>
+                                    </strong>
+                                </td>
+                                <td class="col-md-2 mytd">
+                                    <strong>
+                                        <center>
+                                            RETENUE
+                                        </center>
+                                    </strong>
+                                </td>
+                                <td class="col-md-2 mytd">
+                                    <strong>
+                                        <center>
+                                            MNT. NET
+                                        </center>
+                                    </strong>
+                                </td>
+                             </tr>
+                             <tr t-foreach="doc.types" t-as="type">
+                                <td class="td_2">
+                                    <!--<t t-if="doc.withholding.label_ras == 'honoraire'">-->
+                                        <strong>
+
+                                                 <span style="text-align:center;">
+                                                     <t t-esc="type.name"/>
+                                                 </span>
+                                        </strong>
+
+                                    <!--</t>-->
+                                </td>
+                                <td class="td_2">
+                                   <!--<t t-if="doc.withholding.label_ras == 'honoraire'">-->
+                                    <t t-if="type.id == doc.retenue_type.id">
+
+
+
+                                        <center>
+                                       <span t-esc=" '%.3f'% (doc.retenue_brut)"/>
+
+
+                                     </center>
+
+                                        </t>
+
+                                    <!--</t>-->
+
+                                </td>
+                                <td class="mytd">
+                                    <t t-if="type.id == doc.retenue_type.id">
+                                   <!--<t t-if="doc.withholding.label_ras == 'honoraire'">-->
+                                     <center>
+
+                                         <span t-esc=" '%.3f'% doc.amount"/>
+
+                                    </center>
+                                    </t>
+                                    <!--</t>-->
+
+                                </td>
+                                <td class="mytd">
+                                    <!--<t t-if="doc.withholding.label_ras == 'honoraire'">-->
+
+
+                                        <!--</t>-->
+                                    <t t-if="type.id == doc.retenue_type.id">
+                                     <center>
+                                         <t t-set="net" t-value="doc.retenue_brut - doc.amount"/>
+                                        <span t-esc=" '%.3f'% abs(net)"/>
+
+                                     </center>
+                                    </t>
+
+
+
+                                </td>
+                            </tr>
+
+                           <!-- <tr>
+                                <td class="td_1">
+                                    <center>
+                                        <strong>
+                                            Total Général
+                                        </strong>
+                                    </center>
+
+                                </td>
+                                <td class="mytd">
+                                     <center>
+                                         <span t-esc=" '%.3f'% tot_brut"/>
+                                    </center>
+                                </td>
+                                <td class="mytd">
+                                    <center>
+                                        <span t-esc=" '%.3f'% tot_ret"/>
+                                    </center>
+                                </td>
+                                <td class="mytd">
+                                     <center>
+                                          <span t-esc=" '%.3f'% tot_net"/>
+                                    </center>
+                                </td>
+                            </tr>-->
+
+                         </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                 <div class="row" >
+                        <div class="col-xs-4 normal-size">
+                           <strong>
+                                C - BENEFICIAIRE
+                            </strong>
+                        </div>
+                         <div class="col-xs-4">
+                             <strong>
+                                 <center>
+                                 <!--<t t-if="doc.payment_type == 'out_payment' and doc.partner_id.type_piece">
+                                     &lt;!&ndash;<t t-set="mat_beneficiaire" t-value="doc.partner_id.type_piece"/>&ndash;&gt;
+                                     <span t-esc="dict(doc.partner_id.fields_get(allfields=['type_piece'])['type_piece']['selection'])[doc.partner_id.type_piece]"/>
+                                     &lt;!&ndash;<span t-esc="doc.partner_id.type_piece"/>&ndash;&gt;
+                                 </t>-->
+                                 </center>
+                             </strong>
+                        </div>
+                         <div class="col-xs-4 normal-size" style="margin-left: 240px;">
+                              <strong>
+                                  IDENTIFIANT
+                            </strong>
+                        </div>
+                    </div>
+
+                 <div class="row" style="margin-left: 400px;">
+                        <div class="col-xs-4">
+                            <center style="float:left;">
+                                     <!--N° de la carte d'identité-->
+                                       <!--<br/>-->
+                                        <!--ou-->
+                                    <!--<br/>-->
+                                     <!--séjour pour les étrangers-->
+                            </center>
+                        </div>
+                         <div class="col-xs-3">
+                            <!--<t t-if="doc.payment_type == 'outbound' and doc.partner_id.num_piece">
+                             <div class="cin">
+                                 <center>
+                                     &lt;!&ndash;<t t-set="mat_beneficiaire" t-value="doc.partner_id.type_piece"/>&ndash;&gt;
+                                     <span t-esc="doc.partner_id.num_piece"/>
+                                 </center>
+                             </div>
+                            </t>-->
+                        </div>
+                         <div class="col-xs-5">
+                             <table class="identifiant_table small-size small-table">
+                                    <tr>
+                                        <td class="mytd">
+                                            <center>
+                                               Num Matricule fiscal
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                               Clé Matricule fiscal
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                                code TVA
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                                code de catégorie(1)
+                                            </center>
+                                        </td>
+                                        <td class="mytd">
+                                            <center>
+                                                N° Ets Secondaire
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td class="identifiant mytd">
+                                             <center>
+                                                       <t t-if="doc.company_id.numero_matricule_fiscal ">
+                                                         <t t-set="mat_payeur" t-value="doc.company_id.numero_matricule_fiscal"/>
+                                                        <!--<span t-esc="mat_payeur[:8]"/>-->
+                                                        <span t-esc="doc.company_id.numero_matricule_fiscal"/>
+                                                      </t>
+
+
+                                             </center>
+                                        </td>
+
+                                        <td class="identifiant mytd">
+                                             <center>
+                                                     <t t-if="doc.company_id.cle_matricule_fiscal">
+
+                                                        <!--<span t-esc="code_payeur[9]"/>-->
+                                                        <span t-esc="doc.company_id.cle_matricule_fiscal"/>
+                                                      </t>
+
+                                             </center>
+                                        </td>
+                                        <td class="identifiant mytd">
+                                             <center>
+
+                                                      <t t-if="doc.partner_id.code_tva">
+                                                          <t t-set="cat_beneficiaire" t-value="doc.company_id.code_tva"/>
+                                                            <span t-esc="doc.company_id.code_tva"/>
+                                                      </t>
+                                             </center>
+                                        </td>
+                                        <td class="identifiant mytd">
+                                             <center>
+
+                                                      <t t-if="doc.partner_id.code_categorie">
+                                                          <t t-set="cat_beneficiaire" t-value="doc.company_id.code_categorie"/>
+                                                            <span t-esc="doc.company_id.code_categorie"/>
+                                                      </t>
+                                             </center>
+                                        </td>
+                                        <td class="identifiant mytd">
+                                             <center>
+                                                      <t t-if="doc.company_id.num_etab_secondaire  ">
+
+                                                        <span t-esc="doc.company_id.num_etab_secondaire"/>
+                                                      </t>
+
+                                             </center>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </div>
+                    </div>
+
+                    <br/>
+
+
+                <div class="row">
+                        <div class="col-xs-12 normal-size">
+                            Nom, prénom ou raison sociale :
+                              <strong>
+
+                                <t t-if="doc.payment_type == 'inbound' ">
+                                      <strong><span t-field="doc.company_id.partner_id"/> </strong>
+
+                                </t>
+                                <t t-if="doc.payment_type == 'outbound'">
+                                    <strong><span t-field="doc.partner_id"/> </strong>
+
+                                </t>
+
+                            </strong>
+                        </div>
+                </div>
+
+                 <div class="row">
+                        <div class="col-xs-12 normal-size">
+                            Adresse professionnelle :
+                              <strong>
+
+                                <t t-if="doc.payment_type == 'inbound' ">
+                                    <strong>
+                                        <span t-field="doc.company_id.partner_id.street"/>
+                                        <span t-field="doc.company_id.partner_id.street2"/>
+                                        <span t-field="doc.company_id.partner_id.city"/>
+
+                                    </strong>
+
+                                </t>
+                                <t t-if="doc.payment_type == 'outbound'">
+                                    <strong>
+                                        <span t-field="doc.partner_id.street"/>
+                                        <span t-field="doc.partner_id.street2"/>
+                                        <span t-field="doc.partner_id.city"/>
+                                    </strong>
+                                </t>
+
+                            </strong>
+                        </div>
+
+                 </div>
+
+                    <br/>
+
+                    <br/>
+
+                <div class="row normal-size">
+                    <t t-if="doc.ref">
+                                    <strong>
+                                      Libellé de la Retenue:
+                                    </strong>
+                        <span t-field="doc.ref"/>
+                                </t>
+
+                </div>
+    <br/>
+                <div class="row">
+
+                        <div class="col-xs-8 normal-size">
+                            <p style="margin-left: 470px;">Je soussigné, certifie exacts les renseignements figurant sur le
+                            présent certificat </p>
+                            <p style="margin-left: 470px;">et m'expose aux sanctions prévues par la loi pour
+                                toute inexactitude.</p>
+                        </div>
+                </div>
+
+                <div class="row normal-size " style="margin-left: 20px;">
+                        <div class="col-xs-4">
+                            F.N°
+                        </div>
+                        <div class="col-xs-8">
+
+                        </div>
+                </div>
+    <br/>
+
+                <div class="row" style="margin-left: 20px;">
+                        <div class="col-xs-4">
+                            <!--<t t-foreach="doc.line_ids" t-as="l">-->
+                                <!--<span t-field="l.number"/>-->
+                                 <!--</t>-->
+                        </div>
+                        <div class="col-xs-8 normal-size">
+                            <center>
+                                 A Tunis Le <span t-field="doc.date"/>
+                           </center>
+                        </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+
+                <div class="row" style="margin-left: 20px;">
+                        <div class="col-xs-4">
+
+                        </div>
+                        <div class="col-xs-8 normal-size">
+                           <center>
+                               Cachet et signature du payeur
+                           </center>
+                        </div>
+                    <br/>
+                    <br/>
+                </div>
+
+               <!-- <div class="row">
+                        <div class="col-xs-6">
+                                <span t-esc="doc._get_inv()"/>
+
+                        </div>
+                        <div class="col-xs-6">
+
+                        </div>
+                </div>-->
+
+
+
+
+
+
+              <div >
+                        <div>
+                            <ul class="list-inline text_size">
+                                <li>1) Code catégorie: M.personnes morales C.personne physique "industriel et commerce" P.professions libérales N.employeurs non soumis à
+                 l'impôt sur le revenu ou sur les sociétés (administrations et etablissements publics) E.établissements secondaires</li>
+                            </ul>
+                    </div>
+            </div>
+
+
+
+</div>
+                        </div><!--end page-->
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+</data>
+        </odoo>
