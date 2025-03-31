@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <template id="external_layout_boxed_mct">
+             <div t-attf-class="header">
+
+                <div class="o_boxed_header" style="width: 100%; padding: 0; font-family: 'Montserrat', sans-serif;">
+
+                    <div style="border: 10px solid #EA5A36; position: absolute; right:0; width:1600px;"/>
+                    <br/>
+                    <br/>
+
+                    <div class="row mb8">
+
+                        <div class="col-6">
+
+
+                            <table style="text-align:left; border: 0px solid white; float:left; ">
+                                <tr>
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:12px; color: #3F3F3F;">
+                                            <t t-if="o.move_type == 'out_invoice'">
+                                                <span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size:40px;">
+                                                    Facture
+                                                </span>
+                                            </t>
+                                            <t t-if="o.move_type == 'out_refund'">
+                                                <span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size:40px;">
+                                                    Avoir
+                                                </span>
+                                            </t>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px; margin-right:0px; color: #3F3F3F; font-size:25px;">
+                                            <strong>Numéro</strong>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px; margin-left:0px; color: #3F3F3F; font-size:25px;">
+                                            <span t-esc="o.name"/>
+                                        </span>
+                                    </td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px;  font-weight: 900; color: #3F3F3F; font-size:25px;">
+                                            Date
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px; color: #3F3F3F; font-size:25px;">
+                                            <t t-esc="o.invoice_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px; font-weight: 900; color: #3F3F3F; font-size:25px;">
+                                            Echéance
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span style="margin-top:0px; margin-bottom:0px; color: #3F3F3F; font-size:25px;">
+                                            <t t-esc="o.delivery_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
+                                        </span>
+                                    </td>
+                                    <td/>
+                                </tr>
+                            </table>
+
+
+                        </div>
+
+                        <div class="col-6">
+
+
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="width:370px; min-height:90px; float:right; margin-top:5px;"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="margin-top:0px; " t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <div class="pt-5">
+                    <!-- This div ensures that the address is not cropped by the header. -->
+
+
+                </div>
+
+                <t t-out="0"/>
+            </div>
+
+            <div t-attf-class="footer" style="font-family: 'Montserrat', sans-serif;">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="border-bottom: 2px solid #EA5A36; border-top: 1px solid white; border-left: 1px solid white; border-right: 1px solid white;">
+                            <p style="color:white; margin-top:0px; margin-top:0px;">a</p>
+                        </td>
+
+                    </tr>
+                </table>
+
+                <div align="left" style="font-family: 'Montserrat', sans-serif;font-size:22px;">
+                     <span >ProTechnologies Systems - 10 Avenue Henri Zanaroli - 74600 Annecy - France</span> <br/> <span>04 50 77 22 00 - www.protechnologies.fr - contact@protechnologies.fr</span> <br/> <span>Siret : 41901282800036 - APE : 5829C - RCS : 419 012 828 - N° TVA intracom : FR73419012828 - SAS au Capital de 18 500€</span>
+
+                </div>
+
+
+            </div>
+        </template>
+
+
+        <template id="external_layout_mct">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+
+            <t t-call="custom_portal_preview_report.external_layout_boxed_mct">
+                <t t-out="0"/>
+            </t>
+
+        </template>
+
+
+    </data>
+</odoo>

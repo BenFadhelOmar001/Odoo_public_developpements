@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="paperformat_abonnement_mct" model="report.paperformat">
+            <field name="name">Paperformat Abonnement MCT</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">27</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">33</field>
+            <field name="dpi">146</field>
+            <field name="css_margins" eval="True"/>
+
+        </record>
+
+        <!-- QWeb Reports -->
+        <record id="sale_odrer_mct" model="ir.actions.report">
+            <field name="name">Abonnement</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_portal_preview_report.report_order_document_mct_abonnement</field>
+            <field name="report_file">custom_portal_preview_report.report_order_document_mct_abonnement</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Devis - %s' % (object.name)) or 'Commande - %s' % (object.name)</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="is_invoice_report">False</field>
+            <field name="binding_type">report</field>
+
+
+            <field name="paperformat_id" ref="custom_portal_preview_report.paperformat_abonnement_mct"/>
+        </record>
+
+
+        <record id="paperformat_abonnement_mct_portal_preview" model="report.paperformat">
+            <field name="name">Paperformat Abonnement MCT Portal Preview</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">27</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">33</field>
+            <field name="dpi">146</field>
+            <field name="css_margins" eval="True"/>
+
+        </record>
+
+        <!-- QWeb Reports -->
+        <record id="sale_order_mct_portal_preview" model="ir.actions.report">
+            <field name="name">PDF Abonnement mct portal</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_portal_preview_report.report_invoice_document_mct_portal_preview_abonnement</field>
+            <field name="report_file">custom_portal_preview_report.report_invoice_document_mct_portal_preview_abonnement</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Devis - %s' % (object.name)) or 'Commande - %s' % (object.name)</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="is_invoice_report">False</field>
+            <field name="binding_type">report</field>
+
+        </record>
+
+    </data>
+</odoo>

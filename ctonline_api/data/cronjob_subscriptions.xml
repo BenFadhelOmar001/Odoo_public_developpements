@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="cronjob_subscriptions_action" model="ir.cron">
+            <field name="name">Cronjob subscriptions</field>
+            <field name="model_id" ref="model_sale_order" />
+            <field name="state">code</field>
+            <field name="code">model.cronjob_subscriptions()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="nextcall">2024-12-02 00:00:00</field>
+            <field name="active">True</field>
+        </record>
+
+        
+    </data>
+</odoo>

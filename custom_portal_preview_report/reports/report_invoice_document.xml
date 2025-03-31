@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_invoice_document_mct">
+             <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+            <t t-call="custom_portal_preview_report.external_layout_mct">
+
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/>
+
+                <div class="mt-5 clearfix" style="font-family: 'Montserrat', sans-serif; color: #3F3F3F;">
+                    <div class="page mb-4">
+
+
+
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap');
+
+                        .policeMontserrat {
+                          font-family: 'Montserrat', sans-serif;
+                        };
+
+                        td { padding: 0px; }
+                    </style>
+                        <div class="row mb8">
+                            <div class="col-4">
+                                <span style="float:left;">
+                                    <div name="company_address" class="float-end mb4">
+
+
+                                        <ul class="list-unstyled" name="company_address_list" style="max-width:100%;">
+                                            <li>
+                                                <!--<h4 class="policeMontserrat" t-field="o.company_id.name" style="font-weight:900">
+
+                                                </h4>-->
+                                                <span class="policeMontserrat" style="font-weight:900; font-size:27px; margin-bottom:0px;">
+                                                    Protechnologies
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.company_id.street" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.company_id.street2" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.company_id.zip" style="font-size:22px;"/>
+                                                <span class="policeMontserrat" t-field="o.company_id.city" style="font-size:22px;"/>
+
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.company_id.state_id.name" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.company_id.partner_id.email" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+
+                                </span>
+                            </div>
+
+                            <div class="col-4">
+                                <span style="float:left;">
+                                    <div name="company_address" class="float-end mb4">
+
+
+                                        <ul class="list-unstyled" name="company_address_list" style="max-width:430px; margin-left:60px;">
+                                            <li>
+                                                <span class="policeMontserrat" style="font-weight:900; font-size:27px;  margin-bottom:0px;">Facturé à</span>
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.name" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.street" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.street2" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.zip" style="font-size:22px;"/>
+                                                <span class="policeMontserrat" t-field="o.partner_id.city" style="font-size:22px;"/>
+
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.state_id.name" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_id.email" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </span>
+                            </div>
+
+                            <div class="col-4">
+                                <span style="float:left;">
+                                    <div name="company_address" class="float-end mb4" style="max-width:430px; margin-left:50px;">
+
+
+                                        <ul class="list-unstyled" name="company_address_list">
+                                            <li>
+                                                <span class="policeMontserrat" style="font-weight:900; font-size:27px; margin-bottom:0px;">Livré à</span>
+                                            </li><li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.name" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+
+                                             <li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.street" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.street2" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.zip" style="font-size:22px;"/>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.city" style="font-size:22px;"/>
+
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.state_id.name" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <span class="policeMontserrat" t-field="o.partner_shipping_id.email" style="font-size:22px;">
+
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <div class="oe_structure"/>
+
+                        <t t-set="subscription_id" t-value=""/>
+                        <t t-set="date_debut_contrat" t-value=""/>
+                        <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                        <t t-foreach="lines" t-as="line">
+                            <t t-if="line.subscription_id">
+                                <t t-set="subscription_id" t-value="line.subscription_id.name"/>
+
+                            </t>
+                        </t>
+
+                        <style>
+                            .capitalize-first-letter::first-letter { text-transform: capitalize; }
+                        </style>
+                        <p t-if="line.subscription_id" class="capitalize-first-letter policeMontserrat" style="font-weight:900; font-size:30px; margin-bottom:0px;">
+                            <t t-esc="o.invoice_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;MMMM yyyy&quot;}"/>
+                        </p>
+
+                        <t t-if="line.subscription_id">
+                            <span style="font-weight:700; font-size:20px;" t-esc="line.subscription_id.plan_id.name"/>
+                            <br/>
+                        </t>
+                        <t t-if="line.subscription_id">
+                            <span style="font-weight:700; font-size:20px;" t-esc="line.subscription_id.name"/>
+                            <br/>
+                        </t>
+                        <t t-if="line.subscription_id"><span style="font-weight:900; font-size:20px;">Code client
+                            <span style="font-weight:700; font-size:20px;" t-esc="o.partner_id.ref"/>
+                            </span>
+                            <br/>
+                        </t>
+                        <t t-else=""><span style="font-weight:900; font-size:30px;">Code client
+                            <span style="font-weight:700; font-size:30px;" t-esc="o.partner_id.ref"/>
+                            </span>
+                            <br/>
+                        </t>
+
+                        <br/>
+
+                        <t t-if="line.subscription_id">
+                        <table class="table table-sm o_main_table table-borderless" name="invoice_line_table" style="max-width:85%; color: #3F3F3F;">
+                            <thead>
+                                <tr>
+                                    <th name="th_description" class="text-start" style="border-bottom:2px solid #ea5a36; padding: 0px;">
+                                        <span class="policeMontserrat" style="font-weight:900; color: #3F3F3F; margin-bottom:0px; margin-left:0px; font-size:25px;">Description</span>
+                                    </th>
+                                    <th name="th_quantity" class="text-center" style="border-bottom:2px solid #ea5a36;">
+                                        <span>
+                                            <span class="policeMontserrat" style="font-weight:900; color: #3F3F3F;  margin-bottom:0px; font-size:25px;">Quantité</span>
+                                        </span>
+                                    </th>
+
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="invoice_tbody" style="font-size:18px;X">
+                                <!--<tr>
+                                        <td style="padding: 0px; color: white; font-size:10px;">
+                                                <span>espace
+                                                </span>
+                                            </td>
+                                    </tr>-->
+
+
+
+                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                                <t t-set="section_name" t-value=""/>
+
+                                <t t-foreach="lines" t-as="line">
+
+
+
+
+                                    <t t-set="section_line_name" t-value=""/>
+                                    <t t-if="line.display_type == 'line_section'">
+                                        <t t-set="section_line_name" t-value="line.name"/>
+                                    </t>
+
+                                    <t>
+                                        <tr t-if="section_line_name">
+                                            <tr>
+                                        <td style="padding: 0px; color: white; font-size:15px;">
+                                                <span>espace
+                                                </span>
+                                            </td>
+                                    </tr>
+                                            <td class="text-start" style="font-weight:900; padding: 0px;">
+
+                                                    <span class="policeMontserrat" style="margin-top:13px; margin-bottom:0px; margin-left:0px; color: #3F3F3F; font-size:25px;">
+                                                        <span t-esc="section_line_name" style="font-weight:900; margin-left:0px;"/>
+                                                    </span>
+
+                                            </td>
+
+                                        </tr>
+                                    </t>
+
+                                    <tr>
+
+                                        <t t-if="line.display_type == 'line_section'">
+                                            <t t-set="section_name" t-value="line.name"/>
+                                        </t>
+                                        <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
+                                            <td style="padding: 0px;">
+                                                <span class="policeMontserrat" style="margin-top:0px; color: #3F3F3F; font-size:20px;" t-if="line.product_id.name" t-field="line.product_id.name">
+                                                </span>
+                                            </td>
+
+
+                                            <td name="td_quantity" class="text-center" style="padding: 0px;">
+
+                                                <span class="policeMontserrat" style="color: #3F3F3F; font-size:20px;" t-esc="'%.0f'%line.quantity"/>
+
+                                            </td>
+
+
+
+
+                                        </t>
+                                        <t t-elif="line.display_type == 'line_section'">
+
+
+
+
+                                            <t t-set="current_section" t-value="line"/>
+
+                                        </t>
+
+
+                                        <t t-elif="line.display_type == 'line_note'">
+                                            <td>
+                                                <span class="policeMontserrat" style="max-width:50%;  font-size:20px;" t-field="line.name">A note, whose content
+                                                    usually applies to the section or product above.
+                                                </span>
+                                            </td>
+
+                                        </t>
+                                    </tr>
+
+
+                                </t>
+                                <t>
+
+
+                                </t>
+                            </tbody>
+                        </table>
+                        </t>
+                            <t t-else="">
+                            <table class="table table-sm o_main_table table-borderless" name="invoice_line_table" style="max-width:85%; color: #3F3F3F;">
+                            <thead>
+                                <tr>
+                                    <th name="th_description" class="text-start" style="border-bottom:2px solid #ea5a36; padding: 0px;">
+                                        <span class="policeMontserrat" style="font-weight:900; color: #3F3F3F; margin-bottom:0px; margin-left:0px; font-size:25px;">Description</span>
+                                    </th>
+                                    <th name="th_quantity" class="text-center" style="border-bottom:2px solid #ea5a36;">
+                                        <span>
+                                            <span class="policeMontserrat" style="font-weight:900; color: #3F3F3F;  margin-bottom:0px; font-size:25px;">Quantité</span>
+                                        </span>
+                                    </th>
+                                    <th name="th_description" class="text-end" style="border-bottom:2px solid #ea5a36; padding: 0px;">
+                                        <span class="policeMontserrat" style="font-weight:900; color: #3F3F3F; margin-bottom:0px; margin-right:0px; font-size:25px;">Montant</span>
+                                    </th>
+
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="invoice_tbody" style="font-size:18px;X">
+                                <!--<tr>
+                                        <td style="padding: 0px; color: white; font-size:10px;">
+                                                <span>espace
+                                                </span>
+                                            </td>
+                                    </tr>-->
+
+                                <t t-set="somme_subtotal" t-value="0"/>
+
+                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                                <t t-set="section_name" t-value=""/>
+
+                                <t t-foreach="lines" t-as="line">
+
+
+
+
+                                    <t t-set="section_line_name" t-value=""/>
+                                    <t t-if="line.display_type == 'line_section'">
+                                        <t t-set="section_line_name" t-value="line.name"/>
+                                    </t>
+
+                                    <t t-if="section_line_name">
+                                        <tr>
+                                        <td style="padding: 0px; color: white; font-size:15px;">
+                                                <span>espace
+                                                </span>
+                                            </td>
+                                    </tr>
+                                        <tr>
+                                            <td class="text-start" style="font-weight:900; padding: 0px;">
+
+                                                    <span class="policeMontserrat" style="margin-top:13px; margin-bottom:0px; margin-left:0px; color: #3F3F3F; font-size:25px;">
+                                                        <span t-esc="section_line_name" style="font-weight:900; margin-left:0px;"/>
+                                                    </span>
+
+                                            </td>
+
+                                        </tr>
+
+                                    </t>
+
+                                    <tr>
+
+                                        <t t-if="line.display_type == 'line_section'">
+                                            <t t-set="section_name" t-value="line.name"/>
+                                        </t>
+                                        <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
+                                            <td style="padding: 0px;">
+                                                <span class="policeMontserrat" style="margin-top:0px; color: #3F3F3F; font-size:20px;" t-if="line.product_id.name" t-field="line.product_id.name">
+                                                </span>
+                                            </td>
+
+
+                                            <td name="td_quantity" class="text-center" style="padding: 0px;">
+
+                                                <span class="policeMontserrat" style="color: #3F3F3F; font-size:20px;" t-esc="'%.0f'%line.quantity"/>
+
+                                            </td>
+
+                                           <td name="td_price_subtotal" class="text-end" style="padding: 0px;">
+
+                                                <span class="policeMontserrat" style="color: #3F3F3F; font-size:20px;" t-field="line.price_subtotal"/>
+
+                                            </td>
+
+
+
+
+                                        </t>
+                                        <t t-elif="line.display_type == 'line_section'">
+
+
+
+
+                                            <t t-set="current_section" t-value="line"/>
+
+                                        </t>
+
+
+
+                                        <t t-elif="line.display_type == 'line_note'">
+                                            <td>
+                                                <span class="policeMontserrat" style="max-width:50%;  font-size:20px;" t-field="line.name">A note, whose content
+                                                    usually applies to the section or product above.
+                                                </span>
+                                            </td>
+
+                                        </t>
+                                    </tr>
+
+
+                                </t>
+                                <t>
+
+
+                                </t>
+                            </tbody>
+                        </table>
+                        </t>
+                        <br/>
+
+
+
+
+                            <div class="row" style="page-break-inside: avoid">
+
+                                    <div class="col-7">
+                                        <t t-if="not is_html_empty(o.narration)">
+                                            <br/>
+                                            <span class="policeMontserrat" style="font-size:22px; font-weight:900;">Paiement par prélèvement à la date
+                                             d’échéance
+                                            </span>
+                                            <span class="policeMontserrat" style="font-size:20px;" t-esc="o.narration"/>
+
+                                        </t>
+                                    </div>
+                                    <div class="col-5">
+                                        <table class="o_total_table table table-borderless avoid-page-break-inside" style="width:70%; float:right;">
+
+                                            <!-- Tax totals summary (invoice currency) -->
+                                            <t t-if="o.tax_totals">
+                                                <!--<t t-if="o.tax_totals" t-call="account.document_tax_totals">-->
+                                                <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                                <t t-set="currency" t-value="o.currency_id"/>
+                                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+                                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                                    <tr class="o_subtotal">
+                                                        <td style="font-size:22px; border-bottom: 2px solid #6c7470; color:#4e5250; font-weight:900;">
+                                                            <span class="policeMontserrat">Total HT</span>
+                                                        </td>
+                                                        <td class="text-end" style="font-size:22px; border-bottom: 2px solid #6c7470; color:#4e5250; font-weight:900;">
+                                                            <span class="policeMontserrat" t-att-class="oe_subtotal_footer_separator" t-out="subtotal['base_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}">
+                                                                27.00
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+                                                        <tr class="o_taxes">
+
+                                                            <td style="font-size:22px; border-bottom: 2px solid #6c7470; color:#4e5250; font-weight:900;">
+                                                                <span class="text-nowrap policeMontserrat">TVA</span>
+                                                            </td>
+                                                            <td class="text-end o_price_total" style="font-size:22px; border-bottom: 2px solid #6c7470; color:#4e5250; font-weight:900;">
+                                                                <span class="text-nowrap policeMontserrat" t-out="tax_group['tax_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}">
+                                                                    1.05
+                                                                </span>
+                                                            </td>
+
+                                                        </tr>
+                                                    </t>
+                                                </t>
+
+                                                <!--Total amount with all taxes-->
+                                                <tr class="o_total">
+                                                    <td class="policeMontserrat" style="font-size:22px; font-weight:900; color:#323735;">
+                                                        Total
+                                                    </td>
+                                                    <td class="text-end" style="font-size:22px; font-weight:900; color:#323735;">
+                                                        <span class="policeMontserrat" t-out="tax_totals['total_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}">
+                                                            31.05
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+
+
+                                        </table>
+                                    </div>
+                            </div>
+                            <div class="oe_structure"/>
+
+
+
+                    </div>
+                </div>
+                </t>
+            </t>
+        </t>
+
+
+        </template>
+
+
+    </data>
+</odoo>
