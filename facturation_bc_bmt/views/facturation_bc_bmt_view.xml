@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_sale_order_list" model="ir.ui.view">
+    <field name="name">sale.order.list.inherit</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+    <field name="arch" type="xml">
+
+
+        <xpath expr="//field[@name='state']" position="after">
+
+                <button name="go_to_picking"
+                    type="object"
+                    class="btn btn-primary"
+                    string="Bon de livraison"/>
+
+        </xpath>
+    </field>
+</record>
+
+        <record id="view_sale_advance_payment_inv_inherit" model="ir.ui.view">
+    <field name="name">sale.advance.payment.inv.inherit</field>
+    <field name="model">sale.advance.payment.inv</field>
+    <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+    <field name="arch" type="xml">
+
+
+        <xpath expr="//group[1]" position="after">
+
+                <group>
+                  <div style="float:right">
+                    <label for="total_amount">Montant Total</label>
+                    <field name="total_amount" style="font-size:50px; color:red;" string="Montant Total" />
+                    </div>
+                    
+                </group>
+
+        </xpath>
+    </field>
+</record>
+        <record id="view_res_parnter_inherit" model="ir.ui.view">
+    <field name="name">res.partner.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="infolib_l10n_tn_stamp_tax.view_res_partner_form_inherited"/>
+    <field name="arch" type="xml">
+
+
+        <xpath expr="//field[@name='stamp_tax_partner']" position="after">
+
+
+
+                    <field name="invoiced" string="Condition des factures > 5000 DT" />
+
+
+        </xpath>
+    </field>
+</record>
+
+
+
+
+
+    </data>
+</odoo>

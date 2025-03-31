@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_form_demande_reparation" model="ir.ui.view">
+        <field name="name">view_demande_reparation</field>
+        <field name="model">demande.reparation</field>
+        <field name="arch" type="xml">
+            <form name="arch" type="xml">
+                <group>
+                    <group>
+                        <field name="fournisseur_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Services">
+                             <field name="product_ids" string="Services" domain="[('type', '=', 'service')]">
+
+                    </field>
+                        </page>
+                    </notebook>
+
+                </group>
+            </form>
+        </field>
+    </record>
+
+        <record id="view_demande_reparation" model="ir.ui.view">
+        <field name="name">view demande reparation</field>
+        <field name="model">demande.reparation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="fournisseur_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="demande_reparation_action" model="ir.actions.act_window">
+        <field name="name">Demandes de réparations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">demande.reparation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+<!--        menu items     -->
+
+    <menuitem id="menu_demande_reparation"
+              name="Demandes de réparations"
+              parent="purchase.menu_purchase_root"
+              action="demande_reparation_action"
+              sequence="4"/>
+
+
+
+
+
+    </data>
+</odoo>
